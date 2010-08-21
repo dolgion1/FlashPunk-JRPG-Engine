@@ -1,0 +1,49 @@
+The current features I plan to implement are:
+
+DONE - means is working as currently required
+ATM - means is being worked on at the moment
+
+1. [DONE] implement an ongoing timer that doesn't stop as long as the game is being played. It can be paused however,
+   for example when the player is looking at the world map.
+
+2. [DONE] add NPCs to the world who just stand at one point all day
+
+3. [DONE] make updates to the display and AI of the NPCs depending on the time
+
+4. [DONE] Implementing A* Pathfinding for NPCs
+   1. [DONE] Create a datacontainer class that can keep the necessary properties needed for squares in A* pathfinding
+      1. [DONE] x and y coordinates
+      2. [DONE] array index
+	  3. [DONE] flag that indicates whether the node is passable or not
+   2. [DONE] Create a node class that is specifically used to store A* information
+	  1. [DONE] an internal square property
+	  2. [DONE] F, G and H values
+	  3. [DONE] a reference to its parent
+   3. [DONE] Load in the gridSquares of each map at instantiation
+   4. [DONE] create a method for NPCs where they can be told where to go. Just this: a target global position. 
+	  The NPC then uses an implementation of A* to figure out the immediate path and a larger scale mapPath using Depth-First, 
+	  and sets its currentActivity to walk. The entire way is calculated before starting to move.
+   5. [DONE] Make it possible to walk between maps, and to "be" at different maps than the player. Basically, keep the 
+	  simulation going no matter what the player does or where he is. Requires a larger scale inter-map system
+	  of pathfinding. In order to do that:
+   6. [DONE] Create parent-child relationship to maps, for dungeons and towns etc. This means creating a proper datastructure
+
+5. Enable NPCs to do other various things
+   1. Be spoken to when clicked upon
+   2. [DONE] Automatically select the appropriate animation according to the direction of movement, or at no movement
+
+6. [ATM] implement a streamlined process for NPC AI routines, that can be composed or built and therefore easily 
+   changed, and fed to the NPC, that describe the movement actions given in point 4. A script file as XML would be a
+   viable option. There I can determine at what times the NPC must walk to what global positions for example. Maybe entire
+   dialogues and more can be stored there.
+
+8. display dialogue text
+
+
+
+Minor changes:
+
+- experiment with collision grid: make tree collision boxes smaller
+- diagonal movement of avatar must be the given speed limit in magnitude
+- even though NPCs are added to stage, if their currentMapIndex state variable states that they aren't actually 
+  actors on the current map of the player, disable collision and their visiblity

@@ -4,7 +4,7 @@
   <output>
     <movie disabled="False" />
     <movie input="" />
-    <movie path="bin\JRPGMilestone2.swf" />
+    <movie path="bin\FlashPunk-JRPG-Engine.swf" />
     <movie fps="30" />
     <movie width="640" />
     <movie height="480" />
