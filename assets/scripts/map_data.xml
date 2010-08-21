@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<map>
+		<name>Grass Lands</name>
+		<index>0</index>
+		<worldmap_x_offset>312</worldmap_x_offset>
+		<worldmap_y_offset>144</worldmap_y_offset>
+		<type>outdoor</type>
+		
+		<north>-1</north>
+		<east>-1</east>
+		<south>-1</south>
+		<west>1</west>
+		
+		<child_maps>
+			<child mapIndex="2"/>
+			<child mapIndex="3"/>
+			<child mapIndex="4"/>
+		</child_maps>
+		
+		<transition_points>
+			<transition_point mapIndex="2" x="432" y="336"/>
+			<transition_point mapIndex="3" x="528" y="336"/>
+			<transition_point mapIndex="4" x="624" y="336"/>
+		</transition_points>
+	</map>
+	
+	<map>
+		<name>Earth Lands</name>
+		<index>1</index>
+		<worldmap_x_offset>0</worldmap_x_offset>
+		<worldmap_y_offset>144</worldmap_y_offset>
+		<type>outdoor</type>
+		
+		<north>-1</north>
+		<east>0</east>
+		<south>-1</south>
+		<west>-1</west>
+		
+		<child_maps>
+			<child mapIndex="5"/>
+			<child mapIndex="6"/>
+			<child mapIndex="7"/>
+		</child_maps>
+		
+		<transition_points>
+			<transition_point mapIndex="5" x="432" y="336"/>
+			<transition_point mapIndex="6" x="528" y="336"/>
+			<transition_point mapIndex="7" x="624" y="336"/>
+		</transition_points>
+	</map>
+	
+	
+	<map>
+		<name>Grass Left House</name>
+		<index>2</index>
+		<worldmap_x_offset>0</worldmap_x_offset>
+		<worldmap_y_offset>0</worldmap_y_offset>
+		<type>indoor</type>
+		
+		<north>-1</north>
+		<east>-1</east>
+		<south>-1</south>
+		<west>-1</west>
+		
+		<child_maps>
+		</child_maps>
+		
+		<transition_points>
+			<transition_point mapIndex="0" x="288" y="432"/>
+		</transition_points>
+	</map>
+	
+	<map>
+		<name>Grass Middle House</name>
+		<index>3</index>
+		<worldmap_x_offset>0</worldmap_x_offset>
+		<worldmap_y_offset>0</worldmap_y_offset>
+		<type>indoor</type>
+		
+		<north>-1</north>
+		<east>-1</east>
+		<south>-1</south>
+		<west>-1</west>
+		
+		<child_maps>
+		</child_maps>
+		
+		<transition_points>
+			<transition_point mapIndex="0" x="288" y="432"/>
+		</transition_points>
+	</map>
+	
+	<map>
+		<name>Grass Right House</name>
+		<index>4</index>
+		<worldmap_x_offset>0</worldmap_x_offset>
+		<worldmap_y_offset>0</worldmap_y_offset>
+		<type>indoor</type>
+		
+		<north>-1</north>
+		<east>-1</east>
+		<south>-1</south>
+		<west>-1</west>
+		
+		<child_maps>
+		</child_maps>
+		
+		<transition_points>
+			<transition_point mapIndex="0" x="288" y="432"/>
+		</transition_points>
+	</map>
+	
+	<map>
+		<name>Earth Left House</name>
+		<index>5</index>
+		<worldmap_x_offset>0</worldmap_x_offset>
+		<worldmap_y_offset>0</worldmap_y_offset>
+		<type>indoor</type>
+		
+		<north>-1</north>
+		<east>-1</east>
+		<south>-1</south>
+		<west>-1</west>
+		
+		<child_maps>
+		</child_maps>
+		
+		<transition_points>
+			<transition_point mapIndex="1" x="288" y="432"/>
+		</transition_points>
+	</map>
+	
+	<map>
+		<name>Earth Middle House</name>
+		<index>6</index>
+		<worldmap_x_offset>0</worldmap_x_offset>
+		<worldmap_y_offset>0</worldmap_y_offset>
+		<type>indoor</type>
+		
+		<north>-1</north>
+		<east>-1</east>
+		<south>-1</south>
+		<west>-1</west>
+		
+		<child_maps>
+		</child_maps>
+		
+		<transition_points>
+			<transition_point mapIndex="1" x="288" y="432"/>
+		</transition_points>
+	</map>
+	
+	<map>
+		<name>Earth Right House</name>
+		<index>7</index>
+		<worldmap_x_offset>0</worldmap_x_offset>
+		<worldmap_y_offset>0</worldmap_y_offset>
+		<type>indoor</type>
+		
+		<north>-1</north>
+		<east>-1</east>
+		<south>-1</south>
+		<west>-1</west>
+		
+		<child_maps>
+		</child_maps>
+		
+		<transition_points>
+			<transition_point mapIndex="1" x="288" y="432"/>
+		</transition_points>
+	</map>
+</data>

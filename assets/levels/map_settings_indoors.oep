@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project>
+	<name>Map</name>
+	
+	<settings>
+		<defaultWidth>624</defaultWidth>
+		<defaultHeight>480</defaultHeight>
+		<workingDirectory>../gfx</workingDirectory>
+	</settings>
+	
+	<tilesets>
+		<tileset name="tiles" image="tiles.png" tileWidth="48" tileHeight="48" />
+	</tilesets>
+	
+	<layers>
+		<grid name="solid" gridSize="16" exportAsObjects="true" /> 
+		<tiles name="ground" gridSize="48" />
+	</layers>
+</project>

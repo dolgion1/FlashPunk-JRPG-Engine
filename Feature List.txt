@@ -1,0 +1,60 @@
+2. Basic NPCs and Day/Night Cycle
+
+This prototype is developed for the implementation of:
+
+1. Day/Night Cycles
+   The notion of real time is introduced in this prototype. A day consists of 4 different time frames.
+   They are: morning, afternoon, evening and night. A textual display shows the current time in HH:MM:SS format,
+   as well as the current timeframe, for example "Afternoon". 
+
+2. NPCs
+   They stand around, they can walk around according to their own agenda, they can be clicked on and display
+   a bubble/box of text. Depending on the current timeframe, NPCs follow the designated rhythm. For example,
+   in the afternoon, a farmer NPC would stand on his farmland. When clicking on an NPC, it will say what 
+   time frame it is by saying "Good morning!" or "Good evening!" etc.
+   NPCs can go persistently to different maps, all in real time. This means, the player could in theory 
+   follow NPCs for the entire day every day.
+
+These features require to figure out how to:
+
+1. [DONE] implement an ongoing timer that doesn't stop as long as the game is being played. It can be paused however,
+   for example when the player is looking at the world map.
+
+2. [DONE] add NPCs to the world who just stand at one point all day
+
+3. [DONE] make updates to the display and AI of the NPCs depending on the time
+
+4. [DONE] Implementing A* Pathfinding for NPCs
+   1. [DONE] Create a datacontainer class that can keep the necessary properties needed for squares in A* pathfinding
+      1. x and y coordinates
+      2. array index
+	  3. boolean that indicates whether the node is passable or not
+   2. [DONE] Create a node class that is specifically used to store A* information
+	  1. an internal square property
+	  2. F, G and H values
+	  3. a reference to its parent
+   3. [DONE] Load in the gridSquares of each map at instantiation
+   
+   4. [DONE] create a method for NPCs where they can be told where to go. Just this: a target global position. 
+	  The NPC then uses an implementation of A* to figure out the immediate path and a larger scale mapPath using Depth-First, 
+	  and sets its currentActivity to walk. The entire way is calculated before starting to move.
+   5. [DONE] Make it possible to walk between maps, and to "be" at different maps than the player. Basically, keep the 
+	  simulation going no matter what the player does or where he is. Requires a larger scale inter-map system
+	  of pathfinding. In order to do that:
+   6. [DONE] Create parent-child relationship to maps, for dungeons and towns etc. This means creating a proper datastructure
+
+4. Enable NPCs to do other various things
+   1. Be spoken to when clicked upon
+   2. Automatically select the appropriate animation according to the direction of movement, or at no movement
+
+5. implement a streamlined process for NPC AI routines, that can be composed or built and therefore easily 
+   changed, and fed to the NPC, that describe the movement actions given in point 4. A script file as XML would be a
+   viable option. There I can determine at what times the NPC must walk to what global positions for example. Maybe entire
+   dialogues and more can be stored there.
+
+6. keep NPC data safe and persistent through map changes
+
+7. get mouse events so that the player can interact with NPCs or objects (like houses)
+
+8. display dialogue text
+
