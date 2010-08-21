@@ -8,7 +8,7 @@ package entities
 	 */
 	public class GridOverlay extends Entity
 	{
-		[Embed (source = "../../assets/gfx/grid_overlay.png")]
+		[Embed (source = "../../assets/gfx/grid_overlay_small.png")]
 		private var GRID_OVERLAY:Class;
 		private var image:Image;
 		
@@ -21,8 +21,8 @@ package entities
 			height = _height;
 			setHitbox(_width, _height, 0, 0);
 			image = new Image(GRID_OVERLAY);
-			image.scaleX = _width/48;
-			image.scaleY = _height/48;
+			image.scaleX = _width/16;
+			image.scaleY = _height/16;
 			graphic = image;
 		}
 	}

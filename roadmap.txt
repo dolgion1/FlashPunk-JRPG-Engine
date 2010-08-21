@@ -43,7 +43,9 @@ ATM - means is being worked on at the moment
 
 Minor changes:
 
-- experiment with collision grid: make tree collision boxes smaller
+- [DONE] experiment with collision grid: make tree collision boxes smaller
 - [DONE] diagonal movement of avatar must be the given speed limit in magnitude
 - [DONE] even though NPCs are added to stage, if their currentMapIndex state variable states that they aren't actually 
   actors on the current map of the player, disable collision and their visiblity
+- [DONE] make hitboxes of NPCs and Player smaller for more exact collision detection
+- [DONE] update worldmap

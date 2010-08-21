@@ -18,12 +18,16 @@ package entities
 		public const MIN_DISTANCE:Number = 10;
 		public const SPAWN_END:int = 2;
 		
-		[Embed(source = "../../assets/gfx/npc_01.png")] private var NPC_SPRITESHEET_01:Class;
-		[Embed(source = "../../assets/gfx/npc_02.png")] private var NPC_SPRITESHEET_02:Class;
+		[Embed(source = "../../assets/gfx/npc_01_collision_borders.png")] private var NPC_SPRITESHEET_01:Class;
+		[Embed(source = "../../assets/gfx/npc_02_collision_borders.png")] private var NPC_SPRITESHEET_02:Class;
 		
 		public var spritesheets:Array = new Array(NPC_SPRITESHEET_01, NPC_SPRITESHEET_02);
 		public const SPRITE_WIDTH:int = 25;
 		public const SPRITE_HEIGHT:int = 29;
+		public const HITBOX_WIDTH:int = 16;
+		public const HITBOX_HEIGHT:int = 23;
+		public const HITBOX_X_OFFSET:int = -4;
+		public const HITBOX_Y_OFFSET:int = -3;
 		
 		public var spritesheetIndex:int;
 		public var npcSpritemap:Spritemap;
@@ -63,7 +67,7 @@ package entities
 			setupSpritesheet();
 			graphic = npcSpritemap;
 			npcSpritemap.play(curAnimation);
-			setHitbox(SPRITE_WIDTH, SPRITE_HEIGHT, 0, 0);
+			setHitbox(HITBOX_WIDTH, HITBOX_HEIGHT, HITBOX_X_OFFSET, HITBOX_Y_OFFSET);
 			type = "npc"
 		}
 		

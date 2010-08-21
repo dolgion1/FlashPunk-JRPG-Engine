@@ -14,7 +14,7 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'8/20/2010'</value>
+      <value>'8/21/2010'</value>
     </define>
     <source-path append="true">
       <path-element>C:\Users\Dolgion\FlashPunk-JRPG-Engine\src</path-element>

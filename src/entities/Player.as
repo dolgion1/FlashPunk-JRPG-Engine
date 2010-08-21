@@ -12,10 +12,14 @@ package entities
 	 */
 	public class Player extends Entity
 	{
-		[Embed(source = "../../assets/gfx/player.png")]
+		[Embed(source = "../../assets/gfx/player_collision_borders.png")]
 		public const PLAYER:Class;
 		public const SPRITE_WIDTH:Number = 23;
 		public const SPRITE_HEIGHT:Number = 28;
+		public const HITBOX_WIDTH:int = 16;
+		public const HITBOX_HEIGHT:int = 23;
+		public const HITBOX_X_OFFSET:int = -4;
+		public const HITBOX_Y_OFFSET:int = -3;
 		
 		public static var speed:Number = 2;
 		public static var diagonalSpeed:Number = 1.4;
@@ -33,7 +37,7 @@ package entities
 			y = position.y;
 			currentMapIndex = position.mapIndex;
 			
-			setHitbox(SPRITE_WIDTH, SPRITE_HEIGHT, 0, 0);
+			setHitbox(HITBOX_WIDTH, HITBOX_HEIGHT, HITBOX_X_OFFSET, HITBOX_Y_OFFSET);
 			type = "player";
 			
 			defineInputKeys();
