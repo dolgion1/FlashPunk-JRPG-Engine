@@ -108,7 +108,6 @@ package utility
 				var fullCost:int = movementCost + heuristicCost;
 				
 				openNodes.push(new Node(currentSquare, fullCost, movementCost, heuristicCost, node));
-				//trace("    and it's an open point. " + i + " x: " + testPoints[i].x + " y:" + testPoints[i].y);
 			}
 			
 			/*

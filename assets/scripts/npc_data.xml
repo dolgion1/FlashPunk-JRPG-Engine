@@ -3,12 +3,12 @@
 	<npc>
 		<name>Zelda</name>
 		<spritesheet>0</spritesheet>
-		<x>443</x>
-		<y>192</y>
-		<mapIndex>0</mapIndex>
+		<x>200</x>
+		<y>200</y>
+		<mapIndex>3</mapIndex>
 		
 		<appointments>
-			<appointment hour="6" minute="30" x="240" y="192" mapIndex="6"/>			
+			<appointment hour="6" minute="30" x="200" y="150" mapIndex="5"/>			
 		</appointments>
 	</npc>
 	

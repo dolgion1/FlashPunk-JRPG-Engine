@@ -97,22 +97,31 @@ package entities
 			if (distance < MIN_DISTANCE) 
 			{
 				pathIndex++;
+				
+				// if the NPC just entered a new map, we don't want to activate
+				// collision detection if the player happens to stand on the spawning
+				// point of the NPC, or else they will get stuck
 				if (justSpawned && (collide("player", x, y) == null))
 				{
 					justSpawned = false;
 				}
+				// did the NPC reach the end of the path?
 				if (pathIndex >= path.length)
 				{
 					pathIndex = 0;
 					
+					// the NPC is in the last map of the mapPath
 					if (mapPathIndex == (mapPath.length - 1))
 					{
-						// then we're in the last map
 						path = pathfinder.pathfinding(new GlobalPosition(currentMapIndex, x, y), endPoint, maps);
 						if (path.length == 0)
 						{
-							// we finally arrived
+							// the NPC finally arrived, because the 
+							// end point is the position that the NPC 
+							// is currently at
 							currentActivity = NONE;
+							
+							// determine the idle animation
 							switch (curAnimation)
 							{
 								case "walk_left": curAnimation = "stand_left"; break;
@@ -122,7 +131,7 @@ package entities
 							}
 						}
 						
-						// for temporary ghost state
+						// this enables 
 						justSpawned = true;
 					}
 					else
@@ -146,6 +155,8 @@ package entities
 			}
 			else
 			{
+				// keep moving towards the current
+				// point of the path
 				movement();
 			}
 		}
@@ -182,21 +193,11 @@ package entities
 			}
 			else verticalMovement = false;
 			
-			if ((!verticalMovement) && (!horizontalMovement))
-			{
-				switch (curAnimation)
-				{
-					case "walk_left": trace("stand left now"); curAnimation = "stand_left"; break;
-					case "walk_right": curAnimation = "stand_right"; break;
-					case "walk_up": curAnimation = "stand_up"; break;
-					case "walk_down": curAnimation = "stand_down"; break;
-				}
-			}
-			
 			if (!justSpawned)
 			{
-				if (colliding())					
+				if (colliding())				
 				{
+					// go back 
 					x = _x;
 					y = _y;
 				}

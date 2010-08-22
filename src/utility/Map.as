@@ -3,6 +3,7 @@ package utility
 	import entities.Player;
 	import entities.Tiles;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.xml.*;
 	/**
@@ -89,25 +90,24 @@ package utility
 			}
 			
 			// find the collision rects from the xml
-			// and set those squares to unwalkable who fall into
-			// the rects
+			// and set those squares to unwalkable that
+			// overlap with the rects
 			if (xml.solid[0] != null)
 			{
 				for each (var solid:XML in xml.solid[0].rect)
 				{
 					for (i = 0; i < gridSquares.length; i++)
 					{
-						var rectX:int = solid.@x;
-						var rectY:int = solid.@y;
-						var rectW:int = solid.@w;
-						var rectH:int = solid.@h;
-						
-						if ((gridSquares[i].x >= rectX) && gridSquares[i].x < (rectX + rectW))
+						var rect1:Rectangle = new Rectangle(gridSquares[i].x,
+															gridSquares[i].y,
+															48, 48);
+						var rect2:Rectangle = new Rectangle(solid.@x,
+															solid.@y,
+															solid.@w,
+															solid.@h);
+						if (rect1.intersects(rect2))
 						{
-							if ((gridSquares[i].y >= rectY) && gridSquares[i].y < (rectY + rectH))
-							{
-								gridSquares[i].walkable = false;
-							}
+							gridSquares[i].walkable = false;
 						}
 					}
 				}

@@ -165,14 +165,6 @@ package utility
 			}
 			else if (maps[curMapIndex].type == Map.OUTDOOR)
 			{
-				// exit condition
-				if (curMapIndex == endMapIndex) 
-				{
-					mapPath.push(curMapIndex);
-					visitedMaps.push(curMapIndex);
-					return true;
-				}
-				
 				// go through children maps
 				for (i = 0; i < maps[curMapIndex].childMaps.length; i++)
 				{
@@ -186,8 +178,7 @@ package utility
 						}
 					}
 				}
-				visitedMaps.push(curMapIndex);
-				
+								
 				// go through children maps
 				for (i = 0; i < maps[curMapIndex].exits.length; i++)
 				{
@@ -205,6 +196,8 @@ package utility
 						}
 					}
 				}
+				visitedMaps.push(curMapIndex);
+
 			}
 			return false;
 		}
