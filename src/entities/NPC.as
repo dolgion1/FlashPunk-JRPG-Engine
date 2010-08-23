@@ -18,8 +18,8 @@ package entities
 		public const MIN_DISTANCE:Number = 10;
 		public const SPAWN_END:int = 2;
 		
-		[Embed(source = "../../assets/gfx/npc_01_collision_borders.png")] private var NPC_SPRITESHEET_01:Class;
-		[Embed(source = "../../assets/gfx/npc_02_collision_borders.png")] private var NPC_SPRITESHEET_02:Class;
+		[Embed(source = "../../assets/gfx/npc_01.png")] private var NPC_SPRITESHEET_01:Class;
+		[Embed(source = "../../assets/gfx/npc_02.png")] private var NPC_SPRITESHEET_02:Class;
 		
 		public var spritesheets:Array = new Array(NPC_SPRITESHEET_01, NPC_SPRITESHEET_02);
 		public const SPRITE_WIDTH:int = 25;

@@ -12,7 +12,7 @@ package entities
 	 */
 	public class Player extends Entity
 	{
-		[Embed(source = "../../assets/gfx/player_collision_borders.png")]
+		[Embed(source = "../../assets/gfx/player.png")]
 		public const PLAYER:Class;
 		public const SPRITE_WIDTH:Number = 23;
 		public const SPRITE_HEIGHT:Number = 28;

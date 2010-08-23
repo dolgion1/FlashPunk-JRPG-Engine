@@ -34,7 +34,7 @@ package utility
 				trace("The end square is not walkable. x:" + endSquare.x + " y:" + endSquare.y + " map:" + _startPoint.mapIndex);
 				return null;
 			}
-			//trace("end square x:" + endSquare.x + " y:" + endSquare.y + " map:" + _startPoint.mapIndex);
+			
 			closedNodes = new Array(new Node(startSquare, 0, 0, 0, null));
 			openNodes = new Array();
 			path = new Array();
@@ -82,7 +82,7 @@ package utility
 				var isClosedNode:Boolean = false;
 				var isOpenNode:Boolean = false;
 				currentSquare = getExactGridSquare(testPoints[i]);
-				//trace(" test point number." + i + " x: " + testPoints[i].x + " y:" + testPoints[i].y);
+				
 				if (currentSquare == null)
 				{
 					continue;

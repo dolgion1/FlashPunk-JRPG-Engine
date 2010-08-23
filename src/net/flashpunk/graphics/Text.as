@@ -40,7 +40,6 @@
 			if (!width) width = _field.textWidth + 4;
 			if (!height) height = _field.textHeight + 4;
 			_source = new BitmapData(width, height, true, 0);
-			_sourceRect = _source.rect;
 			super(_source);
 			updateBuffer();
 			this.x = x;
@@ -56,6 +55,13 @@
 			_source.fillRect(_sourceRect, 0);
 			_source.draw(_field);
 			super.updateBuffer();
+		}
+		
+		/** @private Centers the Text's originX/Y to its center. */
+		override public function centerOrigin():void 
+		{
+			originX = _width / 2;
+			originY = _height / 2;
 		}
 		
 		/**
@@ -102,8 +108,6 @@
 		override public function get height():uint { return _height; }
 		
 		// Text information.
-		/** @private */ private var _source:BitmapData;
-		/** @private */ private var _sourceRect:Rectangle;
 		/** @private */ private var _field:TextField = new TextField;
 		/** @private */ private var _width:uint;
 		/** @private */ private var _height:uint;
@@ -114,9 +118,9 @@
 		
 		// Default font family.
 		// Use this option when compiling with Flex SDK 4
-		[Embed(source = '04B_03__.TTF', embedAsCFF="false", fontFamily = 'default')]
+		 [Embed(source = '04B_03__.TTF', embedAsCFF="false", fontFamily = 'default')]
 		// Use this option when compiling with Flex SDK <4
-		//[Embed(source = '04B_03__.TTF', fontFamily = 'default')]
+		// [Embed(source = '04B_03__.TTF', fontFamily = 'default')]
 		/** @private */ private static var _FONT_DEFAULT:Class;
 	}
 }
