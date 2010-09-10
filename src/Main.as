@@ -17,7 +17,7 @@
 		{
 			super(624, 480, 60, false);
 			FP.world = new Game();
-			FP.console.enable();
+			// FP.console.enable();
 		}
 		
 		override public function init():void 

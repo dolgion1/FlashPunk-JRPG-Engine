@@ -4,5 +4,17 @@
 		<x>200</x>
 		<y>200</y>
 		<mapIndex>0</mapIndex>
+		
+		<dialogs>
+			<dialog partner="Zelda" index="0">
+				<line index="0">
+					<version>I got this job as player character for the Doglion's FlashPunk Tutorials!</version>
+					<version>Stalkin' yo mom!</version>
+				</line>
+				<line index="1">
+					<version>Bye Zelda!</version>
+				</line>
+			</dialog>
+		</dialogs>
 	</player>
 </data>

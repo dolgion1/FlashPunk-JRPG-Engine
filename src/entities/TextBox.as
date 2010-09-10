@@ -12,15 +12,21 @@ package entities
 	{
 		[Embed (source = "../../assets/gfx/text_box_background.png")]
 		public const TEXT_BOX:Class;
+		
 		public var xOffset:Number;
 		public var yOffset:Number;
+		public var image:Image;
 		
-		public function TextBox(_xOffset:Number, _yOffset:Number) 
+		public function TextBox(_xOffset:Number, _yOffset:Number, _scaleX:Number, _scaleY:Number) 
 		{
-			graphic = new Image(TEXT_BOX);
+			image = new Image(TEXT_BOX);
+			image.scaleX = _scaleX;
+			image.scaleY = _scaleY;
+			graphic = image;
 			
 			xOffset = _xOffset;
 			yOffset = _yOffset;
+			
 		}
 		
 		override public function update():void

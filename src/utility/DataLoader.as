@@ -29,8 +29,34 @@ package utility
 		{
 			var playerDataByteArray:ByteArray = new playerData;
 			var playerDataXML:XML = new XML(playerDataByteArray.readUTFBytes(playerDataByteArray.length));
+			var p:XML;
+			var q:XML;
+			var r:XML;
 			
-			return new Player(new GlobalPosition(playerDataXML.player.mapIndex, playerDataXML.player.x, playerDataXML.player.y));
+			// load in the dialog
+			var playerDialogs:Array = new Array();
+			
+			for each (p in playerDataXML.player.dialogs.dialog)
+			{
+				// trace("Partner: " + p.@partner);
+				var playerDialogLines:Array = new Array();
+				for each (q in p.line)
+				{
+					var playerDialogLineVersions:Array = new Array();
+					// trace("  a new general line: " + q.@index);
+					for each (r in q.version)
+					{
+						// trace("    a version of it: " + r);
+						playerDialogLineVersions.push(r);
+					}
+					var playerDialogLine:Line = new Line(q.@index, playerDialogLineVersions);
+					playerDialogLines.push(playerDialogLine);
+				}
+				var playerDialog:Dialog = new Dialog(p.@partner, p.@index, playerDialogLines);
+				playerDialogs.push(playerDialog);
+			}
+			
+			return new Player(new GlobalPosition(playerDataXML.player.mapIndex, playerDataXML.player.x, playerDataXML.player.y), playerDialogs);
 		}
 		
 		public function setupMaps():Array
@@ -86,17 +112,44 @@ package utility
 			var npcDataXML:XML = new XML(npcDataByteArray.readUTFBytes(npcDataByteArray.length));
 			var o:XML;
 			var p:XML;
+			var q:XML;
+			var r:XML;
 			var npc:NPC;
 			var npcs:Array = new Array();
 			
 			for each (o in npcDataXML.npc)
 			{
+				// load in the appointments
 				var npcAppointments:Array = new Array();
 				for each (p in o.appointments.appointment)
 				{
 					npcAppointments.push(new Appointment(p.@hour, p.@minute, new GlobalPosition(p.@mapIndex, p.@x, p.@y)));
 				}
-				npc = new NPC(maps, o.name, o.spritesheet, o.x, o.y, o.mapIndex, npcAppointments);
+				
+				// load in the dialog
+				var npcDialogs:Array = new Array();
+				for each (p in o.dialogs.dialog)
+				{
+					
+					// trace("Partner: " + p.@partner);
+					var npcDialogLines:Array = new Array();
+					for each (q in p.line)
+					{
+						var npcDialogLineVersions:Array = new Array();
+						// trace("  a new general line: " + q.@index);
+						for each (r in q.version)
+						{
+							// trace("    a version of it: " + r);
+							npcDialogLineVersions.push(r);
+						}
+						var npcDialogLine:Line = new Line(q.@index, npcDialogLineVersions);
+						npcDialogLines.push(npcDialogLine);
+					}
+					var npcDialog:Dialog = new Dialog(p.@partner, p.@index, npcDialogLines);
+					npcDialogs.push(npcDialog);
+				}
+				
+				npc = new NPC(maps, o.name, o.spritesheet, o.x, o.y, o.mapIndex, npcAppointments, npcDialogs);
 				npcs.push(npc);
 			}
 			

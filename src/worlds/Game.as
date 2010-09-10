@@ -26,8 +26,8 @@ package worlds
 		public var mapDisplay:DisplayText;
 		public var daytimeDisplay:DisplayText;
 		public var timeDisplay:DisplayText;
-		public var npcTextBox:TextBox;
-		public var npcText:DisplayText;
+		public var npcTextBox:DialogTextBox;
+		public var playerTextBox:DialogTextBox;
 		public var gridOverlays:Array = new Array();
 		
 		// Helper Datastructures
@@ -37,12 +37,15 @@ package worlds
 		
 		// Helper state variables
 		public static var currentMapIndex:int;
+		public static var inDialog:Boolean = false;
+		public static var dialogEndedThisFrame:Boolean = false;
 		public var worldMapOpened:Boolean = false;
 		
 		// Utilities
 		public var time:Time = new Time();
 		public var camera:Camera;
 		public var dataloader:DataLoader = new DataLoader();
+		public var dialogManager:DialogManager = new DialogManager();
 		
 		public function Game() 
 		{
@@ -67,29 +70,55 @@ package worlds
 			
 			super.update();
 			
-			if (worldMapOpened) return;
-			
-			// Iterate the global time
-			var currentTime:Array = time.newMinute();
-			if (currentTime)
+			if (worldMapOpened) // Check if in world map mode
 			{
-				// Do AI logic of NPCs each new game minute
-				for each (var npc:NPC in npcs)
+				return;
+			}
+			else if (inDialog) // Check if in dialog mode
+			{
+				if (!npcTextBox.visible) // dialog was just initiated
 				{
-					npc.aiUpdate(currentTime[0], currentTime[1]);
+					if (dialogManager.setCurrentDialogWithPlayer(player, player.dialogPartner, npcs))
+					{
+						npcTextBox.visible = true;
+						
+						// find the dialog that is to be displayed
+						npcTextBox.setText(dialogManager.getNextLine());
+					}
+					else inDialog = false;
+				}
+				return;
+			}
+			else // normal mode
+			{
+				if (npcTextBox.visible)
+				{
+					npcTextBox.visible = false;
+					playerTextBox.visible = false;
 				}
 				
-				daytimeDisplay.displayText.text = time.daytimeString;
-				timeDisplay.displayText.text = time.timeString;
-			}
-			
-			// Camera moves if player reaches cam offset
-			camera.followPlayer(currentMap.height, currentMap.width, player);
-			
-			// Check if player leaves the map
-			if (checkSwitchToNewMap())
-			{
-				resetStage();
+				// Iterate the global time
+				var currentTime:Array = time.newMinute();
+				if (currentTime)
+				{
+					// Do AI logic of NPCs each new game minute
+					for each (var npc:NPC in npcs)
+					{
+						npc.aiUpdate(currentTime[0], currentTime[1]);
+					}
+					
+					daytimeDisplay.displayText.text = time.daytimeString;
+					timeDisplay.displayText.text = time.timeString;
+				}
+				
+				// Camera moves if player reaches cam offset
+				camera.followPlayer(currentMap.height, currentMap.width, player);
+				
+				// Check if player leaves the map
+				if (checkSwitchToNewMap())
+				{
+					resetStage();
+				}
 			}
 		}
 		
@@ -178,15 +207,17 @@ package worlds
 			timeDisplay = new DisplayText("00:00", 550, 0, "default", 10, 0xFFFFFF, 50);
 			add(timeDisplay);
 			
-			/* TODO: TextBox feature
-			 *	// show the text box of the npc
-			 *	npcTextBox = new TextBox(100, 0);
-			 *	add(npcTextBox);
-			 *	
-			 *	// ..and the text
-			 *	npcText = new DisplayText("Hi Link!", 150, 50, "default", 10, 0xFFFFFF, 50);
-			 *	add(npcText);
-			 */
+			// create the text box of the npc
+			npcTextBox = new DialogTextBox(200, 60, "Sample text for a dialog", 1.5, 1);
+			npcTextBox.visible = false;
+			add(npcTextBox.textBox);
+			addList(npcTextBox.displayTexts);
+			
+			// create the text box of the player
+			playerTextBox = new DialogTextBox(100, 300, "Sample text for a dialog", 1.5, 1);
+			playerTextBox.visible = false;
+			add(playerTextBox.textBox);
+			addList(playerTextBox.displayTexts);
 		}
 		
 		public function processGeneralInput():void
@@ -197,6 +228,38 @@ package worlds
 			
 			if (Input.check(Key.ESCAPE))
 				if (worldMapOpened) closeWorldMap();
+				
+			if (dialogEndedThisFrame) dialogEndedThisFrame = false;
+				
+			if (Input.pressed(Key.SPACE))
+				if (inDialog)
+				{
+					if ((dialogManager.currentTurn == 1) && (npcTextBox.currentPage < npcTextBox.pages.length))
+					{
+						npcTextBox.nextPage();
+					}
+					else 
+					{
+						var nextLine:String = dialogManager.getNextLine();
+						if (nextLine != null)
+						{
+							if ((dialogManager.currentTurn == 1))
+							{
+								npcTextBox.setText(nextLine);
+							}
+							else 
+							{
+								if (!playerTextBox.visible) playerTextBox.visible = true;
+								playerTextBox.setText(nextLine);
+							}
+						}
+						else 
+						{
+							inDialog = false;
+							dialogEndedThisFrame = true;
+						}
+					}
+				}
 		}
 		
 		public function resetStage():void

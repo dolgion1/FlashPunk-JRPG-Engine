@@ -3,6 +3,7 @@ package entities
 	import net.flashpunk.*;
 	import net.flashpunk.graphics.*;
 	import flash.geom.Point;
+	import flash.utils.Dictionary;
 	import utility.*;
 	import worlds.Game;
 	
@@ -48,13 +49,18 @@ package entities
 		public var endPoint:GlobalPosition;
 		public var appointments:Array = new Array();
 		
+		public var dialogs:Array = new Array();
+		public var dialogsInTotal:Dictionary = new Dictionary();
+		public var dialogCounters:Dictionary = new Dictionary();
+		
 		public function NPC(_maps:Array, 
 							_name:String, 
 							_spritesheetIndex:int, 
 							_x:int, 
 							_y:int, 
 							_mapIndex:int, 
-							_appointments:Array)
+							_appointments:Array,
+							_dialogs:Array)
 		{
 			maps = _maps;
 			name = _name;
@@ -62,6 +68,8 @@ package entities
 			y = _y;
 			currentMapIndex = _mapIndex;
 			appointments = _appointments;
+			dialogs = _dialogs;
+			setupUpDialogsInTotal();
 			
 			spritesheetIndex = _spritesheetIndex;
 			setupSpritesheet();
@@ -85,7 +93,7 @@ package entities
 			}
 			npcSpritemap.play(curAnimation);
 			
-			if (currentActivity == WALK)
+			if (currentActivity == WALK && (!Game.inDialog))
 			{
 				walkProcedure();
 			}
@@ -254,6 +262,22 @@ package entities
 			npcSpritemap.add("stand_up", [2], 0, false);
 			npcSpritemap.add("stand_left", [4], 0, false);
 			npcSpritemap.add("stand_right", [6], 0, false);
+		}
+		
+		public function setupUpDialogsInTotal():void
+		{
+			for each (var d:Dialog in dialogs)
+			{
+				if (dialogsInTotal[d.partner] == null)
+				{
+					dialogsInTotal[d.partner] = 1;
+					dialogCounters[d.partner] = 0;
+				}
+				else 
+				{
+					dialogsInTotal[d.partner]++;
+				}
+			}
 		}
 	}
 

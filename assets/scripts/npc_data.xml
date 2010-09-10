@@ -10,6 +10,21 @@
 		<appointments>
 			<appointment hour="6" minute="30" x="200" y="150" mapIndex="5"/>			
 		</appointments>
+		
+		<dialogs>
+			<dialog partner="player" index="0">
+				<line index="0">
+					<version>Oh hello Link! What have you been up to?</version>
+				</line>
+				<line index="1">
+					<version>Oh that is nice! Say hello to him for me, will you?</version>
+					<version>Ah, she's in the area to the west, you'll find her outside or in the third house.</version>
+				</line>
+				<line index="2">
+					<version>Bye Link!</version>
+				</line>
+			</dialog>
+		</dialogs>
 	</npc>
 	
 	<npc>

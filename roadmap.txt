@@ -28,16 +28,28 @@ ATM - means is being worked on at the moment
 	  of pathfinding. In order to do that:
    6. [DONE] Create parent-child relationship to maps, for dungeons and towns etc. This means creating a proper datastructure
 
-5. Enable NPCs to do other various things
-   1. Be spoken to when clicked upon
-   2. [DONE] Automatically select the appropriate animation according to the direction of movement, or at no movement
+5. [DONE] Automatically select the appropriate animation according to the direction of movement, or at no movement
 
-6. [ATM] implement a streamlined process for NPC AI routines, that can be composed or built and therefore easily 
+6. [DONE] implement a streamlined process for NPC AI routines, that can be composed or built and therefore easily 
    changed, and fed to the NPC, that describe the movement actions given in point 4. A script file as XML would be a
    viable option. There I can determine at what times the NPC must walk to what global positions for example. Maybe entire
    dialogues and more can be stored there.
-
-8. display dialogue text
+   
+7. TextBox class for dialogs. There is a fixed size, and position can be adjusted. 
+   1. Check if the action button is being pressed to advance text and conversation
+   2. Dynamically set the display text from outside
+   3. Text wrapping and portioning
+   4. Letter-by-letter unrolling 
+   
+8. [ATM] Multiple-Choice Dialog
+   1. [ATM] Recognize the keypress from the player that should initiate conversation. needs to check the position and direction that the
+      player is facing. if there is an npc, update state variables
+   2. [DONE] Store dialogs and their text (with multiple choices for a single turn) in the xml files and load them into dialogs[] arrays
+      of NPCs and Player
+   3. Freeze gameplay when the player activates dialog with an npc (time freezes, etc)
+   4. Show correct dialog text
+   5. Read dialog-mode input only, instead of usual input
+   6. Display a list with all possible choices if there are more than one at a given time
 
 
 
