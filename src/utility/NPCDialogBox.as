@@ -5,7 +5,7 @@ package utility
 	 * ...
 	 * @author dolgion
 	 */
-	public class DialogTextBox
+	public class NPCDialogBox
 	{
 		public const DEFAULT_FONT_SIZE:int = 12;
 		
@@ -15,21 +15,23 @@ package utility
 		public var x:int;
 		public var y:int;
 		public var currentPage:int;
+		public var charsPerRow:int;
+		public var rowsPerPage:int;
 		private var text:String;
 		private var visibility:Boolean;
 		
-		public function DialogTextBox(_x:int, _y:int, _text:String, _scaleX:Number, _scaleY:Number)
+		
+		public function NPCDialogBox(_x:int, _y:int, _scaleX:Number, _scaleY:Number)
 		{
 			x = _x;
 			y = _y;
 			textBox = new TextBox(_x, _y,  _scaleX,  _scaleY);
-			
-			initDisplayTexts();
-			
-			setText(_text);
+			charsPerRow = _scaleX * 46;
+			rowsPerPage = _scaleY * 3;
+			initDisplayTexts(_scaleX);
 		}
 		
-		public function setText(_text:String):void
+		public function set line(_text:String):void
 		{
 			pages = new Array();
 			
@@ -41,15 +43,15 @@ package utility
 			{
 				// Going through all words of the given text
 				// the text must be distributed over pages, each able
-				// to contain 120 characters
+				// to contain [rowsPerPage * charsPerRow] characters
 				
 				// we count the characters of the words combined
-				// if the charCount would be above 120 if the 
+				// if the charCount would be above [rowsPerPage * charsPerRow] if the 
 				// next word was added, we know that the subset of 
 				// words from j to i has to be pushed into pages
 				charCount += words[i].length + (i - j); // i - j is to add up the spaces
 				
-				if (charCount > 210)
+				if (charCount > (charsPerRow * rowsPerPage))
 				{
 					// push the subset of words that is within 120 chars
 					pages.push(words.slice(j, i + 1));
@@ -75,23 +77,22 @@ package utility
 			
 			// this method has the task to display the current page 
 			// in the displayTexts array of DisplayText instances
-			// each line can contain 40 characters though, so if the page
+			// each line can contain [charsPerRow] characters though, so if the page
 			// has more characters in total, they must be broken up over
-			// maximum 3 rows. It is assured that a single page has
-			// at maximum 140 charactes though
+			// maximum [rowsPerPage] rows. It is assured that a single page has
+			// at maximum [rowsPerPage * charsPerRow] charactes though
 			
 			var displayTextIndex:int = 0;
 			var currentRow:int = 0;
 			var charCount:int = 0;
 			var j:int = 0;
 			var page:Array = pages[currentPage];
+			
 			for (var i:int = 0; i < page.length; i++)
 			{
-				
-				
 				charCount += page[i].length + (i - j);
 				
-				if (charCount > 70)
+				if (charCount > charsPerRow)
 				{
 					displayTexts[displayTextIndex].displayText.text = page.slice(j, i).join(" ");
 					displayTextIndex++;
@@ -108,17 +109,17 @@ package utility
 			currentPage++;
 		}
 		
-		public function initDisplayTexts():void
+		public function initDisplayTexts(_scaleX:int):void
 		{
-			for (var i:int = 0; i < 3; i++)
+			for (var i:int = 0; i < rowsPerPage; i++)
 			{
-				displayTexts[i] = new DisplayText("", x + 10, y + (i * 30), "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+				displayTexts[i] = new DisplayText("", x + 10 + (_scaleX * 3), y + (i * 30), "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			}
 		}
 		
 		public function resetDisplayTexts():void
 		{
-			for (var i:int = 0; i < 3; i++)
+			for (var i:int = 0; i < rowsPerPage; i++)
 			{
 				displayTexts[i].displayText.text = "";
 			}

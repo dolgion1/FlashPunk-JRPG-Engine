@@ -17,21 +17,32 @@ package utility
 			
 		}
 		
-		public function getNextLine():String
+		public function get dialogHasEnded():Boolean
 		{
 			if (currentLine >= currentDialog[currentTurn].lines.length) 
 			{
 				currentTurn = 0;
 				currentLine = 0;
-				return null;
+				return true;
 			}
-			var nextLine:String = currentDialog[currentTurn].lines[currentLine].versions[0];
-			
-			if (currentTurn == 1) currentLine++;
-			currentTurn++;
-			if (currentTurn == 2) currentTurn = 0;
+			else return false;
+		}
+		
+		public function nextNPCLine(_playerResponse:int):String
+		{
+			var nextLine:String = currentDialog[0].lines[currentLine].versions[_playerResponse];
+			currentTurn = 1;
 			
 			return nextLine;
+		}
+		
+		public function get nextPlayerLineVersions():Array
+		{
+			var nextLineVersions:Array = currentDialog[1].lines[currentLine].versions;
+			currentTurn = 0;
+			currentLine++;
+			
+			return nextLineVersions;
 		}
 		
 		public function setCurrentDialogWithPlayer(_player:Player, _npcName:String, _npcs:Array):Boolean

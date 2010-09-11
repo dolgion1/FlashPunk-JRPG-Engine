@@ -26,8 +26,8 @@ package worlds
 		public var mapDisplay:DisplayText;
 		public var daytimeDisplay:DisplayText;
 		public var timeDisplay:DisplayText;
-		public var npcTextBox:DialogTextBox;
-		public var playerTextBox:DialogTextBox;
+		public var npcDialogBox:NPCDialogBox;
+		public var playerDialogBox:PlayerDialogBox;
 		public var gridOverlays:Array = new Array();
 		
 		// Helper Datastructures
@@ -61,6 +61,8 @@ package worlds
 			// set up camera
 			camera = new Camera(200, Player.speed);
 			camera.adjustToPlayer(currentMap.height, currentMap.width, player);
+			
+			defineInputKeys();
 		}
 		
 		override public function update():void
@@ -76,14 +78,14 @@ package worlds
 			}
 			else if (inDialog) // Check if in dialog mode
 			{
-				if (!npcTextBox.visible) // dialog was just initiated
+				if (!npcDialogBox.visible) // dialog was just initiated
 				{
 					if (dialogManager.setCurrentDialogWithPlayer(player, player.dialogPartner, npcs))
 					{
-						npcTextBox.visible = true;
+						npcDialogBox.visible = true;
 						
 						// find the dialog that is to be displayed
-						npcTextBox.setText(dialogManager.getNextLine());
+						npcDialogBox.line = dialogManager.nextNPCLine(0);
 					}
 					else inDialog = false;
 				}
@@ -91,10 +93,10 @@ package worlds
 			}
 			else // normal mode
 			{
-				if (npcTextBox.visible)
+				if (npcDialogBox.visible)
 				{
-					npcTextBox.visible = false;
-					playerTextBox.visible = false;
+					npcDialogBox.visible = false;
+					playerDialogBox.visible = false;
 				}
 				
 				// Iterate the global time
@@ -208,49 +210,50 @@ package worlds
 			add(timeDisplay);
 			
 			// create the text box of the npc
-			npcTextBox = new DialogTextBox(200, 60, "Sample text for a dialog", 1.5, 1);
-			npcTextBox.visible = false;
-			add(npcTextBox.textBox);
-			addList(npcTextBox.displayTexts);
+			npcDialogBox = new NPCDialogBox(200, 60, 1.5, 1);
+			npcDialogBox.visible = false;
+			add(npcDialogBox.textBox);
+			addList(npcDialogBox.displayTexts);
 			
 			// create the text box of the player
-			playerTextBox = new DialogTextBox(100, 300, "Sample text for a dialog", 1.5, 1);
-			playerTextBox.visible = false;
-			add(playerTextBox.textBox);
-			addList(playerTextBox.displayTexts);
+			playerDialogBox = new PlayerDialogBox(10, 320, 2.5, 1.5);
+			playerDialogBox.visible = false;
+			add(playerDialogBox.textBox);
+			addList(playerDialogBox.displayTexts);
 		}
 		
 		public function processGeneralInput():void
 		{
 			// Check for input that opens or closes the world map
-			if (Input.check(Key.M))
+			if (Input.check("map"))
 				if (!worldMapOpened) openWorldMap();
 			
-			if (Input.check(Key.ESCAPE))
+			if (Input.check("exit"))
 				if (worldMapOpened) closeWorldMap();
 				
 			if (dialogEndedThisFrame) dialogEndedThisFrame = false;
 				
-			if (Input.pressed(Key.SPACE))
+			if (Input.pressed("action"))
+			{
 				if (inDialog)
 				{
-					if ((dialogManager.currentTurn == 1) && (npcTextBox.currentPage < npcTextBox.pages.length))
+					if ((dialogManager.currentTurn == 1) && (npcDialogBox.currentPage < npcDialogBox.pages.length))
 					{
-						npcTextBox.nextPage();
+						npcDialogBox.nextPage();
 					}
 					else 
 					{
-						var nextLine:String = dialogManager.getNextLine();
-						if (nextLine != null)
+						if (!dialogManager.dialogHasEnded)
 						{
-							if ((dialogManager.currentTurn == 1))
+							if ((dialogManager.currentTurn == 0))
 							{
-								npcTextBox.setText(nextLine);
+								npcDialogBox.line = dialogManager.nextNPCLine(playerDialogBox.chosenVersion - 1);
 							}
 							else 
 							{
-								if (!playerTextBox.visible) playerTextBox.visible = true;
-								playerTextBox.setText(nextLine);
+								if (!playerDialogBox.visible) playerDialogBox.visible = true;
+								
+								playerDialogBox.lineVersions = dialogManager.nextPlayerLineVersions;
 							}
 						}
 						else 
@@ -260,6 +263,25 @@ package worlds
 						}
 					}
 				}
+			}
+			
+			if (Input.pressed("scroll_up"))
+			{
+				if (inDialog && dialogManager.currentTurn == 0)
+				{
+					playerDialogBox.scrollUp();
+				}
+				
+			}
+			
+			if (Input.pressed("scroll_down"))
+			{
+				if (inDialog && dialogManager.currentTurn == 0)
+				{
+					playerDialogBox.scrollDown();
+				}
+				
+			}
 		}
 		
 		public function resetStage():void
@@ -356,6 +378,15 @@ package worlds
 			else if (player.y > currentMap.height) return Map.SOUTH;
 			
 			return Map.NONE;
+		}
+		
+		public function defineInputKeys():void
+		{
+			Input.define("scroll_up", Key.W, Key.UP);
+			Input.define("scroll_down", Key.S, Key.DOWN);
+			Input.define("map", Key.M);
+			Input.define("exit", Key.ESCAPE);
+			Input.define("action", Key.SPACE);
 		}
 	}
 }
