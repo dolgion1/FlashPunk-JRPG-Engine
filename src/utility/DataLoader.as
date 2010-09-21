@@ -38,15 +38,14 @@ package utility
 			
 			for each (p in playerDataXML.player.dialogs.dialog)
 			{
-				// trace("Partner: " + p.@partner);
+				// Gonna loop through all the lines in the current dialog
 				var playerDialogLines:Array = new Array();
 				for each (q in p.line)
 				{
 					var playerDialogLineVersions:Array = new Array();
-					// trace("  a new general line: " + q.@index);
+					// gonna loop through all possible dialog options
 					for each (r in q.version)
 					{
-						// trace("    a version of it: " + r);
 						playerDialogLineVersions.push(r);
 					}
 					var playerDialogLine:Line = new Line(q.@index, playerDialogLineVersions);
@@ -130,16 +129,14 @@ package utility
 				var npcDialogs:Array = new Array();
 				for each (p in o.dialogs.dialog)
 				{
-					
-					// trace("Partner: " + p.@partner);
+					// loop through all lines in the current dialog
 					var npcDialogLines:Array = new Array();
 					for each (q in p.line)
 					{
 						var npcDialogLineVersions:Array = new Array();
-						// trace("  a new general line: " + q.@index);
+						// loop through all possible dialog options
 						for each (r in q.version)
 						{
-							// trace("    a version of it: " + r);
 							npcDialogLineVersions.push(r);
 						}
 						var npcDialogLine:Line = new Line(q.@index, npcDialogLineVersions);

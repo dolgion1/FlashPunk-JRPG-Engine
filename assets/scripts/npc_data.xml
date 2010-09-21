@@ -25,6 +25,19 @@
 					<version>Bye Link!</version>
 				</line>
 			</dialog>
+			<dialog partner="player" index="1">
+				<line index="0">
+					<version>What now?</version>
+				</line>
+				<line index="1">
+					<version>I said she is in the map to THE WEST! You dumbass!</version>
+					<version>Oh well, I suppose that's YOUR problem.</version>
+					<version>BLOW IT OUT YOUR ASS!</version>
+				</line>
+				<line index="2">
+					<version>Ciao...</version>
+				</line>
+			</dialog>
 		</dialogs>
 	</npc>
 	

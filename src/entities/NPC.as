@@ -93,7 +93,7 @@ package entities
 			}
 			npcSpritemap.play(curAnimation);
 			
-			if (currentActivity == WALK && (!Game.inDialog))
+			if (currentActivity == WALK && (Game.gameMode != Game.DIALOG_MODE))
 			{
 				walkProcedure();
 			}

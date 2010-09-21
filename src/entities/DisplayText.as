@@ -9,9 +9,6 @@ package entities
 	 */
 	public class DisplayText extends Entity
 	{
-		//[Embed(source = '../../assets/fonts/arial.ttf', fontFamily = 'default')]
-		//private const BIOTYPE:Class;
-
 		public var displayText:Text;
 		public var xOffset:Number;
 		public var yOffset:Number;

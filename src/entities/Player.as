@@ -64,7 +64,7 @@ package entities
 			playerSpritemap.play(curAnimation);
 			
 			// Movement input checks
-			if (!Game.inDialog)
+			if (Game.gameMode != Game.DIALOG_MODE)
 			{
 				if (Input.check("walk_left"))
 				{
@@ -141,7 +141,7 @@ package entities
 			}
 			
 			// Interaction input checks
-			if (Input.pressed("action") && (!Game.inDialog) && (!Game.dialogEndedThisFrame))
+			if (Input.pressed("action") && (Game.gameMode != Game.DIALOG_MODE) && (!Game.dialogEndedThisFrame))
 			{
 				var npc:NPC;
 				if (curAnimation == "walk_left" || 
@@ -150,9 +150,9 @@ package entities
 					if (collide("npc", x - 3, y))
 					{
 						npc = collide("npc", x - 3, y) as NPC;
-						if (!Game.inDialog) 
+						if (Game.gameMode != Game.DIALOG_MODE) 
 						{
-							Game.inDialog = true;
+							Game.gameMode = Game.DIALOG_MODE;
 							dialogPartner = npc.name;
 						}
 					}
@@ -163,9 +163,9 @@ package entities
 					if (collide("npc", x + 3, y))
 					{
 						npc = collide("npc", x + 3, y) as NPC;
-						if (!Game.inDialog) 
+						if (Game.gameMode != Game.DIALOG_MODE) 
 						{
-							Game.inDialog = true;
+							Game.gameMode = Game.DIALOG_MODE;
 							dialogPartner = npc.name;
 						}
 					}
@@ -176,9 +176,9 @@ package entities
 					if (collide("npc", x, y - 3))
 					{
 						npc = collide("npc", x, y - 3) as NPC;
-						if (!Game.inDialog) 
+						if (Game.gameMode != Game.DIALOG_MODE) 
 						{
-							Game.inDialog = true;
+							Game.gameMode = Game.DIALOG_MODE;
 							dialogPartner = npc.name;
 						}
 					}	
@@ -189,9 +189,9 @@ package entities
 					if (collide("npc", x, y + 3))
 					{
 						npc = collide("npc", x, y + 3) as NPC;
-						if (!Game.inDialog) 
+						if (Game.gameMode != Game.DIALOG_MODE) 
 						{
-							Game.inDialog = true;
+							Game.gameMode = Game.DIALOG_MODE;
 							dialogPartner = npc.name;
 						}
 					}

@@ -9,8 +9,10 @@ package utility
 	{
 		public const DEFAULT_FONT_SIZE:int = 12;
 		
+		// entities
 		public var textBox:TextBox;
 		public var displayTexts:Array = new Array();
+		
 		public var pages:Array = new Array();
 		public var x:int;
 		public var y:int;
@@ -19,7 +21,6 @@ package utility
 		public var rowsPerPage:int;
 		private var text:String;
 		private var visibility:Boolean;
-		
 		
 		public function NPCDialogBox(_x:int, _y:int, _scaleX:Number, _scaleY:Number)
 		{
@@ -53,7 +54,7 @@ package utility
 				
 				if (charCount > (charsPerRow * rowsPerPage))
 				{
-					// push the subset of words that is within 120 chars
+					// push the subset of words that is within [charsPerRow * rowsPerPage] chars
 					pages.push(words.slice(j, i + 1));
 					charCount = 0;
 					j = i;

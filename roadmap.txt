@@ -35,21 +35,22 @@ ATM - means is being worked on at the moment
    viable option. There I can determine at what times the NPC must walk to what global positions for example. Maybe entire
    dialogues and more can be stored there.
    
-7. TextBox class for dialogs. There is a fixed size, and position can be adjusted. 
-   1. Check if the action button is being pressed to advance text and conversation
-   2. Dynamically set the display text from outside
-   3. Text wrapping and portioning
-   4. Letter-by-letter unrolling 
+7. [DONE] TextBox class for dialogs. Size and position can be adjusted. 
+   1. [DONE] Check if the action button is being pressed to advance text and conversation
+   2. [DONE] Dynamically set the display text from outside through a dialog manager
+   3. [DONE] Text wrapping and portioning
+   4. [LATER] Letter-by-letter unrolling 
    
 8. [ATM] Multiple-Choice Dialog
-   1. [ATM] Recognize the keypress from the player that should initiate conversation. needs to check the position and direction that the
+   1. [DONE] Recognize the keypress from the player that should initiate conversation. needs to check the position and direction that the
       player is facing. if there is an npc, update state variables
    2. [DONE] Store dialogs and their text (with multiple choices for a single turn) in the xml files and load them into dialogs[] arrays
       of NPCs and Player
-   3. Freeze gameplay when the player activates dialog with an npc (time freezes, etc)
-   4. Show correct dialog text
-   5. Read dialog-mode input only, instead of usual input
-   6. Display a list with all possible choices if there are more than one at a given time
+   3. [DONE] Freeze gameplay when the player activates dialog with an npc (time freezes, etc)
+   4. [DONE] Show correct dialog text
+   5. [DONE] Read dialog-mode input only, instead of usual input
+   6. [DONE] Display a list with all possible choices if there are more than one at a given time
+   7. [DONE] A given answer invokes the corresponding response of the NPC
 
 
 

@@ -15,6 +15,10 @@ package worlds
 	 */
 	public class Game extends World
 	{
+		public static const NORMAL_MODE:int = 0;
+		public static const WORLD_MAP_MODE:int = 1;
+		public static const DIALOG_MODE:int = 2;
+		
 		// Entities
 		public var player:Player;
 		public var npcs:Array = new Array();
@@ -37,9 +41,9 @@ package worlds
 		
 		// Helper state variables
 		public static var currentMapIndex:int;
-		public static var inDialog:Boolean = false;
+		public static var gameMode:int = NORMAL_MODE;
+		public var dialogModeInitiated:Boolean = false;
 		public static var dialogEndedThisFrame:Boolean = false;
-		public var worldMapOpened:Boolean = false;
 		
 		// Utilities
 		public var time:Time = new Time();
@@ -72,33 +76,19 @@ package worlds
 			
 			super.update();
 			
-			if (worldMapOpened) // Check if in world map mode
+			if (gameMode == WORLD_MAP_MODE) // Check if in world map mode
 			{
 				return;
 			}
-			else if (inDialog) // Check if in dialog mode
+			else if (gameMode == DIALOG_MODE) // Check if in dialog mode
 			{
-				if (!npcDialogBox.visible) // dialog was just initiated
-				{
-					if (dialogManager.setCurrentDialogWithPlayer(player, player.dialogPartner, npcs))
-					{
-						npcDialogBox.visible = true;
-						
-						// find the dialog that is to be displayed
-						npcDialogBox.line = dialogManager.nextNPCLine(0);
-					}
-					else inDialog = false;
-				}
+				if (!dialogModeInitiated)
+					initiateDialogMode();
+				
 				return;
 			}
 			else // normal mode
 			{
-				if (npcDialogBox.visible)
-				{
-					npcDialogBox.visible = false;
-					playerDialogBox.visible = false;
-				}
-				
 				// Iterate the global time
 				var currentTime:Array = time.newMinute();
 				if (currentTime)
@@ -222,65 +212,78 @@ package worlds
 			addList(playerDialogBox.displayTexts);
 		}
 		
+		public function initiateDialogMode():void
+		{
+			if (dialogManager.setCurrentDialogWithPlayer(player, getNPCByName(player.dialogPartner)))
+			{
+				dialogModeInitiated = true;
+				npcDialogBox.visible = true;
+				
+				// find the dialog that is to be displayed
+				npcDialogBox.line = dialogManager.nextNPCLine(0);
+			}
+			else gameMode = NORMAL_MODE;
+		}
+		
 		public function processGeneralInput():void
 		{
-			// Check for input that opens or closes the world map
-			if (Input.check("map"))
-				if (!worldMapOpened) openWorldMap();
-			
-			if (Input.check("exit"))
-				if (worldMapOpened) closeWorldMap();
-				
-			if (dialogEndedThisFrame) dialogEndedThisFrame = false;
-				
-			if (Input.pressed("action"))
-			{
-				if (inDialog)
-				{
-					if ((dialogManager.currentTurn == 1) && (npcDialogBox.currentPage < npcDialogBox.pages.length))
+			if (gameMode == DIALOG_MODE)
+			{	
+				if (Input.pressed("action"))
+				{					
+					if (!dialogManager.dialogHasEnded)
 					{
-						npcDialogBox.nextPage();
-					}
-					else 
-					{
-						if (!dialogManager.dialogHasEnded)
+						if ((npcDialogBox.currentPage < npcDialogBox.pages.length))
 						{
-							if ((dialogManager.currentTurn == 0))
-							{
-								npcDialogBox.line = dialogManager.nextNPCLine(playerDialogBox.chosenVersion - 1);
-							}
-							else 
-							{
-								if (!playerDialogBox.visible) playerDialogBox.visible = true;
-								
-								playerDialogBox.lineVersions = dialogManager.nextPlayerLineVersions;
-							}
+							npcDialogBox.nextPage();
+						}
+						else if ((dialogManager.currentTurn == dialogManager.NPC_TURN))
+						{
+							npcDialogBox.line = dialogManager.nextNPCLine(playerDialogBox.chosenVersion - 1);
 						}
 						else 
 						{
-							inDialog = false;
-							dialogEndedThisFrame = true;
+							if (!playerDialogBox.visible) playerDialogBox.visible = true;
+							
+							playerDialogBox.lineVersions = dialogManager.nextPlayerLineVersions;
 						}
+					}
+					else 
+					{
+						gameMode = NORMAL_MODE;
+						dialogEndedThisFrame = true;
+						npcDialogBox.visible = false;
+						playerDialogBox.visible = false;
+						dialogModeInitiated = false;
+					}
+				}
+				
+				if (Input.pressed("selection_up"))
+				{
+					if (dialogManager.currentTurn == dialogManager.NPC_TURN)
+					{
+						playerDialogBox.selectionUp();
+					}
+				}
+				
+				if (Input.pressed("selection_down"))
+				{
+					if (dialogManager.currentTurn == dialogManager.NPC_TURN)
+					{
+						playerDialogBox.selectionDown();
 					}
 				}
 			}
-			
-			if (Input.pressed("scroll_up"))
+			else
 			{
-				if (inDialog && dialogManager.currentTurn == 0)
-				{
-					playerDialogBox.scrollUp();
-				}
+				// Check for input that opens or closes the world map
+				if (Input.check("map"))
+					if (gameMode == NORMAL_MODE) openWorldMap();
 				
-			}
-			
-			if (Input.pressed("scroll_down"))
-			{
-				if (inDialog && dialogManager.currentTurn == 0)
-				{
-					playerDialogBox.scrollDown();
-				}
-				
+				if (Input.check("exit"))
+					if (gameMode == WORLD_MAP_MODE) closeWorldMap();
+					
+				if (dialogEndedThisFrame) dialogEndedThisFrame = false;
 			}
 		}
 		
@@ -293,7 +296,7 @@ package worlds
 		
 		public function openWorldMap():void
 		{
-			worldMapOpened = true;
+			gameMode = WORLD_MAP_MODE;
 			removeAll();
 			worldMap = new WorldMap();
 			
@@ -314,7 +317,7 @@ package worlds
 		
 		public function closeWorldMap():void 
 		{
-			worldMapOpened = false;
+			gameMode = NORMAL_MODE;
 			resetStage();
 		}
 		
@@ -382,11 +385,21 @@ package worlds
 		
 		public function defineInputKeys():void
 		{
-			Input.define("scroll_up", Key.W, Key.UP);
-			Input.define("scroll_down", Key.S, Key.DOWN);
+			Input.define("selection_up", Key.W, Key.UP);
+			Input.define("selection_down", Key.S, Key.DOWN);
 			Input.define("map", Key.M);
 			Input.define("exit", Key.ESCAPE);
 			Input.define("action", Key.SPACE);
+		}
+		
+		public function getNPCByName(_name:String):NPC
+		{
+			for each (var n:NPC in npcs)
+			{
+				if (n.name == _name) return n;
+			}
+			
+			return null;
 		}
 	}
 }

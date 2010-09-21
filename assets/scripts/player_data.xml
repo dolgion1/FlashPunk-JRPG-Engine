@@ -16,6 +16,16 @@
 					<version>Bye Zelda!</version>
 				</line>
 			</dialog>
+			<dialog partner="Zelda" index="1">
+				<line index="0">
+					<version>Where was she again?!</version>
+					<version>That stupid old woman won't talk to me. Absolutely silent.</version>
+					<version>...and grandpa found a dinosaur egg, but then grandma said "It's not a dinosaur egg, it's still warm. Somebody left it there and you better put it back..."</version>
+				</line>
+				<line index="1">
+					<version>Whatever..!</version>
+				</line>
+			</dialog>
 		</dialogs>
 	</player>
 </data>

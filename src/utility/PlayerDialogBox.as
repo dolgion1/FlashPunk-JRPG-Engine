@@ -9,8 +9,10 @@ package utility
 	{
 		public const DEFAULT_FONT_SIZE:int = 12;
 		
+		// entities
 		public var textBox:TextBox;
 		public var displayTexts:Array = new Array();
+		
 		public var dialogOptions:Array = new Array();
 		public var displayTextFeed:Array = new Array();
 		public var x:int;
@@ -23,8 +25,6 @@ package utility
 		public var chosenVersion:int;
 		private var text:String;
 		private var visibility:Boolean;
-		
-		
 		private var charCount:int;
 		private var words:Array = new Array();
 		
@@ -54,14 +54,14 @@ package utility
 				var j:int = 0;
 				for (var i:int = 0; i < words.length; i++)
 				{
-					charCount += words[i].length + i;
+					charCount += words[i].length + (i - j);
 					if (charCount > charsPerRow)
 					{
 						// We take the previous elements
 						// and join them together with a space character
 						// it becomes a member in the displayTextFeed
 						var line:String = words.slice(j, i).join(" ");
-						displayTextFeed.push(line);
+						displayTextFeed.push(new DisplayTextFeed(line, dCounter - 1));
 						j = i;
 						charCount = 0;
 						
@@ -72,7 +72,7 @@ package utility
 					}
 					if (i == words.length - 1)
 					{
-						displayTextFeed.push(words.slice(j, i + 1).join(" "));
+						displayTextFeed.push(new DisplayTextFeed(words.slice(j, i + 1).join(" "), dCounter - 1));
 						if (endDisplayTextFeedIndex < maxRows)
 						{
 							endDisplayTextFeedIndex = displayTextFeed.length;
@@ -84,77 +84,130 @@ package utility
 			// At this point, we have the altered displayTextFeed ready for serving
 			chosenVersion = 1;
 			populateDisplayTexts();
+			highlightChosenVersion();
 		}
 		
 		public function populateDisplayTexts():void
 		{
 			// clear up eventual text from before
 			resetDisplayTexts();
-			var currentVersion:int = chosenVersion;
 			var displayTextIndex:int = 0;
-			var chosenRows:Array = new Array(); // contains the indices of displayTexts elements that are to be highlighted
 			for (var i:int = startDisplayTextFeedIndex; i < endDisplayTextFeedIndex; i++)
 			{
-				if (displayTextFeed[i].charCodeAt(0) >= 49 && 
-					displayTextFeed[i].charCodeAt(0) <= 57)
+				if (displayTextFeed[i].text.charCodeAt(0) >= 49 && 
+					displayTextFeed[i].text.charCodeAt(0) <= 57)
 				{
-					currentVersion = int(versionPortion(displayTextFeed[i]));
-					displayTexts[displayTextIndex].displayText.text = displayTextFeed[i];
-					
-					// When the beginning of a new dialog option is at the first row,
-					// update the current version
-					if (displayTextIndex == 0) 
-					{
-						chosenVersion = currentVersion;
-						displayTexts[displayTextIndex].displayText.color = 0xFF0000;
-						displayTexts[displayTextIndex].displayText.size = 14;
-					}
+					displayTexts[displayTextIndex].displayText.text = displayTextFeed[i].text;
 				}
 				else
 				{
-					displayTexts[displayTextIndex].displayText.text = "  " + displayTextFeed[i];
-					if (currentVersion == chosenVersion)
-					{
-						displayTexts[displayTextIndex].displayText.color = 0xFF0000;
-						displayTexts[displayTextIndex].displayText.size = 14;
-					}
+					displayTexts[displayTextIndex].displayText.text = "  " + displayTextFeed[i].text;
 				}
-				
-				
 				displayTextIndex++;
 			}
-			
 		}
 		
-		public function versionPortion(_line:String):String
+		public function highlightChosenVersion():void
+		{
+			// find the displayTexts that show a part if not the entire dialog option
+			// and highlight them
+			var currentDisplayText:int = 0;
+			for (var i:int = startDisplayTextFeedIndex; i < endDisplayTextFeedIndex; i++)
+			{
+				if (displayTextFeed[i].version == chosenVersion)
+				{
+					highlightDisplayText(currentDisplayText);
+				}
+				else
+				{
+					unhighlightDisplayText(currentDisplayText);
+				}
+				currentDisplayText++;
+			}
+		}
+		
+		public function versionPortion(_line:String):int
 		{
 			for (var i:int = 0; i < _line.length; i++)
 			{
 				if (_line.charAt(i) == ".")
 				{
-					return _line.substring(0, i);
+					return int(_line.substring(0, i));
 				}
 			}
-			return null;
+			return -1;
 		}
 		
-		public function scrollUp():void
+		public function selectionUp():void
 		{
-			if (startDisplayTextFeedIndex > 0)
+			if (chosenVersion > 1)
 			{
-				startDisplayTextFeedIndex--;
-				endDisplayTextFeedIndex--;
-				populateDisplayTexts();
+				chosenVersion--;
+				changeSelection("up");
 			}
 		}
 		
-		public function scrollDown():void
+		public function selectionDown():void
 		{
-			if (endDisplayTextFeedIndex < displayTextFeed.length)
+			if (chosenVersion < dialogOptions.length)
 			{
-				startDisplayTextFeedIndex++;
-				endDisplayTextFeedIndex++;
+				chosenVersion++;
+				changeSelection("down");
+			}
+		}
+		
+		public function changeSelection(_direction:String):void
+		{
+			// find out if the chosen dialog option is displayed in the text box
+			var startIndex:int = 0;
+			var endIndex:int = 0;
+			for (var i:int = 0; i < displayTextFeed.length; i++)
+			{
+				if (displayTextFeed[i].version == chosenVersion)
+				{
+					startIndex = i;
+					break;
+				}
+			}
+			for (i = startIndex; i < displayTextFeed.length; i++)
+			{
+				if (displayTextFeed[i].version != chosenVersion)
+				{
+					endIndex = i;
+					break;
+				}
+				else if (i == displayTextFeed.length - 1)
+				{
+					endIndex = displayTextFeed.length;
+					break;
+				}
+			}
+			
+			// if the dialog option is too huge to display all at once, display the first portion
+			if (maxRows < (endIndex - startIndex)) 
+			{
+				startDisplayTextFeedIndex = startIndex;
+				endDisplayTextFeedIndex = startDisplayTextFeedIndex + maxRows;
 				populateDisplayTexts();
+				highlightChosenVersion();
+			}
+			else if ((_direction == "up") && (startDisplayTextFeedIndex > startIndex)) // if the dialog portion starts above what is seen now, scroll there
+			{
+				startDisplayTextFeedIndex = startIndex;
+				endDisplayTextFeedIndex = startDisplayTextFeedIndex + maxRows;
+				populateDisplayTexts();
+				highlightChosenVersion();
+			}
+			else if ((_direction == "down") && (endDisplayTextFeedIndex < endIndex)) // if the dialog portion ends below what is seen now, scroll there
+			{
+				endDisplayTextFeedIndex = endIndex;
+				startDisplayTextFeedIndex = endDisplayTextFeedIndex - maxRows;
+				populateDisplayTexts();
+				highlightChosenVersion();
+			}
+			else // simply change the highlight, since the dialog option is already fully visible
+			{
+				highlightChosenVersion();
 			}
 		}
 		
@@ -174,6 +227,16 @@ package utility
 				displayTexts[i].displayText.color = 0xFFFFFF;
 				displayTexts[i].displayText.size = DEFAULT_FONT_SIZE;
 			}
+		}
+		
+		public function highlightDisplayText(_index:int):void
+		{
+			displayTexts[_index].displayText.color = 0xFF0000;
+		}
+		
+		public function unhighlightDisplayText(_index:int):void
+		{
+			displayTexts[_index].displayText.color = 0xFFFFFF;
 		}
 		
 		public function get visible():Boolean
