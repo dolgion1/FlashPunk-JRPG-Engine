@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<items>
+		<weapons>
+			<!-->
+				DAMAGE TYPES:
+					Slashing - 0
+					Piercing - 1
+					Impact - 2
+					Magic - 3
+				ATTACK TYPES:
+					Melee - 0
+					Ranged - 1
+			</!-->
+			<weapon name="Steel Sword">
+				<damagetype>0</damagetype>
+				<attacktype>0</attacktype>
+				<twohanded>false</twohanded>
+				<damagerating>5</damagerating>
+			</weapon>
+			<weapon name="Dagger">
+				<damagetype>1</damagetype>
+				<attacktype>0</attacktype>
+				<twohanded>false</twohanded>
+				<damagerating>4</damagerating>
+			</weapon>
+			<weapon name="Short Bow">
+				<damagetype>1</damagetype>
+				<attacktype>1</attacktype>
+				<twohanded>true</twohanded>
+				<damagerating>5</damagerating>
+			</weapon>
+		</weapons>
+		
+		<!-->
+			ARMOR TYPES:
+				Head - 0
+				Torso - 1
+				Legs - 2
+				Hands - 3
+				Feet - 4
+		</!-->
+		<armors>
+			<armor name="Cotton Hood">
+				<armortype>0</armortype>
+				<armorrating>2</armorrating>
+			</armor>
+			<armor name="Gay Leather Hat">
+				<armortype>0</armortype>
+				<armorrating>0</armorrating>
+			</armor>
+			<armor name="Cotton Coat">
+				<armortype>1</armortype>
+				<armorrating>4</armorrating>
+			</armor>
+			<armor name="Gay Pink Shirt">
+				<armortype>1</armortype>
+				<armorrating>0</armorrating>
+			</armor>
+			<armor name="Leather Pants">
+				<armortype>2</armortype>
+				<armorrating>2</armorrating>
+			</armor>
+			<armor name="Gay Leopard Pants">
+				<armortype>2</armortype>
+				<armorrating>0</armorrating>
+			</armor>
+			<armor name="Leather Boots">
+				<armortype>4</armortype>
+				<armorrating>2</armorrating>
+			</armor>
+			<armor name="Gay Sandals">
+				<armortype>4</armortype>
+				<armorrating>0</armorrating>
+			</armor>
+			<armor name="Woolen Gloves">
+				<armortype>3</armortype>
+				<armorrating>2</armorrating>
+			</armor>
+			<armor name="Gay Leopard Gloves">
+				<armortype>3</armortype>
+				<armorrating>0</armorrating>
+			</armor>
+		</armors>
+		
+		<consumables>
+			
+		</consumables>
+	</items>
+</data>

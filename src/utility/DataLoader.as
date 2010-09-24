@@ -22,6 +22,7 @@ package utility
 		[Embed(source = "../../assets/scripts/player_data.xml", mimeType = "application/octet-stream")] private var playerData:Class;
 		[Embed(source = "../../assets/scripts/map_data.xml", mimeType = "application/octet-stream")] private var mapData:Class;
 		[Embed(source = "../../assets/scripts/npc_data.xml", mimeType = "application/octet-stream")] private var npcData:Class;
+		[Embed(source = "../../assets/scripts/item_data.xml", mimeType = "application/octet-stream")] private var itemData:Class;
 		
 		public function DataLoader() {}
 		
@@ -151,6 +152,47 @@ package utility
 			}
 			
 			return npcs;
+		}
+		
+		public function setupItems():Array
+		{
+			var itemDataByteArray:ByteArray = new itemData;
+			var itemDataXML:XML = new XML(itemDataByteArray.readUTFBytes(itemDataByteArray.length));
+			var i:XML;
+			var q:XML;
+			var r:XML;
+			var items:Array = new Array();
+			var weapons:Array = new Array();
+			var armors:Array = new Array();
+			
+			for each (i in itemDataXML.items.weapons.weapon)
+			{
+				var weapon:Weapon = new Weapon();
+				weapon.name = i.@name;
+				weapon.damageType = i.damagetype;	
+				weapon.attackType = i.attacktype;
+				weapon.damageRating = i.damagerating
+				
+				if (i.twohanded == "true") weapon.twoHanded = true;
+				else weapon.twoHanded = false;
+				
+				weapons.push(weapon);
+			}
+			
+			for each (i in itemDataXML.items.armors.armor)
+			{
+				var armor:Armor = new Armor();
+				armor.name = i.@name;
+				armor.armorType = i.armortype;
+				armor.armorRating= i.armorrating;
+				
+				armors.push(armor);
+			}
+			
+			items.push(weapons);
+			items.push(armors);
+			
+			return items;
 		}
 	}
 

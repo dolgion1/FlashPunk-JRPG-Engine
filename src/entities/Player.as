@@ -34,6 +34,15 @@ package entities
 		public var dialogsInTotal:Dictionary = new Dictionary();
 		public var dialogCounters:Dictionary = new Dictionary();
 		
+		// character stats
+		public var experience:int = 0;
+		public var strength:int = 10;
+		public var agility:int = 10;
+		public var intelligence:int = 10;
+		
+		public var items:Array = new Array();
+		public var equipment:Dictionary = new Dictionary();
+		
 		public function Player(_position:GlobalPosition, _dialogs:Array)
 		{
 			setupSpritesheet();
@@ -50,6 +59,7 @@ package entities
 			type = "player";
 			
 			defineInputKeys();
+			initEquipment();
 		}
 		
 		override public function update():void
@@ -64,7 +74,7 @@ package entities
 			playerSpritemap.play(curAnimation);
 			
 			// Movement input checks
-			if (Game.gameMode != Game.DIALOG_MODE)
+			if (Game.gameMode == Game.NORMAL_MODE)
 			{
 				if (Input.check("walk_left"))
 				{
@@ -247,6 +257,22 @@ package entities
 					dialogsInTotal[d.partner]++;
 				}
 			}
+		}
+		
+		public function initEquipment():void
+		{
+			equipment["WeaponEquipPrimary"] = null;
+			equipment["WeaponEquipSecondary"] = null;
+			equipment["ArmorEquipHead"] = null;
+			equipment["ArmorEquipTorso"] = null;
+			equipment["ArmorEquipLegs"] = null;
+			equipment["ArmorEquipHands"] = null;
+			equipment["ArmorEquipFeet"] = null;
+		}
+		
+		public function get stats():Array
+		{
+			return new Array(experience, strength, agility, intelligence);
 		}
 	}
 }

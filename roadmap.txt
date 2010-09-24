@@ -41,7 +41,7 @@ ATM - means is being worked on at the moment
    3. [DONE] Text wrapping and portioning
    4. [LATER] Letter-by-letter unrolling 
    
-8. [ATM] Multiple-Choice Dialog
+8. [DONE] Multiple-Choice Dialog
    1. [DONE] Recognize the keypress from the player that should initiate conversation. needs to check the position and direction that the
       player is facing. if there is an npc, update state variables
    2. [DONE] Store dialogs and their text (with multiple choices for a single turn) in the xml files and load them into dialogs[] arrays
@@ -52,6 +52,9 @@ ATM - means is being worked on at the moment
    6. [DONE] Display a list with all possible choices if there are more than one at a given time
    7. [DONE] A given answer invokes the corresponding response of the NPC
 
+9. Menu with a list of sections and a view of the stats of the player. Sections are:
+	1. Inventory
+	
 
 
 Minor changes:

@@ -18,10 +18,13 @@ package worlds
 		public static const NORMAL_MODE:int = 0;
 		public static const WORLD_MAP_MODE:int = 1;
 		public static const DIALOG_MODE:int = 2;
+		public static const STATUS_SCREEN_MODE:int = 3;
+		public static const INVENTORY_SCREEN_MODE:int = 4;
 		
 		// Entities
 		public var player:Player;
 		public var npcs:Array = new Array();
+		public var items:Array = new Array();
 		public var tiles:Tiles;
 		public var trees:Trees;
 		public var houses:Array;
@@ -33,6 +36,8 @@ package worlds
 		public var npcDialogBox:NPCDialogBox;
 		public var playerDialogBox:PlayerDialogBox;
 		public var gridOverlays:Array = new Array();
+		public var statusScreen:StatusScreen;
+		public var inventoryScreen:InventoryScreen;
 		
 		// Helper Datastructures
 		public var maps:Array = new Array();
@@ -58,6 +63,10 @@ package worlds
 			player = dataloader.setupPlayer();
 			currentMapIndex = player.currentMapIndex;
 			npcs = dataloader.setupNPCs(maps);
+			items = dataloader.setupItems();
+			
+			// give all items to the player
+			player.items = items;
 			
 			// prepare the stage
 			loadMap();
@@ -76,18 +85,14 @@ package worlds
 			
 			super.update();
 			
-			if (gameMode == WORLD_MAP_MODE) // Check if in world map mode
-			{
-				return;
-			}
-			else if (gameMode == DIALOG_MODE) // Check if in dialog mode
+			if (gameMode == DIALOG_MODE) // Check if in dialog mode
 			{
 				if (!dialogModeInitiated)
 					initiateDialogMode();
 				
 				return;
 			}
-			else // normal mode
+			else if (gameMode == NORMAL_MODE)// normal mode
 			{
 				// Iterate the global time
 				var currentTime:Array = time.newMinute();
@@ -210,6 +215,20 @@ package worlds
 			playerDialogBox.visible = false;
 			add(playerDialogBox.textBox);
 			addList(playerDialogBox.displayTexts);
+			
+			// status screen creation
+			statusScreen = new StatusScreen();
+			statusScreen.visible = false;
+			add(statusScreen.background);
+			add(statusScreen.portrait);
+			addList(statusScreen.displayTexts);
+			
+			inventoryScreen = new InventoryScreen();
+			inventoryScreen.visible = false;
+			add(inventoryScreen.background);
+			add(inventoryScreen.cursor);
+			add(inventoryScreen.cursorEquip);
+			addList(inventoryScreen.displayTexts);
 		}
 		
 		public function initiateDialogMode():void
@@ -228,9 +247,9 @@ package worlds
 		public function processGeneralInput():void
 		{
 			if (gameMode == DIALOG_MODE)
-			{	
+			{
 				if (Input.pressed("action"))
-				{					
+				{
 					if (!dialogManager.dialogHasEnded)
 					{
 						if ((npcDialogBox.currentPage < npcDialogBox.pages.length))
@@ -258,7 +277,7 @@ package worlds
 					}
 				}
 				
-				if (Input.pressed("selection_up"))
+				if (Input.pressed("up"))
 				{
 					if (dialogManager.currentTurn == dialogManager.NPC_TURN)
 					{
@@ -266,7 +285,7 @@ package worlds
 					}
 				}
 				
-				if (Input.pressed("selection_down"))
+				if (Input.pressed("down"))
 				{
 					if (dialogManager.currentTurn == dialogManager.NPC_TURN)
 					{
@@ -274,17 +293,70 @@ package worlds
 					}
 				}
 			}
-			else
+			else if (gameMode == NORMAL_MODE)
 			{
 				// Check for input that opens or closes the world map
-				if (Input.check("map"))
-					if (gameMode == NORMAL_MODE) openWorldMap();
+				if (Input.pressed("map"))
+				{
+					openWorldMap();
+				}
+				else if (Input.pressed("status_screen"))
+				{
+					openStatusScreen();
+				}
+				else if (Input.pressed("inventory_screen"))
+				{
+					openInventoryScreen();
+				}
 				
-				if (Input.check("exit"))
-					if (gameMode == WORLD_MAP_MODE) closeWorldMap();
-					
 				if (dialogEndedThisFrame) dialogEndedThisFrame = false;
 			}
+			else if (gameMode == STATUS_SCREEN_MODE)
+			{
+				// Check for input that opens the menu
+				if (Input.pressed("status_screen"))
+				{
+					closeStatusScreen();
+				}
+			}
+			else if (gameMode == INVENTORY_SCREEN_MODE)
+			{
+				
+				// Check for input that opens the menu
+				if (Input.pressed("inventory_screen"))
+				{
+					closeInventoryScreen();
+				}
+				else if (Input.pressed("up"))
+				{
+					inventoryScreen.cursorMovement("up");
+				}
+				else if (Input.pressed("down"))
+				{
+					inventoryScreen.cursorMovement("down");
+				}
+				else if (Input.pressed("left"))
+				{
+					inventoryScreen.cursorMovement("left");
+				}
+				else if (Input.pressed("right"))
+				{
+					inventoryScreen.cursorMovement("right");
+				}
+				else if (Input.pressed("action"))
+				{
+					inventoryScreen.actionPress();
+				}
+				else if (Input.pressed("exit"))
+				{
+					closeInventoryScreen();
+				}
+				else if (Input.pressed("cancel"))
+				{
+					inventoryScreen.cancelPress();
+				}
+			}
+			
 		}
 		
 		public function resetStage():void
@@ -319,6 +391,32 @@ package worlds
 		{
 			gameMode = NORMAL_MODE;
 			resetStage();
+		}
+		
+		public function openStatusScreen():void
+		{
+			gameMode = STATUS_SCREEN_MODE;
+			statusScreen.visible = true;
+			statusScreen.stats = player.stats;
+		}
+		
+		public function closeStatusScreen():void
+		{
+			gameMode = NORMAL_MODE;
+			statusScreen.visible = false;
+		}
+		
+		public function openInventoryScreen():void
+		{
+			gameMode = INVENTORY_SCREEN_MODE;
+			inventoryScreen.visible = true;
+			inventoryScreen.initialize(player.items, player.equipment);
+		}
+		
+		public function closeInventoryScreen():void
+		{
+			gameMode = NORMAL_MODE;
+			inventoryScreen.visible = false;
 		}
 		
 		public function checkSwitchToNewMap():Boolean
@@ -385,11 +483,16 @@ package worlds
 		
 		public function defineInputKeys():void
 		{
-			Input.define("selection_up", Key.W, Key.UP);
-			Input.define("selection_down", Key.S, Key.DOWN);
+			Input.define("up", Key.W, Key.UP);
+			Input.define("down", Key.S, Key.DOWN);
+			Input.define("left", Key.A, Key.LEFT);
+			Input.define("right", Key.D, Key.RIGHT);
 			Input.define("map", Key.M);
+			Input.define("cancel", Key.X);
 			Input.define("exit", Key.ESCAPE);
 			Input.define("action", Key.SPACE);
+			Input.define("status_screen", Key.C);
+			Input.define("inventory_screen", Key.I);
 		}
 		
 		public function getNPCByName(_name:String):NPC

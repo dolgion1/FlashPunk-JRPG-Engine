@@ -191,15 +191,17 @@ package utility
 				populateDisplayTexts();
 				highlightChosenVersion();
 			}
-			else if ((_direction == "up") && (startDisplayTextFeedIndex > startIndex)) // if the dialog portion starts above what is seen now, scroll there
+			else if ((_direction == "up") && (startDisplayTextFeedIndex > startIndex)) 
 			{
+				// if the dialog portion starts above what is seen now, scroll there
 				startDisplayTextFeedIndex = startIndex;
 				endDisplayTextFeedIndex = startDisplayTextFeedIndex + maxRows;
 				populateDisplayTexts();
 				highlightChosenVersion();
 			}
-			else if ((_direction == "down") && (endDisplayTextFeedIndex < endIndex)) // if the dialog portion ends below what is seen now, scroll there
+			else if ((_direction == "down") && (endDisplayTextFeedIndex < endIndex)) 
 			{
+				// if the dialog portion ends below what is seen now, scroll there
 				endDisplayTextFeedIndex = endIndex;
 				startDisplayTextFeedIndex = endDisplayTextFeedIndex - maxRows;
 				populateDisplayTexts();
