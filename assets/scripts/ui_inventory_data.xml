@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<cursorpositions>
+		<!-->Equipment Area</!-->
+		<cursorposition key="ArmorEquipHead" x="65" y="70" validity="true" />
+		<cursorposition key="ArmorEquipTorso" x="65" y="90" validity="true" />
+		<cursorposition key="ArmorEquipLegs" x="65" y="110" validity="true" />
+		<cursorposition key="ArmorEquipHands" x="65" y="130" validity="true" />
+		<cursorposition key="ArmorEquipFeet" x="65" y="150" validity="true" />
+		<cursorposition key="WeaponEquipPrimary" x="265" y="70" validity="true" />
+		<cursorposition key="WeaponEquipSecondary" x="265" y="90" validity="true" />
+		
+		<!-->Item Area</!-->
+		<cursorposition key="WeaponItem1" x="65" y="210" validity="false" />
+		<cursorposition key="WeaponItem2" x="65" y="230" validity="false" />
+		<cursorposition key="WeaponItem3" x="65" y="250" validity="false" />
+		<cursorposition key="WeaponItem4" x="65" y="270" validity="false" />
+		<cursorposition key="WeaponItem5" x="65" y="290" validity="false" />
+		<cursorposition key="WeaponItem6" x="65" y="310" validity="false" />
+		
+		<cursorposition key="ArmorItem1" x="215" y="210" validity="false" />
+		<cursorposition key="ArmorItem2" x="215" y="230" validity="false" />
+		<cursorposition key="ArmorItem3" x="215" y="250" validity="false" />
+		<cursorposition key="ArmorItem4" x="215" y="270" validity="false" />
+		<cursorposition key="ArmorItem5" x="215" y="290" validity="false" />
+		<cursorposition key="ArmorItem6" x="215" y="310" validity="false" />
+		
+		<cursorposition key="ConsumableItem1" x="365" y="210" validity="false" />
+		<cursorposition key="ConsumableItem2" x="365" y="230" validity="false" />
+		<cursorposition key="ConsumableItem3" x="365" y="250" validity="false" />
+		<cursorposition key="ConsumableItem4" x="365" y="270" validity="false" />
+		<cursorposition key="ConsumableItem5" x="365" y="290" validity="false" />
+		<cursorposition key="ConsumableItem6" x="365" y="310" validity="false" />
+	</cursorpositions>
+	
+	<cursorpositionnodes>
+		
+		<!-->Equipment Area</!-->
+		<cursorpositionnode key="ArmorEquipHead">
+			<up>null</up>
+			<down>ArmorEquipTorso</down>
+			<left>null</left>
+			<right>WeaponEquipPrimary</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ArmorEquipTorso">
+			<up>ArmorEquipHead</up>
+			<down>ArmorEquipLegs</down>
+			<left>null</left>
+			<right>WeaponEquipSecondary</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ArmorEquipLegs">
+			<up>ArmorEquipTorso</up>
+			<down>ArmorEquipHands</down>
+			<left>null</left>
+			<right>null</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ArmorEquipHands">
+			<up>ArmorEquipLegs</up>
+			<down>ArmorEquipFeet</down>
+			<left>null</left>
+			<right>null</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ArmorEquipFeet">
+			<up>ArmorEquipHands</up>
+			<down>WeaponItem1</down>
+			<left>null</left>
+			<right>null</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="WeaponEquipPrimary">
+			<up>null</up>
+			<down>WeaponEquipSecondary</down>
+			<left>ArmorEquipHead</left>
+			<right>null</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="WeaponEquipSecondary">
+			<up>WeaponEquipPrimary</up>
+			<down>ArmorEquipLegs</down>
+			<left>ArmorEquipTorso</left>
+			<right>null</right>
+		</cursorpositionnode>
+		
+		
+		
+		<!-->Item Area</!-->
+		<cursorpositionnode key="WeaponItem1">
+			<up>ArmorEquipFeet</up>
+			<down>WeaponItem2</down>
+			<left>null</left>
+			<right>ArmorItem1</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="WeaponItem2">
+			<up>WeaponItem1</up>
+			<down>WeaponItem3</down>
+			<left>null</left>
+			<right>ArmorItem2</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="WeaponItem3">
+			<up>WeaponItem2</up>
+			<down>WeaponItem4</down>
+			<left>null</left>
+			<right>ArmorItem3</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="WeaponItem4">
+			<up>WeaponItem3</up>
+			<down>WeaponItem5</down>
+			<left>null</left>
+			<right>ArmorItem4</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="WeaponItem5">
+			<up>WeaponItem4</up>
+			<down>WeaponItem6</down>
+			<left>null</left>
+			<right>ArmorItem5</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="WeaponItem6">
+			<up>WeaponItem5</up>
+			<down>null</down>
+			<left>null</left>
+			<right>ArmorItem6</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ArmorItem1">
+			<up>ArmorEquipFeet</up>
+			<down>ArmorItem2</down>
+			<left>WeaponItem1</left>
+			<right>ConsumableItem1</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ArmorItem2">
+			<up>ArmorItem1</up>
+			<down>ArmorItem3</down>
+			<left>WeaponItem2</left>
+			<right>ConsumableItem2</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ArmorItem3">
+			<up>ArmorItem2</up>
+			<down>ArmorItem4</down>
+			<left>WeaponItem3</left>
+			<right>ConsumableItem3</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ArmorItem4">
+			<up>ArmorItem3</up>
+			<down>ArmorItem5</down>
+			<left>WeaponItem4</left>
+			<right>ConsumableItem4</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ArmorItem5">
+			<up>ArmorItem4</up>
+			<down>ArmorItem6</down>
+			<left>WeaponItem5</left>
+			<right>ConsumableItem5</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ArmorItem6">
+			<up>ArmorItem5</up>
+			<down>null</down>
+			<left>WeaponItem6</left>
+			<right>ConsumableItem6</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ConsumableItem1">
+			<up>ArmorEquipFeet</up>
+			<down>ConsumableItem2</down>
+			<left>ArmorItem1</left>
+			<right>null</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ConsumableItem2">
+			<up>ConsumableItem1</up>
+			<down>ConsumableItem3</down>
+			<left>ArmorItem2</left>
+			<right>null</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ConsumableItem3">
+			<up>ConsumableItem2</up>
+			<down>ConsumableItem4</down>
+			<left>ArmorItem3</left>
+			<right>null</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ConsumableItem4">
+			<up>ConsumableItem3</up>
+			<down>ConsumableItem5</down>
+			<left>ArmorItem4</left>
+			<right>null</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ConsumableItem5">
+			<up>ConsumableItem4</up>
+			<down>ConsumableItem6</down>
+			<left>ArmorItem5</left>
+			<right>null</right>
+		</cursorpositionnode>
+		
+		<cursorpositionnode key="ConsumableItem6">
+			<up>ConsumableItem5</up>
+			<down>null</down>
+			<left>ArmorItem6</left>
+			<right>null</right>
+		</cursorpositionnode>
+		
+	</cursorpositionnodes>
+	
+	<columnkeys>
+		<columnkey column="0" index="0" key="WeaponItem1" />
+		<columnkey column="0" index="1" key="WeaponItem2" />
+		<columnkey column="0" index="2" key="WeaponItem3" />
+		<columnkey column="0" index="3" key="WeaponItem4" />
+		<columnkey column="0" index="4" key="WeaponItem5" />
+		<columnkey column="0" index="5" key="WeaponItem6" />
+		
+		<columnkey column="1" index="0" key="ArmorItem1" />
+		<columnkey column="1" index="1" key="ArmorItem2" />
+		<columnkey column="1" index="2" key="ArmorItem3" />
+		<columnkey column="1" index="3" key="ArmorItem4" />
+		<columnkey column="1" index="4" key="ArmorItem5" />
+		<columnkey column="1" index="5" key="ArmorItem6" />
+		
+		<columnkey column="2" index="0" key="ConsumableItem1" />
+		<columnkey column="2" index="1" key="ConsumableItem2" />
+		<columnkey column="2" index="2" key="ConsumableItem3" />
+		<columnkey column="2" index="3" key="ConsumableItem4" />
+		<columnkey column="2" index="4" key="ConsumableItem5" />
+		<columnkey column="2" index="5" key="ConsumableItem6" />
+	</columnkeys>
+	
+	<displaytexts>
+		<displaytext text="Equipment" x="50" y="30" size="14" />
+		<displaytext text="Items" x="50" y="170" size="14" />
+		<displaytext text="Information" x="50" y="320" size="14" />
+		<displaytext text="Head: " x="100" y="60" size="12" />
+		<displaytext text="Torso: " x="100" y="80" size="12" />
+		<displaytext text="Legs: " x="100" y="100" size="12" />
+		<displaytext text="Hands: " x="100" y="120" size="12" />
+		<displaytext text="Feet: " x="100" y="140" size="12" />
+		<displaytext text="Primary Weapon: " x="300" y="60" size="12" />
+		<displaytext text="Secondary Weapon: " x="300" y="80" size="12" />
+	</displaytexts>
+</data>

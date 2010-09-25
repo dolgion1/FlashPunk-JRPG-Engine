@@ -16,10 +16,17 @@ package utility
 										   _leftKey:String,
 										   _rightKey:String) 
 		{
-			upKey = _upKey;
-			downKey = _downKey;
-			leftKey = _leftKey;
-			rightKey = _rightKey;
+			if (_upKey != "null") upKey = _upKey;
+			else upKey = null;
+			
+			if (_downKey != "null") downKey = _downKey;
+			else downKey = null;
+			
+			if (_leftKey != "null") leftKey = _leftKey;
+			else leftKey = null;
+			
+			if (_rightKey != "null") rightKey = _rightKey;
+			else rightKey = null;
 		}
 		
 	}

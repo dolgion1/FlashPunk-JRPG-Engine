@@ -223,7 +223,7 @@ package worlds
 			add(statusScreen.portrait);
 			addList(statusScreen.displayTexts);
 			
-			inventoryScreen = new InventoryScreen();
+			inventoryScreen = new InventoryScreen(dataloader.setupInventoryUIData());
 			inventoryScreen.visible = false;
 			add(inventoryScreen.background);
 			add(inventoryScreen.cursor);
@@ -310,6 +310,17 @@ package worlds
 				}
 				
 				if (dialogEndedThisFrame) dialogEndedThisFrame = false;
+			}
+			else if (gameMode == WORLD_MAP_MODE)
+			{
+				if (Input.pressed("map"))
+				{
+					closeWorldMap();
+				}
+				else if (Input.pressed("exit"))
+				{
+					closeWorldMap();
+				}
 			}
 			else if (gameMode == STATUS_SCREEN_MODE)
 			{

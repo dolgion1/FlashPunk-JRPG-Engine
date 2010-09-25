@@ -1,6 +1,8 @@
 package utility 
 {
+	import flash.geom.Point;
 	import flash.utils.ByteArray;
+	import flash.utils.Dictionary;
 	import net.flashpunk.*;
 	import entities.*;
 	import utility.*;
@@ -23,6 +25,7 @@ package utility
 		[Embed(source = "../../assets/scripts/map_data.xml", mimeType = "application/octet-stream")] private var mapData:Class;
 		[Embed(source = "../../assets/scripts/npc_data.xml", mimeType = "application/octet-stream")] private var npcData:Class;
 		[Embed(source = "../../assets/scripts/item_data.xml", mimeType = "application/octet-stream")] private var itemData:Class;
+		[Embed(source = "../../assets/scripts/ui_inventory_data.xml", mimeType = "application/octet-stream")] private var inventoryUIData:Class;
 		
 		public function DataLoader() {}
 		
@@ -159,8 +162,6 @@ package utility
 			var itemDataByteArray:ByteArray = new itemData;
 			var itemDataXML:XML = new XML(itemDataByteArray.readUTFBytes(itemDataByteArray.length));
 			var i:XML;
-			var q:XML;
-			var r:XML;
 			var items:Array = new Array();
 			var weapons:Array = new Array();
 			var armors:Array = new Array();
@@ -193,6 +194,57 @@ package utility
 			items.push(armors);
 			
 			return items;
+		}
+		
+		public function setupInventoryUIData():Array
+		{
+			var inventoryUIDataArray:ByteArray = new inventoryUIData;
+			var inventoryUIDataXML:XML = new XML(inventoryUIDataArray.readUTFBytes(inventoryUIDataArray.length));
+			var i:XML;
+			var cursorPositions:Dictionary = new Dictionary();
+			var cursorPositionsValidity:Dictionary = new Dictionary();
+			var cursorPositionsNodes:Dictionary = new Dictionary();
+			var columnKeys:Array = new Array();
+			
+			columnKeys[0] = new Array();
+			columnKeys[1] = new Array();
+			columnKeys[2] = new Array();
+			
+			var displayTexts:Array = new Array();
+			
+			for each (i in inventoryUIDataXML.cursorpositions.cursorposition)
+			{
+				cursorPositions["" + i.@key] = new Point(int(i.@x), int(i.@y));
+				
+				if (i.@validity == "true")
+				{
+					trace("  cursorPositionsValidity  true: " + i.@key);
+					cursorPositionsValidity["" + i.@key] = true;
+				}
+				else 
+				{
+					trace("  cursorPositionsValidity  false: " + i.@key);
+					cursorPositionsValidity["" + i.@key] = false;
+				}
+				//trace("  cursorPositionsValidity[i.@key]" +  cursorPositionsValidity["" + i.@key]);
+			}
+			
+			for each (i in inventoryUIDataXML.cursorpositionnodes.cursorpositionnode)
+			{
+				cursorPositionsNodes["" + i.@key] = new CursorPositionNode(i.up, i.down, i.left, i.right);
+			}
+			
+			for each (i in inventoryUIDataXML.columnkeys.columnkey)
+			{
+				columnKeys[i.@column][i.@index] = i.@key;
+			}
+			
+			for each (i in inventoryUIDataXML.displaytexts.displaytext)
+			{
+				displayTexts.push(new DisplayText("" + i.@text, i.@x, i.@y, "default", i.@size, 0xFFFFFF, 500));
+			}
+			
+			return new Array(cursorPositions, cursorPositionsValidity, cursorPositionsNodes, columnKeys, displayTexts);
 		}
 	}
 

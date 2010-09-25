@@ -81,21 +81,24 @@ package entities
 		
 		override public function update():void
 		{
-			if (currentMapIndex != Game.currentMapIndex)
+			if (Game.gameMode == Game.NORMAL_MODE)
 			{
-				collidable = false;
-				visible = false;
-			}
-			else 
-			{
-				collidable = true;
-				visible = true;
-			}
-			npcSpritemap.play(curAnimation);
-			
-			if (currentActivity == WALK && (Game.gameMode != Game.DIALOG_MODE))
-			{
-				walkProcedure();
+				if (currentMapIndex != Game.currentMapIndex)
+				{
+					collidable = false;
+					visible = false;
+				}
+				else 
+				{
+					collidable = true;
+					visible = true;
+				}
+				npcSpritemap.play(curAnimation);
+				
+				if (currentActivity == WALK && (Game.gameMode != Game.DIALOG_MODE))
+				{
+					walkProcedure();
+				}
 			}
 		}
 		
