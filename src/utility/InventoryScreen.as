@@ -246,6 +246,134 @@ package utility
 			}
 		}
 		
+		public function resetItemHighlights():void
+		{
+			for (var i:int = 0; i < 3; i++)
+			{
+				if (items.length == i) break;
+				
+				for (var j:int = 0; j < itemColumns[i].length; j++)
+				{
+					if (items[i].length == j) break;
+					itemColumns[i][j].displayText.color = 0xFFFFFF;
+				}
+			}
+		}
+		
+		public function highlightValidEquipment():void
+		{
+			for (var i:int = 0; i < itemColumns[currentCursorColumn].length; i++)
+			{
+				if (items[currentCursorColumn].length == i) break;
+				
+				if (currentCursorColumn == ARMOR_ITEM_COLUMN)
+				{
+					var armor:Armor = items[currentCursorColumn][itemsStartIndex[currentCursorColumn] + i];
+					switch (currentEquipmentKey)
+					{
+						case "ArmorEquipHead": 
+						{
+							if (armor.armorType != Armor.HEAD || armor.equipped)
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
+							}
+							else
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0xFFFFFF;
+							}
+							break;
+						}
+						case "ArmorEquipTorso": 
+						{
+							if (armor.armorType != Armor.TORSO || armor.equipped)
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
+							}
+							else
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0xFFFFFF;
+							}
+							break;
+						}
+						case "ArmorEquipLegs": 
+						{
+							if (armor.armorType != Armor.LEGS || armor.equipped)
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
+							}
+							else
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0xFFFFFF;
+							}
+							break;
+						}
+						case "ArmorEquipHands": 
+						{
+							if (armor.armorType != Armor.HANDS || armor.equipped)
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
+							}
+							else
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0xFFFFFF;
+							}
+							break;
+						}
+						case "ArmorEquipFeet": 
+						{
+							if (armor.armorType != Armor.FEET || armor.equipped)
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
+							}
+							else
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0xFFFFFF;
+							}
+							break;
+						}
+					}
+				}
+				else if (currentCursorColumn == WEAPON_ITEM_COLUMN)
+				{
+					trace("got into weapon item column");
+					var weapon:Weapon = items[currentCursorColumn][itemsStartIndex[currentCursorColumn] + i];
+					switch (currentEquipmentKey)
+					{
+						case "WeaponEquipPrimary":
+						{
+							if (weapon.equipped)
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
+							}
+							else
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0xFFFFFF;
+							}
+							break;
+						}
+						case "WeaponEquipSecondary": 
+						{
+							// If there is a primary weapon and it's two handed
+							if (equipment["WeaponEquipPrimary"] != null &&
+								equipment["WeaponEquipPrimary"].twoHanded)
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
+							}
+							else if (weapon.twoHanded || weapon.equipped) // grey out the two handed weapons
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
+							}
+							else
+							{
+								itemColumns[currentCursorColumn][i].displayText.color = 0xFFFFFF;
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+		
 		public function cancelPress():void
 		{
 			if (currentMode == NORMAL_MODE)
@@ -253,8 +381,13 @@ package utility
 				if (currentCursorColumn == ARMOR_EQUIP_COLUMN ||
 					currentCursorColumn == WEAPON_EQUIP_COLUMN)
 				{
-					equipment[currentCursorPositionKey] = null;
-					populateEquipmentColumns();
+					if (equipment[currentCursorPositionKey] != null)
+					{
+						equipment[currentCursorPositionKey].equipped = false;
+						equipment[currentCursorPositionKey] = null;
+						
+						populateEquipmentColumns();
+					}
 				}
 			}
 			else if (currentMode == EQUIP_MODE)
@@ -265,6 +398,7 @@ package utility
 				currentCursorPositionKey = currentEquipmentKey;
 				currentEquipmentKey = "";
 				updateCurrentCursorColumn();
+				resetItemHighlights();
 			}
 		}
 		
@@ -284,6 +418,7 @@ package utility
 					currentCursorPositionKey = "ArmorItem1";
 					updateCurrentCursorColumn();
 					currentMode = EQUIP_MODE;
+					highlightValidEquipment();
 				}
 				else if (currentCursorColumn == WEAPON_EQUIP_COLUMN)
 				{
@@ -297,7 +432,7 @@ package utility
 					currentCursorPositionKey = "WeaponItem1";
 					updateCurrentCursorColumn();
 					currentMode = EQUIP_MODE;
-					trace("Equipping: " + currentEquipmentKey);
+					highlightValidEquipment();
 				}
 			}
 			else if (currentMode == EQUIP_MODE)
@@ -313,7 +448,8 @@ package utility
 				{
 					case "ArmorEquipHead": 
 					{
-						if (items[currentCursorColumn][index].armorType == Armor.HEAD)
+						if ((items[currentCursorColumn][index].armorType == Armor.HEAD) &&
+							(!items[currentCursorColumn][index].equipped))
 						{
 							validSelection = true;
 						}
@@ -321,7 +457,8 @@ package utility
 					}
 					case "ArmorEquipTorso":
 					{
-						if (items[currentCursorColumn][index].armorType == Armor.TORSO)
+						if ((items[currentCursorColumn][index].armorType == Armor.TORSO) &&
+							(!items[currentCursorColumn][index].equipped))
 						{
 							validSelection = true;
 						}
@@ -329,7 +466,8 @@ package utility
 					}
 					case "ArmorEquipLegs": 
 					{
-						if (items[currentCursorColumn][index].armorType == Armor.LEGS)
+						if ((items[currentCursorColumn][index].armorType == Armor.LEGS) &&
+							(!items[currentCursorColumn][index].equipped))
 						{
 							validSelection = true;
 						}
@@ -337,7 +475,8 @@ package utility
 					}
 					case "ArmorEquipHands":
 					{
-						if (items[currentCursorColumn][index].armorType == Armor.HANDS)
+						if ((items[currentCursorColumn][index].armorType == Armor.HANDS) &&
+							(!items[currentCursorColumn][index].equipped))
 						{
 							validSelection = true;
 						}
@@ -345,7 +484,8 @@ package utility
 					}
 					case "ArmorEquipFeet":
 					{
-						if (items[currentCursorColumn][index].armorType == Armor.FEET)
+						if ((items[currentCursorColumn][index].armorType == Armor.FEET) &&
+							(!items[currentCursorColumn][index].equipped))
 						{
 							validSelection = true;
 						}
@@ -353,29 +493,35 @@ package utility
 					}
 					case "WeaponEquipPrimary":
 					{
-						validSelection = true;
-						if (items[currentCursorColumn][index].twoHanded)
+						if (!items[currentCursorColumn][index].equipped)
 						{
-							equipment["WeaponEquipSecondary"] = null;
+							validSelection = true;
+							if (items[currentCursorColumn][index].twoHanded)
+							{
+								equipment["WeaponEquipSecondary"].equipped = false;
+								equipment["WeaponEquipSecondary"] = null;
+							}
 						}
 						break;
 					}
 					case "WeaponEquipSecondary":
 					{
-						if (equipment["WeaponEquipPrimary"] != null)
+						if (!items[currentCursorColumn][index].equipped)
 						{
-							trace(equipment["WeaponEquipPrimary"].twoHanded + " " + items[currentCursorColumn][index].twoHanded);
-							if ((!equipment["WeaponEquipPrimary"].twoHanded) &&
-								(!items[currentCursorColumn][index].twoHanded))
+							if (equipment["WeaponEquipPrimary"] != null)
 							{
-								validSelection = true;
+								if ((!equipment["WeaponEquipPrimary"].twoHanded) &&
+									(!items[currentCursorColumn][index].twoHanded))
+								{
+									validSelection = true;
+								}
 							}
-						}
-						else
-						{
-							if (!items[currentCursorColumn][index].twoHanded)
+							else
 							{
-								validSelection = true;
+								if (!items[currentCursorColumn][index].twoHanded)
+								{
+									validSelection = true;
+								}
 							}
 						}
 						break;
@@ -384,7 +530,12 @@ package utility
 				
 				if (validSelection)
 				{
-					equipment[currentEquipmentKey] = items[currentCursorColumn][index];					
+					if (equipment[currentEquipmentKey] != null)
+					{
+						equipment[currentEquipmentKey].equipped = false;
+					}
+					equipment[currentEquipmentKey] = items[currentCursorColumn][index];
+					items[currentCursorColumn][index].equipped = true;
 					populateEquipmentColumns();
 					
 					currentMode = NORMAL_MODE;
@@ -393,6 +544,7 @@ package utility
 					currentCursorPositionKey = currentEquipmentKey;
 					currentEquipmentKey = "";
 					updateCurrentCursorColumn();
+					resetItemHighlights();
 				}
 			}
 		}
@@ -518,6 +670,7 @@ package utility
 							itemsStartIndex[WEAPON_ITEM_COLUMN]--;
 							itemsEndIndex[WEAPON_ITEM_COLUMN]--;
 							updateItemColumn(WEAPON_ITEM_COLUMN);
+							highlightValidEquipment();
 							moveCursor = false;
 						}
 						else if (itemsStartIndex[WEAPON_ITEM_COLUMN] == 0)
@@ -533,6 +686,7 @@ package utility
 							itemsStartIndex[ARMOR_ITEM_COLUMN]--;
 							itemsEndIndex[ARMOR_ITEM_COLUMN]--;
 							updateItemColumn(ARMOR_ITEM_COLUMN);
+							highlightValidEquipment();
 							moveCursor = false;
 						}
 						else if (itemsStartIndex[WEAPON_ITEM_COLUMN] == 0)
@@ -548,6 +702,7 @@ package utility
 							itemsStartIndex[CONSUMABLE_ITEM_COLUMN]--;
 							itemsEndIndex[CONSUMABLE_ITEM_COLUMN]--;
 							updateItemColumn(CONSUMABLE_ITEM_COLUMN);
+							highlightValidEquipment();
 							moveCursor = false;
 						}
 						else if (itemsStartIndex[WEAPON_ITEM_COLUMN] == 0)
@@ -583,6 +738,7 @@ package utility
 							itemsStartIndex[WEAPON_ITEM_COLUMN]++;
 							itemsEndIndex[WEAPON_ITEM_COLUMN]++;
 							updateItemColumn(WEAPON_ITEM_COLUMN);
+							highlightValidEquipment();
 						}
 					}
 					else if (currentCursorPositionKey == "ArmorItem6" && _direction == "down")
@@ -593,6 +749,7 @@ package utility
 							itemsStartIndex[ARMOR_ITEM_COLUMN]++;
 							itemsEndIndex[ARMOR_ITEM_COLUMN]++;
 							updateItemColumn(ARMOR_ITEM_COLUMN);
+							highlightValidEquipment();
 						}
 					}
 					else if (currentCursorPositionKey == "ConsumableItem6" && _direction == "down")
@@ -603,6 +760,7 @@ package utility
 							itemsStartIndex[CONSUMABLE_ITEM_COLUMN]++;
 							itemsEndIndex[CONSUMABLE_ITEM_COLUMN]++;
 							updateItemColumn(CONSUMABLE_ITEM_COLUMN);
+							highlightValidEquipment();
 						}
 					}
 				}

@@ -14,6 +14,7 @@ package utility
 		
 		public var armorType:int;
 		public var armorRating:int;
+		public var equipped:Boolean = false;
 		
 		public function Armor() 
 		{

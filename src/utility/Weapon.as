@@ -18,6 +18,7 @@ package utility
 		public var attackType:int;
 		public var twoHanded:Boolean;
 		public var damageRating:int;
+		public var equipped:Boolean = false;
 		
 		public function Weapon() 
 		{
