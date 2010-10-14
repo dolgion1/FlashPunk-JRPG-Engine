@@ -116,6 +116,10 @@ package utility
 			else displayTexts[WEAPON_EQUIP_SECONDARY_DISPLAY_TEXT].displayText.text = "Secondary Weapon: ";
 		}
 		
+		
+		
+		
+		// REVIEW THIS FUNCTION. VALIDITIES ARE GETTING LOST
 		public function populateItemColumns():void
 		{
 			resetItemColumnDisplayTexts();
@@ -146,10 +150,11 @@ package utility
 					
 					itemColumns[i][j].displayText.text = items[i][j].name;
 					cursorPositionsValidity[columnKeys[i][j]] = true;
-					trace("validated " + columnKeys[i][j]);
+					trace("WeaponItem1" == columnKeys[i][j]);
+					trace("validated " + columnKeys[i][j] + " which is now: " + cursorPositionsValidity[columnKeys[i][j]]);
 				}
 			}
-			
+			trace("WeaponItem1 validity: " + cursorPositionsValidity["WeaponItem1"]);
 			cursor.position = cursorPositions[currentCursorPositionKey];
 		}
 		
@@ -526,6 +531,7 @@ package utility
 		
 		public function cursorMovement(_direction:String):void
 		{
+			trace("Validity of WeaponItem1 is right now: " + cursorPositionsValidity["WeaponItem1"]);
 			if (currentMode == NORMAL_MODE)
 			{
 				var newPosition:Point;
@@ -584,6 +590,7 @@ package utility
 							case "left": newCursorPositionKey = cursorPositionsNodes[currentCursorPositionKey].leftKey; break;
 							case "right": newCursorPositionKey = cursorPositionsNodes[currentCursorPositionKey].rightKey; break;
 						}
+						trace( cursorPositionsNodes[currentCursorPositionKey].downKey);
 						trace("tryin to move to " + newCursorPositionKey + " and validity is: " + cursorPositionsValidity[newCursorPositionKey]);
 						if (cursorPositionsValidity[newCursorPositionKey])
 						{
@@ -750,8 +757,8 @@ package utility
 			cursorPositionsNodes = _uiDatastructures[2];
 			columnKeys = _uiDatastructures[3];
 			displayTexts = _uiDatastructures[4];
-			cursorPositionsValidity["WeaponItem1"] = true;
-			trace("reset the validities");
+			//cursorPositionsValidity["WeaponItem1"] = true;
+			//trace("reset the validities");
 		}
 		
 		public function get visible():Boolean

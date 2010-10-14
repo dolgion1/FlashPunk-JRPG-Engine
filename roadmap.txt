@@ -4,64 +4,77 @@ DONE - means is working as currently required
 ATM - means is being worked on at the moment
 
 1. [DONE] implement an ongoing timer that doesn't stop as long as the game is being played. It can be paused however,
-   for example when the player is looking at the world map.
+	for example when the player is looking at the world map.
 
 2. [DONE] add NPCs to the world who just stand at one point all day
 
 3. [DONE] make updates to the display and AI of the NPCs depending on the time
 
 4. [DONE] Implementing A* Pathfinding for NPCs
-   1. [DONE] Create a datacontainer class that can keep the necessary properties needed for squares in A* pathfinding
-      1. [DONE] x and y coordinates
-      2. [DONE] array index
-	  3. [DONE] flag that indicates whether the node is passable or not
-   2. [DONE] Create a node class that is specifically used to store A* information
-	  1. [DONE] an internal square property
-	  2. [DONE] F, G and H values
-	  3. [DONE] a reference to its parent
-   3. [DONE] Load in the gridSquares of each map at instantiation
-   4. [DONE] create a method for NPCs where they can be told where to go. Just this: a target global position. 
-	  The NPC then uses an implementation of A* to figure out the immediate path and a larger scale mapPath using Depth-First, 
-	  and sets its currentActivity to walk. The entire way is calculated before starting to move.
-   5. [DONE] Make it possible to walk between maps, and to "be" at different maps than the player. Basically, keep the 
-	  simulation going no matter what the player does or where he is. Requires a larger scale inter-map system
-	  of pathfinding. In order to do that:
-   6. [DONE] Create parent-child relationship to maps, for dungeons and towns etc. This means creating a proper datastructure
+	1. [DONE] Create a datacontainer class that can keep the necessary properties needed for squares in A* pathfinding
+		1. [DONE] x and y coordinates
+		2. [DONE] array index
+		3. [DONE] flag that indicates whether the node is passable or not
+	2. [DONE] Create a node class that is specifically used to store A* information
+		1. [DONE] an internal square property
+		2. [DONE] F, G and H values
+		3. [DONE] a reference to its parent
+	3. [DONE] Load in the gridSquares of each map at instantiation
+	4. [DONE] create a method for NPCs where they can be told where to go. Just this: a target global position. 
+		The NPC then uses an implementation of A* to figure out the immediate path and a larger scale mapPath using Depth-First, 
+		and sets its currentActivity to walk. The entire way is calculated before starting to move.
+	5. [DONE] Make it possible to walk between maps, and to "be" at different maps than the player. Basically, keep the 
+		simulation going no matter what the player does or where he is. Requires a larger scale inter-map system
+		of pathfinding. In order to do that:
+	6. [DONE] Create parent-child relationship to maps, for dungeons and towns etc. This means creating a proper datastructure
 
 5. [DONE] Automatically select the appropriate animation according to the direction of movement, or at no movement
 
 6. [DONE] implement a streamlined process for NPC AI routines, that can be composed or built and therefore easily 
-   changed, and fed to the NPC, that describe the movement actions given in point 4. A script file as XML would be a
-   viable option. There I can determine at what times the NPC must walk to what global positions for example. Maybe entire
-   dialogues and more can be stored there.
+	changed, and fed to the NPC, that describe the movement actions given in point 4. A script file as XML would be a
+	viable option. There I can determine at what times the NPC must walk to what global positions for example. Maybe entire
+	dialogues and more can be stored there.
    
 7. [DONE] TextBox class for dialogs. Size and position can be adjusted. 
-   1. [DONE] Check if the action button is being pressed to advance text and conversation
-   2. [DONE] Dynamically set the display text from outside through a dialog manager
-   3. [DONE] Text wrapping and portioning
-   4. [LATER] Letter-by-letter unrolling 
+	1. [DONE] Check if the action button is being pressed to advance text and conversation
+	2. [DONE] Dynamically set the display text from outside through a dialog manager
+	3. [DONE] Text wrapping and portioning
+	4. [LATER] Letter-by-letter unrolling 
    
 8. [DONE] Multiple-Choice Dialog
-   1. [DONE] Recognize the keypress from the player that should initiate conversation. needs to check the position and direction that the
-      player is facing. if there is an npc, update state variables
-   2. [DONE] Store dialogs and their text (with multiple choices for a single turn) in the xml files and load them into dialogs[] arrays
-      of NPCs and Player
-   3. [DONE] Freeze gameplay when the player activates dialog with an npc (time freezes, etc)
-   4. [DONE] Show correct dialog text
-   5. [DONE] Read dialog-mode input only, instead of usual input
-   6. [DONE] Display a list with all possible choices if there are more than one at a given time
-   7. [DONE] A given answer invokes the corresponding response of the NPC
+	1. [DONE] Recognize the keypress from the player that should initiate conversation. needs to check the position and direction that the
+		player is facing. if there is an npc, update state variables
+	2. [DONE] Store dialogs and their text (with multiple choices for a single turn) in the xml files and load them into dialogs[] arrays
+		of NPCs and Player
+	3. [DONE] Freeze gameplay when the player activates dialog with an npc (time freezes, etc)
+	4. [DONE] Show correct dialog text
+	5. [DONE] Read dialog-mode input only, instead of usual input
+	6. [DONE] Display a list with all possible choices if there are more than one at a given time
+	7.[DONE] A given answer invokes the corresponding response of the NPC
 
-9. Menu with a list of sections and a view of the stats of the player. Sections are:
-	1. Inventory
+9. [ATM] Inventory Screen
+	1. [DONE] Display an entity containing a list of items currently in possession
+	2. [DONE] Display entries for equippable slots (body parts, weapon slots)
+	3. Display information about the currently selected item
+	4. [ATM] Movement of the FF-style cursor
+	5. [DONE] Load in UI Data from XML
+	6. [DONE] Equipping and highlighting respective items
 	
-
-
-Minor changes:
-
-- [DONE] experiment with collision grid: make tree collision boxes smaller
-- [DONE] diagonal movement of avatar must be the given speed limit in magnitude
-- [DONE] even though NPCs are added to stage, if their currentMapIndex state variable states that they aren't actually 
-  actors on the current map of the player, disable collision and their visiblity
-- [DONE] make hitboxes of NPCs and Player smaller for more exact collision detection
-- [DONE] update worldmap
+10. [ATM] Character Stats and screen
+	1. [DONE] Store character stats (Strength, Intelligence, etc) in member variables
+	2. [ATM] Allow Equipment to alter/modify those stats
+	3. [DONE] Display those stats in a screen
+	
+11. Game items
+	1. [DONE] Storing items universally
+	2. [DONE] Loading those items and their properties from XML
+	3. Visually place items in the game world
+	4. Allow player to pick them up (from treasure chests or smth)
+	
+12. Enemy NPCs
+	1. Have their own stats
+	2. Have their own loot
+ 	3. Approach the player on sight
+	4. Initiate combat
+	
+13. Turn-based combat
