@@ -18,6 +18,11 @@
 		public static var keyString:String = "";
 		
 		/**
+		 * The last key pressed.
+		 */
+		public static var lastKey:int;
+		
+		/**
 		 * If the mouse button is down.
 		 */
 		public static var mouseDown:Boolean = false;
@@ -135,11 +140,11 @@
 					i:int = v.length;
 				while (i --)
 				{
-					if ((v[i] < 0 && _press.length) || _press.indexOf(v[i]) >= 0) return true;
+					if ((v[i] < 0) ? _pressNum : _press.indexOf(v[i]) >= 0) return true;
 				}
 				return false;
 			}
-			return (input < 0 && _press.length) || _press.indexOf(input) >= 0;
+			return (input < 0) ? _pressNum : _press.indexOf(input) >= 0;
 		}
 		
 		/**
@@ -155,11 +160,11 @@
 					i:int = v.length;
 				while (i --)
 				{
-					if ((v[i] < 0 && _release.length) || _release.indexOf(v[i]) >= 0) return true;
+					if ((v[i] < 0) ? _releaseNum : _release.indexOf(v[i]) >= 0) return true;
 				}
 				return false;
 			}
-			return (input < 0 && _release.length) || _release.indexOf(input) >= 0;
+			return (input < 0) ? _releaseNum : _release.indexOf(input) >= 0;
 		}
 		
 		/**
@@ -213,7 +218,7 @@
 		private static function onKeyDown(e:KeyboardEvent = null):void
 		{
 			// get the keycode
-			var code:int = e.keyCode;
+			var code:int = lastKey = e.keyCode;
 			
 			// update the keystring
 			if (code == Key.BACKSPACE) keyString = keyString.substring(0, keyString.length - 1);
@@ -256,7 +261,6 @@
 				mouseDown = true;
 				mouseUp = false;
 				mousePressed = true;
-				mouseReleased = false;
 			}
 		}
 		
@@ -265,7 +269,6 @@
 		{
 			mouseDown = false;
 			mouseUp = true;
-			mousePressed = false;
 			mouseReleased = true;
 		}
 		

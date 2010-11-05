@@ -4,6 +4,7 @@ package utility
 	import entities.CursorEquip;
 	import entities.DisplayText;
 	import entities.TextBox;
+	import net.flashpunk.FP;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	/**
@@ -80,6 +81,7 @@ package utility
 		
 		public function initialize(_items:Array, _equipment:Dictionary):void
 		{
+			FP.log("debug message");
 			items = _items;
 			equipment = _equipment;
 			
@@ -150,11 +152,24 @@ package utility
 					
 					itemColumns[i][j].displayText.text = items[i][j].name;
 					cursorPositionsValidity[columnKeys[i][j]] = true;
-					trace("WeaponItem1" == columnKeys[i][j]);
-					trace("validated " + columnKeys[i][j] + " which is now: " + cursorPositionsValidity[columnKeys[i][j]]);
+					FP.log("validated " + columnKeys[i][j] + " which is now: " + cursorPositionsValidity[columnKeys[i][j]]);
 				}
+				// DEBUG LOGGING
+				// print all the validities of the column that we just validated
+				
+				/*for (var k:int = itemsStartIndex[i]; k < itemsEndIndex[i]; k++)
+				{
+					FP.log("Checking the column we just went through. " + columnKeys[i][k] + " is " + cursorPositionsValidity[columnKeys[i][k]]);
+				}*/
 			}
-			trace("WeaponItem1 validity: " + cursorPositionsValidity["WeaponItem1"]);
+			for (i = 0; i < 2; i++)
+			{
+				/*for (k = itemsStartIndex[i]; k < itemsEndIndex[i]; k++)
+				{
+					FP.log("Final Check in columns we just went through. " + columnKeys[i][k] + " is " + cursorPositionsValidity[columnKeys[i][k]]);
+				}*/
+			}
+			//FP.log("WeaponItem1 validity: " + cursorPositionsValidity["WeaponItem1"]);
 			cursor.position = cursorPositions[currentCursorPositionKey];
 		}
 		
@@ -531,7 +546,7 @@ package utility
 		
 		public function cursorMovement(_direction:String):void
 		{
-			trace("Validity of WeaponItem1 is right now: " + cursorPositionsValidity["WeaponItem1"]);
+			FP.log("currentCursorPositionKey: " + currentCursorPositionKey);
 			if (currentMode == NORMAL_MODE)
 			{
 				var newPosition:Point;
@@ -590,8 +605,8 @@ package utility
 							case "left": newCursorPositionKey = cursorPositionsNodes[currentCursorPositionKey].leftKey; break;
 							case "right": newCursorPositionKey = cursorPositionsNodes[currentCursorPositionKey].rightKey; break;
 						}
-						trace( cursorPositionsNodes[currentCursorPositionKey].downKey);
-						trace("tryin to move to " + newCursorPositionKey + " and validity is: " + cursorPositionsValidity[newCursorPositionKey]);
+						//FP.log( cursorPositionsNodes[currentCursorPositionKey].downKey);
+						//FP.log("tryin to move to " + newCursorPositionKey + " and validity is: " + cursorPositionsValidity[newCursorPositionKey]);
 						if (cursorPositionsValidity[newCursorPositionKey])
 						{
 							currentCursorPositionKey = newCursorPositionKey;
@@ -758,7 +773,7 @@ package utility
 			columnKeys = _uiDatastructures[3];
 			displayTexts = _uiDatastructures[4];
 			//cursorPositionsValidity["WeaponItem1"] = true;
-			//trace("reset the validities");
+			//FP.log("reset the validities");
 		}
 		
 		public function get visible():Boolean

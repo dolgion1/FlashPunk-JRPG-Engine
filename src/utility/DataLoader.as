@@ -236,7 +236,8 @@ package utility
 			
 			for each (i in inventoryUIDataXML.columnkeys.columnkey)
 			{
-				columnKeys[i.@column][i.@index] = i.@key;
+				columnKeys[i.@column][i.@index] = new String(i.@key);
+//				FP.log(type(i.@key));
 			}
 			
 			for each (i in inventoryUIDataXML.displaytexts.displaytext)

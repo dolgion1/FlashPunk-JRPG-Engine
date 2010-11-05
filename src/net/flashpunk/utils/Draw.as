@@ -8,6 +8,7 @@
 	import flash.geom.Rectangle;
 	import net.flashpunk.Entity;
 	import net.flashpunk.FP;
+	import net.flashpunk.Graphic;
 	
 	/**
 	 * Static class with access to miscellanious drawing functions.
@@ -55,7 +56,7 @@
 		 */
 		public static function line(x1:int, y1:int, x2:int, y2:int, color:uint = 0xFFFFFF):void
 		{
-			if (color >= 0xFF000000) color &= 0xFFFFFF;
+			if (color < 0xFF000000) color = 0xFF000000 | color;
 			
 			// get the drawing positions
 			x1 -= _camera.x;
@@ -207,10 +208,10 @@
 				fy:int = -2 * radius,
 				xx:int = 0,
 				yy:int = radius;
-			_target.setPixel(x, y + radius, color);
-			_target.setPixel(x, y - radius, color);
-			_target.setPixel(x + radius, y, color);
-			_target.setPixel(x - radius, y, color);
+			_target.setPixel32(x, y + radius, color);
+			_target.setPixel32(x, y - radius, color);
+			_target.setPixel32(x + radius, y, color);
+			_target.setPixel32(x - radius, y, color);
 			while (xx < yy)
 			{
 				if (f >= 0) 
@@ -222,14 +223,14 @@
 				xx ++;
 				fx += 2;
 				f += fx;    
-				_target.setPixel(x + xx, y + yy, color);
-				_target.setPixel(x - xx, y + yy, color);
-				_target.setPixel(x + xx, y - yy, color);
-				_target.setPixel(x - xx, y - yy, color);
-				_target.setPixel(x + yy, y + xx, color);
-				_target.setPixel(x - yy, y + xx, color);
-				_target.setPixel(x + yy, y - xx, color);
-				_target.setPixel(x - yy, y - xx, color);
+				_target.setPixel32(x + xx, y + yy, color);
+				_target.setPixel32(x - xx, y + yy, color);
+				_target.setPixel32(x + xx, y - yy, color);
+				_target.setPixel32(x - xx, y - yy, color);
+				_target.setPixel32(x + yy, y + xx, color);
+				_target.setPixel32(x - yy, y + xx, color);
+				_target.setPixel32(x + yy, y - xx, color);
+				_target.setPixel32(x - yy, y - xx, color);
 			}
 		}
 		
@@ -271,7 +272,7 @@
 		{
 			if (outline)
 			{
-				if (color < 0xFF000000) color += 0xFF000000;
+				if (color < 0xFF000000) color = 0xFF000000 | color;
 				var x:int = e.x - e.originX - _camera.x,
 					y:int = e.y - e.originY - _camera.y;
 				_rect.x = x;
@@ -289,9 +290,9 @@
 				_target.fillRect(_rect, color);
 				return;
 			}
-			if (alpha >= 1)
+			if (alpha >= 1 && !blend)
 			{
-				if (color < 0xFF000000) color += 0xFF000000;
+				if (color < 0xFF000000) color = 0xFF000000 | color;
 				_rect.x = e.x - e.originX - _camera.x;
 				_rect.y = e.y - e.originY - _camera.y;
 				_rect.width = e.width;
@@ -299,6 +300,7 @@
 				_target.fillRect(_rect, color);
 				return;
 			}
+			if (color >= 0xFF000000) color = 0xFFFFFF & color;
 			_graphics.clear();
 			_graphics.beginFill(color, alpha);
 			_graphics.drawRect(e.x - e.originX - _camera.x, e.y - e.originY - _camera.y, e.width, e.height);
@@ -313,14 +315,54 @@
 		 * @param	y2		Y control point, used to determine the curve.
 		 * @param	x3		X finish.
 		 * @param	y3		Y finish.
+		 * @param	color	Color of the curve
+		 * @param	alpha	Alpha transparency.
 		 */
-		public static function curve(x1:int, y1:int, x2:int, y2:int, x3:int, y3:int):void
+		public static function curve(x1:int, y1:int, x2:int, y2:int, x3:int, y3:int, thick:Number = 1, color:uint = 0, alpha:Number = 1):void
 		{
 			_graphics.clear();
-			_graphics.lineStyle(1, 0xFF0000);
-			_graphics.moveTo(x1, y1);
-			_graphics.curveTo(x2, y2, x3, y3);
+			_graphics.lineStyle(thick, color, alpha);
+			_graphics.moveTo(x1 - _camera.x, y1 - _camera.y);
+			_graphics.curveTo(x2 - _camera.x, y2 - _camera.y, x3 - _camera.x, y3 - _camera.y);
 			_target.draw(FP.sprite, null, null, blend);
+		}
+		
+		/**
+		 * Draws a graphic object.
+		 * @param	g		The Graphic to draw.
+		 * @param	x		X position.
+		 * @param	y		Y position.
+		 */
+		public static function graphic(g:Graphic, x:int = 0, y:int = 0):void
+		{
+			if (g.visible)
+			{
+				if (g.relative)
+				{
+					FP.point.x = x;
+					FP.point.y = y;
+				}
+				else FP.point.x = FP.point.y = 0;
+				FP.point2.x = FP.camera.x;
+				FP.point2.y = FP.camera.y;
+				g.render(_target, FP.point, FP.point2);
+			}
+		}
+		
+		/**
+		 * Draws an Entity object.
+		 * @param	e					The Entity to draw.
+		 * @param	x					X position.
+		 * @param	y					Y position.
+		 * @param	addEntityPosition	Adds the Entity's x and y position to the target position.
+		 */
+		public static function entity(e:Entity, x:int = 0, y:int = 0, addEntityPosition:Boolean = false):void
+		{
+			if (e.visible && e.graphic)
+			{
+				if (addEntityPosition) graphic(e.graphic, x + e.x, y + e.y);
+				else graphic(e.graphic, x, y);
+			}
 		}
 		
 		// Drawing information.

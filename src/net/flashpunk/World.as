@@ -16,6 +16,11 @@
 		public var visible:Boolean = true;
 		
 		/**
+		 * Point used to determine drawing offset in the render loop.
+		 */
+		public var camera:Point = new Point;
+		
+		/**
 		 * Constructor.
 		 */
 		public function World() 
@@ -901,6 +906,11 @@
 			{
 				for each (e in _remove)
 				{
+					if (e._added != true && _add.indexOf(e) >= 0)
+					{
+						_add.splice(_add.indexOf(e), 1);
+						continue;
+					}
 					e._added = false;
 					e.removed();
 					removeUpdate(e);

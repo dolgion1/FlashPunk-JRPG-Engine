@@ -52,7 +52,7 @@ package worlds
 		
 		// Utilities
 		public var time:Time = new Time();
-		public var camera:Camera;
+		public var cam:Camera;
 		public var dataloader:DataLoader = new DataLoader();
 		public var dialogManager:DialogManager = new DialogManager();
 		
@@ -71,9 +71,9 @@ package worlds
 			// prepare the stage
 			loadMap();
 			
-			// set up camera
-			camera = new Camera(200, Player.speed);
-			camera.adjustToPlayer(currentMap.height, currentMap.width, player);
+			// set up cam
+			cam = new Camera(200, Player.speed);
+			cam.adjustToPlayer(currentMap.height, currentMap.width, player);
 			
 			defineInputKeys();
 		}
@@ -109,7 +109,7 @@ package worlds
 				}
 				
 				// Camera moves if player reaches cam offset
-				camera.followPlayer(currentMap.height, currentMap.width, player);
+				cam.followPlayer(currentMap.height, currentMap.width, player);
 				
 				// Check if player leaves the map
 				if (checkSwitchToNewMap())
@@ -374,7 +374,7 @@ package worlds
 		{
 			removeAll();
 			loadMap();
-			camera.adjustToPlayer(currentMap.height, currentMap.width, player);
+			cam.adjustToPlayer(currentMap.height, currentMap.width, player);
 		}
 		
 		public function openWorldMap():void
