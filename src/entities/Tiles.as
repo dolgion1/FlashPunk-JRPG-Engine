@@ -13,8 +13,8 @@ package entities
 	{
 		[Embed(source = "../../assets/gfx/tiles.png")]
 		private var TILES:Class;
-		private const TILE_SIZE:Number = 48;
-		private const RECT_SIZE:Number = 16;
+		private const TILE_SIZE:int = 48;
+		private const RECT_SIZE:int = 16;
 		public var tilemap:Tilemap;
 		public var grid:Grid;
 		

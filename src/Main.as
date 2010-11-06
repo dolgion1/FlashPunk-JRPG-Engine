@@ -3,6 +3,7 @@
 	import net.flashpunk.Engine;
 	import net.flashpunk.FP;
 	import worlds.Game;
+	import utility.Constants;
 	
 	/**
 	 * ...
@@ -16,8 +17,10 @@
 		public function Main():void
 		{
 			super(624, 480, 60, false);
-			FP.world = new Game();
 			FP.console.enable();
+			Constants.loadData();
+			FP.world = new Game();
+			
 		}
 		
 		override public function init():void 

@@ -11,7 +11,8 @@ package utility
 	{
 		public const NORMAL_COST:int = 10;
 		public const DIAGONAL_COST:int = 14;
-		
+		public const TILE_SIZE:int = 48;
+
 		public var gridSquares:Array = new Array();
 		public var closedNodes:Array;
 		public var openNodes:Array;
@@ -24,6 +25,7 @@ package utility
 		public function pathfinding(_startPoint:GlobalPosition, _endPoint:GlobalPosition, _maps:Array):Array
 		{
 			gridSquares = _maps[_startPoint.mapIndex].gridSquares;
+
 			// figure out to which square the startPoint belongs
 			startSquare = getGridSquare(_startPoint.point);
 			
@@ -62,10 +64,10 @@ package utility
 			
 			// store all the points
 			var testPoints:Array = new Array();
-			testPoints.push(new Point(node.square.x, node.square.y - 48)); // above
-			testPoints.push(new Point(node.square.x + 48, node.square.y)); // to the right
-			testPoints.push(new Point(node.square.x, node.square.y + 48)); // below
-			testPoints.push(new Point(node.square.x - 48, node.square.y)); // to the left
+			testPoints.push(new Point(node.square.x, node.square.y - TILE_SIZE)); // above
+			testPoints.push(new Point(node.square.x + TILE_SIZE, node.square.y)); // to the right
+			testPoints.push(new Point(node.square.x, node.square.y + TILE_SIZE)); // below
+			testPoints.push(new Point(node.square.x - TILE_SIZE, node.square.y)); // to the left
 			
 			/*
 			 * For diagonal movement: be aware, it's almost certain they'll get stuck in 
@@ -141,8 +143,8 @@ package utility
 			var deltaX:Number = Math.abs(_startSquare.x - _endSquare.x);
 			var deltaY:Number = Math.abs(_startSquare.y - _endSquare.y);
 			
-			var horizontalSteps:int = deltaX / 48;
-			var verticalSteps:int = deltaY / 48;
+			var horizontalSteps:int = deltaX / TILE_SIZE;
+			var verticalSteps:int = deltaY / TILE_SIZE;
 			
 			return ((horizontalSteps + verticalSteps) * 10);
 		}
@@ -170,10 +172,10 @@ package utility
 			for (var i:int = 0; i < gridSquares.length; i++)
 			{
 				// check the x coordinate
-				if (gridSquares[i].x <= _position.x && gridSquares[i].x + 48 > _position.x)
+				if (gridSquares[i].x <= _position.x && gridSquares[i].x + TILE_SIZE > _position.x)
 				{
 					// if it's in the range of x, check the y coordinate
-					if (gridSquares[i].y <= _position.y && gridSquares[i].y + 48 > _position.y)
+					if (gridSquares[i].y <= _position.y && gridSquares[i].y + TILE_SIZE > _position.y)
 					{
 						return gridSquares[i];
 					}

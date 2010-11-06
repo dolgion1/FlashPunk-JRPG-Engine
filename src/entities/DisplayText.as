@@ -5,7 +5,7 @@ package entities
 	import net.flashpunk.graphics.Text;
 	/**
 	 * ...
-	 * @author ...
+	 * @author dolgion
 	 */
 	public class DisplayText extends Entity
 	{

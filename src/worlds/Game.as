@@ -72,7 +72,7 @@ package worlds
 			loadMap();
 			
 			// set up cam
-			cam = new Camera(200, Player.speed);
+			cam = new Camera(Constants.cameraOffset, Player.speed);
 			cam.adjustToPlayer(currentMap.height, currentMap.width, player);
 			
 			defineInputKeys();

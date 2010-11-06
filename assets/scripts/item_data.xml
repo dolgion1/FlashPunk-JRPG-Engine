@@ -30,24 +30,6 @@
 				<twohanded>true</twohanded>
 				<damagerating>5</damagerating>
 			</weapon>
-			<weapon name="Bronze Sword">
-				<damagetype>0</damagetype>
-				<attacktype>0</attacktype>
-				<twohanded>false</twohanded>
-				<damagerating>5</damagerating>
-			</weapon>
-			<weapon name="Silver Dagger">
-				<damagetype>1</damagetype>
-				<attacktype>0</attacktype>
-				<twohanded>false</twohanded>
-				<damagerating>4</damagerating>
-			</weapon>
-			<weapon name="Long Bow">
-				<damagetype>1</damagetype>
-				<attacktype>1</attacktype>
-				<twohanded>true</twohanded>
-				<damagerating>5</damagerating>
-			</weapon>
 		</weapons>
 		
 		<!-->

@@ -8,7 +8,9 @@ package utility
 	public class NPCDialogBox
 	{
 		public const DEFAULT_FONT_SIZE:int = 12;
-		
+		public const SCALE_X_MULTIPLIER:int = 46;
+		public const SCALE_Y_MULTIPLIER:int = 3;
+
 		// entities
 		public var textBox:TextBox;
 		public var displayTexts:Array = new Array();
@@ -21,14 +23,14 @@ package utility
 		public var rowsPerPage:int;
 		private var text:String;
 		private var visibility:Boolean;
-		
+
 		public function NPCDialogBox(_x:int, _y:int, _scaleX:Number, _scaleY:Number)
 		{
 			x = _x;
 			y = _y;
 			textBox = new TextBox(_x, _y,  _scaleX,  _scaleY);
-			charsPerRow = _scaleX * 46;
-			rowsPerPage = _scaleY * 3;
+			charsPerRow = _scaleX * SCALE_X_MULTIPLIER;
+			rowsPerPage = _scaleY * SCALE_Y_MULTIPLIER;
 			initDisplayTexts(_scaleX);
 		}
 		

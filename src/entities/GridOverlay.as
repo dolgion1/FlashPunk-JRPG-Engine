@@ -10,6 +10,7 @@ package entities
 	{
 		[Embed (source = "../../assets/gfx/grid_overlay_small.png")]
 		private var GRID_OVERLAY:Class;
+		private var scaleDivider:int = 16;
 		private var image:Image;
 		
 		public function GridOverlay(_x:Number, _y:Number, _width:Number, _height:Number) 
@@ -21,8 +22,8 @@ package entities
 			height = _height;
 			setHitbox(_width, _height, 0, 0);
 			image = new Image(GRID_OVERLAY);
-			image.scaleX = _width/16;
-			image.scaleY = _height/16;
+			image.scaleX = _width/scaleDivider;
+			image.scaleY = _height/scaleDivider;
 			graphic = image;
 		}
 	}

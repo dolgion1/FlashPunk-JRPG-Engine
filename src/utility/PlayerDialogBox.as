@@ -8,6 +8,8 @@ package utility
 	public class PlayerDialogBox
 	{
 		public const DEFAULT_FONT_SIZE:int = 12;
+		public const SCALE_X_MULTIPLIER:int = 46;
+		public const SCALE_Y_MULTIPLIER:int = 3;
 		
 		// entities
 		public var textBox:TextBox;
@@ -33,8 +35,8 @@ package utility
 			x = _x;
 			y = _y;
 			textBox = new TextBox(_x, _y,  _scaleX,  _scaleY);
-			charsPerRow = _scaleX * 46;
-			maxRows = _scaleY * 3;
+			charsPerRow = _scaleX * SCALE_X_MULTIPLIER;
+			maxRows = _scaleY * SCALE_Y_MULTIPLIER;
 			initDisplayTexts(_scaleX, _scaleY);
 		}
 		

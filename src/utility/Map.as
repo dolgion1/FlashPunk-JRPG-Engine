@@ -20,6 +20,8 @@ package utility
 		public static const EAST:int = 1;
 		public static const SOUTH:int = 2;
 		public static const WEST:int = 3;
+
+		public const TILE_SIZE:int = 48;
 		
 		public var index:int;
 		public var name:String;
@@ -79,9 +81,9 @@ package utility
 			var j:int;
 			var square:GridSquare;
 			
-			for (i = 0; i <= height; i += 48)
+			for (i = 0; i <= height; i += TILE_SIZE)
 			{
-				for (j = 0; j <= width; j += 48)
+				for (j = 0; j <= width; j += TILE_SIZE)
 				{
 					counter++;
 					square = new GridSquare(j, i, counter, true);
@@ -100,7 +102,7 @@ package utility
 					{
 						var rect1:Rectangle = new Rectangle(gridSquares[i].x,
 															gridSquares[i].y,
-															48, 48);
+															TILE_SIZE, TILE_SIZE);
 						var rect2:Rectangle = new Rectangle(solid.@x,
 															solid.@y,
 															solid.@w,

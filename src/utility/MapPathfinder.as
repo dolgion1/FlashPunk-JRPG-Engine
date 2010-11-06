@@ -15,6 +15,7 @@ package utility
 		private var endMapIndex:int;
 		private var queue:Array = new Array();
 		private var visitedMaps:Array = new Array();
+		private var tileSize:int = 48;
 		
 		public function MapPathfinder() {}
 		
@@ -27,6 +28,7 @@ package utility
 			mapPath = new Array();
 			determineMapPath(startMapIndex);
 			mapPath.reverse();
+
 			return mapPath;
 		}
 		
@@ -55,8 +57,8 @@ package utility
 						switch (i)
 						{
 							case (Map.NORTH): exitPoint = new GlobalPosition(currentMap.index, x, 0); break;
-							case (Map.EAST): exitPoint = new GlobalPosition(currentMap.index, currentMap.width - 48, y); break;
-							case (Map.SOUTH): exitPoint = new GlobalPosition(currentMap.index, x, currentMap.height - 48); break;
+							case (Map.EAST): exitPoint = new GlobalPosition(currentMap.index, currentMap.width - tileSize, y); break;
+							case (Map.SOUTH): exitPoint = new GlobalPosition(currentMap.index, x, currentMap.height - tileSize); break;
 							case (Map.WEST): exitPoint = new GlobalPosition(currentMap.index, 0, y); break;
 						}
 					}
@@ -99,10 +101,10 @@ package utility
 					{
 						switch (i)
 						{
-							case Map.NORTH: startingPoint.y = newMap.height - 48; startingPoint.x = x; break;
+							case Map.NORTH: startingPoint.y = newMap.height - tileSize; startingPoint.x = x; break;
 							case Map.EAST: startingPoint.x = 0; startingPoint.y = y; break;
 							case Map.SOUTH: startingPoint.y = 0; startingPoint.x = x; break;
-							case Map.WEST: startingPoint.x = newMap.width - 48; startingPoint.y = y; break;
+							case Map.WEST: startingPoint.x = newMap.width - tileSize; startingPoint.y = y; break;
 						}
 					}
 				}

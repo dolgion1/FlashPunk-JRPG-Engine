@@ -10,8 +10,10 @@ package entities
 	{
 		[Embed (source = "../../assets/gfx/house.png")]
 		private var HOUSE:Class;
+
 		public var index:int;
 		public var insideMapIndex:int;
+		public var hitboxSize:int = 48;
 		
 		public function House(_index:int, _x:int, _y:int) 
 		{
@@ -21,7 +23,7 @@ package entities
 			y = _y;
 			
 			graphic = new Image(HOUSE);
-			setHitbox(48, 48);
+			setHitbox(hitboxSize, hitboxSize);
 		}
 		
 	}
