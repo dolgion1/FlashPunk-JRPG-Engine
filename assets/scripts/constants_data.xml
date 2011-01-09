@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf_8" ?>
+<data>
+	
+	<!--> Game Class Constants <!-->
+
+	<camera_offset>200</camera_offset>
+
+	<map_display_text x="300" y="0" />
+	<daytime_display_text x="450" y="0" />
+	<time_display_text x="550" y="0" />
+
+	<npc_dialog_box x="200" y="50" scaleX="1.5" scaleY="1" scaleXMultiplier="46" scaleYMultiplier="3" defaultFontSize="12" />
+	<player_dialog_box x="10" y="320" scaleX="2.5" scaleY="1.5" scaleXMultiplier="46" scaleYMultiplier="3" defaultFontSize="12" />
+
+
+	<!--> NPC Class Constants <!-->
+
+	<npc_sprite width="25" height="29" />
+	<npc_hitbox width="16" height="23" xOffset="-4" yOffset="-3" />
+	<npc_speed>1</npc_speed>
+	
+	<npc_animation name="walk_down" startFrame="0" endFrame="2" frameRate="5" loop="true" />
+	<npc_animation name="walk_up" startFrame="2" endFrame="4" frameRate="5" loop="true" />
+	<npc_animation name="walk_left" startFrame="4" endFrame="6" frameRate="5" loop="true" />
+	<npc_animation name="walk_right" startFrame="6" endFrame="8" frameRate="5" loop="true" />
+	<npc_animation name="stand_down" frame="0" frameRate="0" loop="false" />
+	<npc_animation name="stand_up" frame="2" frameRate="0" loop="false" />
+	<npc_animation name="stand_left" frame="4" frameRate="0" loop="false" />
+	<npc_animation name="stand_right" frame="6" frameRate="0" loop="false" />
+
+
+	<!--> Player Class Constants <!-->
+
+	<player_sprite width="23" height="28" />
+	<player_hitbox width="16" height="23" xOffset="-4" yOffset="-3" />
+	<player_speed normal="2" diagonal="1.4" />
+	<player_dialog_distance>3</player_dialog_distance>
+	<player_enter_house_distance>3</player_enter_house_distance>
+
+	<player_animation name="walk_down" startFrame="0" endFrame="8" frameRate="9" loop="true" />
+	<player_animation name="walk_up" startFrame="8" endFrame="16" frameRate="9" loop="true" />
+	<player_animation name="walk_right" startFrame="16" endFrame="22" frameRate="9" loop="true" />
+	<player_animation name="walk_left" startFrame="24" endFrame="30" frameRate="9" loop="true" />
+	<player_animation name="stand_down" frame="0" frameRate="0" loop="false" />
+	<player_animation name="stand_up" frame="8" frameRate="0" loop="false" />
+	<player_animation name="stand_right" frame="16" frameRate="0" loop="false" />
+	<player_animation name="stand_left" frame="24" frameRate="0" loop="false" />
+
+
+	<!--> Layout Constants <!-->
+	<tile_size>48</tile_size>
+	<rect_size>16</rect_size>
+
+
+	<!--> Pathfinding Constants <!-->
+	<pathfinding_normal_cost>10</pathfinding_normal_cost>
+	<pathfinding_diagonal_cost>14</pathfinding_diagonal_cost>
+
+	<grid_overlay_scale_divider>16</grid_overlay_scale_divider>
+
+	<!--> Inventory Screen <!-->
+	<inventory_x_offset>10</inventory_x_offset>
+	<inventory_y_offset>10</inventory_y_offset>
+	<inventory_x_scale>3</inventory_x_scale>
+	<inventory_y_scale>4.5</inventory_y_scale>
+	<inventory_item_rows>6</inventory_item_rows>
+	<inventory_item_columns>3</inventory_item_columns>
+
+	<!--> Status Screen <!-->
+	<status_x_offset>10</status_x_offset>
+	<status_y_offset>10</status_y_offset>
+	<status_x_scale>3</status_x_scale>
+	<status_y_scale>4.5</status_y_scale>
+	<status_portrait_x_offset>50</status_portrait_x_offset>
+	<status_portrait_y_offset>50</status_portrait_y_offset>
+	<status_display_text name="Experience: " xOffset="250" yOffset="50" width="500" fontSize="12" />
+	<status_display_text name="Strength: " xOffset="250" yOffset="90" width="500" fontSize="12" />
+	<status_display_text name="Agility: " xOffset="250" yOffset="130" width="500" fontSize="12" />
+	<status_display_text name="Intelligence: " xOffset="250" yOffset="170" width="500" fontSize="12" />
+
+</data>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
