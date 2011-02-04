@@ -198,6 +198,8 @@ package utility
 		
 		public function setupInventoryUIData():Array
 		{
+			trace("wtf");
+			
 			var inventoryUIDataArray:ByteArray = new inventoryUIData;
 			var inventoryUIDataXML:XML = new XML(inventoryUIDataArray.readUTFBytes(inventoryUIDataArray.length));
 			var i:XML;

@@ -7,6 +7,7 @@ package utility
 	import net.flashpunk.FP;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
+	
 	/**
 	 * ...
 	 * @author dolgion
