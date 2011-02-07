@@ -36,9 +36,15 @@ package entities
 		
 		// character stats
 		public var experience:int = 0;
-		public var strength:int = 10;
-		public var agility:int = 10;
-		public var intelligence:int = 10;
+		public var strength:int = 10; // determines what weapon and armor can be used and inventory capacity
+		public var agility:int = 10; // determines chance to hit and evade attacks
+		public var spirituality:int = 10; // determines effectiveness of magical weapons and what spells can be used
+		
+		// directly combat related stats
+		public var damageType:int = -1;
+		public var damageRating:int = 0;
+		public var attackType:int = -1;
+		public var armorRating:int = 0;
 		
 		public var items:Array = new Array();
 		public var equipment:Dictionary = new Dictionary();
@@ -270,9 +276,31 @@ package entities
 			equipment["ArmorEquipFeet"] = null;
 		}
 		
+		public function updateStats():void {
+			
+			// loop through the equipment and recalculate the combat related stats
+			if (equipment["WeaponEquipPrimary"] != null)
+			{
+				damageType = equipment["WeaponEquipPrimary"].damageType;
+				damageRating = equipment["WeaponEquipPrimary"].damageRating;
+				attackType = equipment["WeaponEquipPrimary"].attackType;
+				
+				FP.log("primary weapon is equipped");
+			}
+			
+			armorRating = 0;
+			
+			if (equipment["ArmorEquipHead"] != null) armorRating += equipment["ArmorEquipHead"].armorRating;
+			if (equipment["ArmorEquipTorso"] != null) armorRating += equipment["ArmorEquipTorso"].armorRating;
+			if (equipment["ArmorEquipLegs"] != null) armorRating += equipment["ArmorEquipLegs"].armorRating;
+			if (equipment["ArmorEquipHands"] != null) armorRating += equipment["ArmorEquipHands"].armorRating;
+			if (equipment["ArmorEquipFeet"] != null) armorRating += equipment["ArmorEquipFeet"].armorRating;
+		}
+		
 		public function get stats():Array
 		{
-			return new Array(experience, strength, agility, intelligence);
+			FP.log("Combat Stats: " + damageType + ", " + damageRating + ", " + attackType + ", " + armorRating);
+			return new Array(experience, strength, agility, spirituality, damageRating, damageType, attackType, armorRating);
 		}
 	}
 }

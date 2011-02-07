@@ -408,7 +408,7 @@ package worlds
 		{
 			gameMode = STATUS_SCREEN_MODE;
 			statusScreen.visible = true;
-			statusScreen.stats = player.stats;
+			statusScreen.stats = player.stats;	
 		}
 		
 		public function closeStatusScreen():void
@@ -428,6 +428,7 @@ package worlds
 		{
 			gameMode = NORMAL_MODE;
 			inventoryScreen.visible = false;
+			player.updateStats();
 		}
 		
 		public function checkSwitchToNewMap():Boolean

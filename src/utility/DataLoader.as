@@ -198,8 +198,6 @@ package utility
 		
 		public function setupInventoryUIData():Array
 		{
-			trace("wtf");
-			
 			var inventoryUIDataArray:ByteArray = new inventoryUIData;
 			var inventoryUIDataXML:XML = new XML(inventoryUIDataArray.readUTFBytes(inventoryUIDataArray.length));
 			var i:XML;
@@ -220,15 +218,12 @@ package utility
 				
 				if (i.@validity == "true")
 				{
-					trace("  cursorPositionsValidity  true: " + i.@key);
 					cursorPositionsValidity["" + i.@key] = true;
 				}
 				else 
 				{
-					trace("  cursorPositionsValidity  false: " + i.@key);
 					cursorPositionsValidity["" + i.@key] = false;
 				}
-				//trace("  cursorPositionsValidity[i.@key]" +  cursorPositionsValidity["" + i.@key]);
 			}
 			
 			for each (i in inventoryUIDataXML.cursorpositionnodes.cursorpositionnode)
@@ -239,7 +234,6 @@ package utility
 			for each (i in inventoryUIDataXML.columnkeys.columnkey)
 			{
 				columnKeys[i.@column][i.@index] = new String(i.@key);
-//				FP.log(type(i.@key));
 			}
 			
 			for each (i in inventoryUIDataXML.displaytexts.displaytext)

@@ -15,7 +15,7 @@
 			<weapon name="Steel Sword">
 				<damagetype>0</damagetype>
 				<attacktype>0</attacktype>
-				<twohanded>false</twohanded>
+				<twohanded>true</twohanded>
 				<damagerating>5</damagerating>
 			</weapon>
 			<weapon name="Dagger">
@@ -43,7 +43,7 @@
 		<armors>
 			<armor name="Cotton Hood">
 				<armortype>0</armortype>
-				<armorrating>2</armorrating>
+				<armorrating>2</armorrating> 
 			</armor>
 			<armor name="Gay Leather Hat">
 				<armortype>0</armortype>

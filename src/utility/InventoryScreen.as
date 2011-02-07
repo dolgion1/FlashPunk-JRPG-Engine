@@ -82,7 +82,6 @@ package utility
 		
 		public function initialize(_items:Array, _equipment:Dictionary):void
 		{
-			FP.log("debug message");
 			items = _items;
 			equipment = _equipment;
 			
@@ -122,7 +121,6 @@ package utility
 		
 		
 		
-		// REVIEW THIS FUNCTION. VALIDITIES ARE GETTING LOST
 		public function populateItemColumns():void
 		{
 			resetItemColumnDisplayTexts();
@@ -153,24 +151,8 @@ package utility
 					
 					itemColumns[i][j].displayText.text = items[i][j].name;
 					cursorPositionsValidity[columnKeys[i][j]] = true;
-					FP.log("validated " + columnKeys[i][j] + " which is now: " + cursorPositionsValidity[columnKeys[i][j]]);
 				}
-				// DEBUG LOGGING
-				// print all the validities of the column that we just validated
-				
-				/*for (var k:int = itemsStartIndex[i]; k < itemsEndIndex[i]; k++)
-				{
-					FP.log("Checking the column we just went through. " + columnKeys[i][k] + " is " + cursorPositionsValidity[columnKeys[i][k]]);
-				}*/
 			}
-			for (i = 0; i < 2; i++)
-			{
-				/*for (k = itemsStartIndex[i]; k < itemsEndIndex[i]; k++)
-				{
-					FP.log("Final Check in columns we just went through. " + columnKeys[i][k] + " is " + cursorPositionsValidity[columnKeys[i][k]]);
-				}*/
-			}
-			//FP.log("WeaponItem1 validity: " + cursorPositionsValidity["WeaponItem1"]);
 			cursor.position = cursorPositions[currentCursorPositionKey];
 		}
 		
@@ -494,8 +476,11 @@ package utility
 							validSelection = true;
 							if (items[currentCursorColumn][index].twoHanded)
 							{
-								equipment["WeaponEquipSecondary"].equipped = false;
-								equipment["WeaponEquipSecondary"] = null;
+								if (equipment["WeaponEquipSecondary"]!= null)
+								{
+									equipment["WeaponEquipSecondary"].equipped = false;
+									equipment["WeaponEquipSecondary"] = null;
+								}
 							}
 						}
 						break;
@@ -530,7 +515,9 @@ package utility
 					{
 						equipment[currentEquipmentKey].equipped = false;
 					}
+					
 					equipment[currentEquipmentKey] = items[currentCursorColumn][index];
+
 					items[currentCursorColumn][index].equipped = true;
 					populateEquipmentColumns();
 					
@@ -547,7 +534,6 @@ package utility
 		
 		public function cursorMovement(_direction:String):void
 		{
-			FP.log("currentCursorPositionKey: " + currentCursorPositionKey);
 			if (currentMode == NORMAL_MODE)
 			{
 				var newPosition:Point;
@@ -606,8 +592,7 @@ package utility
 							case "left": newCursorPositionKey = cursorPositionsNodes[currentCursorPositionKey].leftKey; break;
 							case "right": newCursorPositionKey = cursorPositionsNodes[currentCursorPositionKey].rightKey; break;
 						}
-						//FP.log( cursorPositionsNodes[currentCursorPositionKey].downKey);
-						//FP.log("tryin to move to " + newCursorPositionKey + " and validity is: " + cursorPositionsValidity[newCursorPositionKey]);
+						
 						if (cursorPositionsValidity[newCursorPositionKey])
 						{
 							currentCursorPositionKey = newCursorPositionKey;

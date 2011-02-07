@@ -1,0 +1,25 @@
+Explanation of combat stats:
+
+- damageRating is the overall power of a weapon
+- damageType is kind of damage the weapon causes (piercing, impact, slashing or magic)
+- armorRating is overall strength of all armor combined
+- attackType says wether the attack is melee or ranged. when a player executes a melee attack,
+  a counter attack can be suffered, depending on the target enemy
+
+
+Long term method of damage calcuation:
+
+for example, a short sword with damageRating of 10, damageType of slashing.
+armorRating of 11 (torso: 5, head: 2, legs: 2, hands: 0, feet: 2).
+the attack is targetted on the torso, which has armorResistance vs slashing +1, meaning torso's attackRating is boosted by 1. 
+torso's armorRating in that attack is now at 6. 
+Now it must be seen if the attacker successfully manages to attack the torso, so we look at the agility of the attacker,
+which is at 5 of 10, and the agility of the target, which is at 6 of 10. So, we have a chance to hit the target 
+being the average of 50% and 60% = 55% to miss, or 45% to hit. 
+
+
+Temporary method of damage calculation:
+
+For now, in combat, single body parts are not targettable. The armor rating of all pieces of armor just adds up to become
+the overall armor rating. damage rating does not take into account the relationship between damage type and armor resistances.
+Rather, damage rating and armor rating and agilities are factored into the damage calculation for now. 

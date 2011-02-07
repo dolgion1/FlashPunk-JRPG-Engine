@@ -78,8 +78,6 @@ package utility
 		
 		public static function loadData():void
 		{
-			FP.log("loading constants data");
-			
 			var constantsDataByteArray:ByteArray = new constantsData;
 			var constantsDataXML:XML = new XML(constantsDataByteArray.readUTFBytes(constantsDataByteArray.length));
 

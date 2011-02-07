@@ -18,7 +18,11 @@ package utility
 		public var experienceDisplay:DisplayText;
 		public var strengthDisplay:DisplayText;
 		public var agilityDisplay:DisplayText;
-		public var intelligenceDisplay:DisplayText;
+		public var spiritualityDisplay:DisplayText;
+		public var damageRatingDisplay:DisplayText;
+		public var damageTypeDisplay:DisplayText;
+		public var attackTypeDisplay:DisplayText;
+		public var armorRatingDisplay:DisplayText;
 		
 		private var visibility:Boolean = false;
 		
@@ -30,12 +34,20 @@ package utility
 			experienceDisplay = new DisplayText("Experience: ", 250, 50, "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			strengthDisplay = new DisplayText("Strength: ", 250, 90, "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			agilityDisplay = new DisplayText("Agility: ", 250, 130, "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			intelligenceDisplay = new DisplayText("Intelligence: ", 250, 170, "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			spiritualityDisplay = new DisplayText("Spirituality: ", 250, 170, "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			damageRatingDisplay = new DisplayText("Damage: ", 250, 210, "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			damageTypeDisplay = new DisplayText("Damage Type: ", 250, 250, "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			attackTypeDisplay = new DisplayText("Attack Type: ", 250, 290, "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			armorRatingDisplay = new DisplayText("Armor: ", 250, 330, "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			
 			displayTexts.push(experienceDisplay);
 			displayTexts.push(strengthDisplay);
 			displayTexts.push(agilityDisplay);
-			displayTexts.push(intelligenceDisplay);
+			displayTexts.push(spiritualityDisplay);
+			displayTexts.push(damageRatingDisplay);
+			displayTexts.push(damageTypeDisplay);
+			displayTexts.push(attackTypeDisplay);
+			displayTexts.push(armorRatingDisplay);
 		}
 		
 		public function set stats(_stats:Array):void
@@ -43,7 +55,11 @@ package utility
 			experienceDisplay.displayText.text = "Experience: " + _stats[0];
 			strengthDisplay.displayText.text = "Strength: " + _stats[1];
 			agilityDisplay.displayText.text = "Agility: " + _stats[2];
-			intelligenceDisplay.displayText.text = "Intelligence: " + _stats[3];
+			spiritualityDisplay.displayText.text = "Spirituality: " + _stats[3];
+			damageRatingDisplay.displayText.text = "Damage: " + _stats[4];
+			damageTypeDisplay.displayText.text = "Damage Type: " + Weapon.getDamageType(_stats[5]);
+			attackTypeDisplay.displayText.text = "Attack Type: " + Weapon.getAttackType(_stats[6]);
+			armorRatingDisplay.displayText.text = "Armor: " + _stats[7];
 		}
 		
 		public function get visible():Boolean

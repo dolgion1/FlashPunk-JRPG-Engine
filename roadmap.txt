@@ -66,8 +66,8 @@ ATM - means is being worked on at the moment
 	6. [DONE] Equipping and highlighting respective items
 	
 10. [ATM] Character Stats and screen
-	1. [DONE] Store character stats (Strength, Intelligence, etc) in member variables
-	2. [ATM] Allow Equipment to alter/modify those stats
+	1. [DONE] Store character stats (Strength, Spirituality, etc) in member variables
+	2. [DONE] Allow Equipment to alter/modify those stats
 	3. [DONE] Display those stats in the character screen
 	
 11. Game items
