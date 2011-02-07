@@ -31,10 +31,10 @@ package utility
 		{
 			switch (_type)
 			{
-				case (0): return "Slashing";
-				case (1): return "Piercing";
-				case (2): return "Impact";
-				case (3): return "Magic";
+				case (SLASHING): return "Slashing";
+				case (PIERCING): return "Piercing";
+				case (IMPACT): return "Impact";
+				case (MAGIC): return "Magic";
 				default: return "Unarmed";
 			}
 		}
@@ -43,8 +43,8 @@ package utility
 		{
 			switch (_type)
 			{
-				case (0): return "Melee";
-				case (1): return "Ranged";
+				case (MELEE): return "Melee";
+				case (RANGED): return "Ranged";
 				default: return "Unarmed";
 			}
 		}

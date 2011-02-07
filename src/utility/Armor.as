@@ -22,6 +22,30 @@ package utility
 			
 		}
 		
+		public static function getArmorType(_type:int):String
+		{
+			switch (_type)
+			{
+				case (HEAD): return "Head";
+				case (TORSO): return "Torso";
+				case (LEGS): return "Legs";
+				case (HANDS): return "Hands";
+				case (FEET): return "Feet";
+				default: return "";
+			}
+		}
+		
+		public static function getResistance(_type:int):String
+		{
+			switch (_type)
+			{
+				case (0): return "Slashing";
+				case (1): return "Piercing";
+				case (2): return "Impact";
+				case (3): return "Magic";
+				default: return "Unarmed";
+			}
+		}
 	}
 
 }

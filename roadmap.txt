@@ -57,15 +57,15 @@ ATM - means is being worked on at the moment
 	6. [DONE] Display a list with all possible choices if there are more than one at a given time
 	7.[DONE] A given answer invokes the corresponding response of the NPC
 
-9. [ATM] Inventory Screen
+9. [DONE] Inventory Screen
 	1. [DONE] Display an entity containing a list of items currently in possession
 	2. [DONE] Display entries for equippable slots (body parts, weapon slots)
-	3. [ATM] Display information about the currently selected item
+	3. [DONE] Display information about the currently selected item
 	4. [DONE] Movement of the FF-style cursor
 	5. [DONE] Load in UI Data from XML
 	6. [DONE] Equipping and highlighting respective items
 	
-10. [ATM] Character Stats and screen
+10. [DONE] Character Stats and screen
 	1. [DONE] Store character stats (Strength, Spirituality, etc) in member variables
 	2. [DONE] Allow Equipment to alter/modify those stats
 	3. [DONE] Display those stats in the character screen

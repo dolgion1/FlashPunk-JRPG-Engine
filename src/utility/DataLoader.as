@@ -186,7 +186,10 @@ package utility
 				armor.name = i.@name;
 				armor.armorType = i.armortype;
 				armor.armorRating= i.armorrating;
-				
+				armor.resistances[Weapon.SLASHING] = int(i.slashing);
+				armor.resistances[Weapon.PIERCING] = int(i.piercing);
+				armor.resistances[Weapon.IMPACT] = int(i.impact);
+				armor.resistances[Weapon.MAGIC] = int(i.magic);
 				armors.push(armor);
 			}
 			

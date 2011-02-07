@@ -31,6 +31,16 @@
 		<cursorposition key="ConsumableItem4" x="365" y="270" validity="false" />
 		<cursorposition key="ConsumableItem5" x="365" y="290" validity="false" />
 		<cursorposition key="ConsumableItem6" x="365" y="310" validity="false" />
+		
+		<!-->Information Area
+		<cursorposition key="Info1" x="215" y="370" validity="false" />
+		<cursorposition key="Info2" x="215" y="400" validity="false" />
+		<cursorposition key="Info3" x="215" y="430" validity="false" />
+		<cursorposition key="Info4" x="365" y="370" validity="false" />
+		<cursorposition key="Info5" x="365" y="400" validity="false" />
+		<cursorposition key="Info6" x="365" y="430" validity="false" />
+		</!-->
+			
 	</cursorpositions>
 	
 	<cursorpositionnodes>
@@ -250,5 +260,15 @@
 		<displaytext text="Feet: " x="100" y="140" size="12" />
 		<displaytext text="Primary Weapon: " x="300" y="60" size="12" />
 		<displaytext text="Secondary Weapon: " x="300" y="80" size="12" />
+		
+		<displaytext text="" x="150" y="340" size="12" />
+		<displaytext text="" x="150" y="360" size="12" />
+		<displaytext text="" x="150" y="380" size="12" />
+		<displaytext text="" x="150" y="400" size="12" />
+		<displaytext text="" x="340" y="340" size="12" />
+		<displaytext text="" x="340" y="360" size="12" />
+		<displaytext text="" x="340" y="380" size="12" />
+		<displaytext text="" x="340" y="400" size="12" />
+		
 	</displaytexts>
 </data>

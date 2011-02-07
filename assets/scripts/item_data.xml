@@ -44,42 +44,82 @@
 			<armor name="Cotton Hood">
 				<armortype>0</armortype>
 				<armorrating>2</armorrating> 
+				<slashing>0</slashing>
+				<piercing>0</piercing>
+				<impact>0</impact>
+				<magic>0</magic>
 			</armor>
 			<armor name="Gay Leather Hat">
 				<armortype>0</armortype>
 				<armorrating>0</armorrating>
+				<slashing>0</slashing>
+				<piercing>0</piercing>
+				<impact>0</impact>
+				<magic>0</magic>
 			</armor>
 			<armor name="Cotton Coat">
 				<armortype>1</armortype>
 				<armorrating>4</armorrating>
+				<slashing>1</slashing>
+				<piercing>1</piercing>
+				<impact>1</impact>
+				<magic>1</magic>
 			</armor>
 			<armor name="Gay Pink Shirt">
 				<armortype>1</armortype>
 				<armorrating>0</armorrating>
+				<slashing>1</slashing>
+				<piercing>-1</piercing>
+				<impact>1</impact>
+				<magic>-1</magic>
 			</armor>
 			<armor name="Leather Pants">
 				<armortype>2</armortype>
 				<armorrating>2</armorrating>
+				<slashing>1</slashing>
+				<piercing>0</piercing>
+				<impact>0</impact>
+				<magic>0</magic>
 			</armor>
 			<armor name="Gay Leopard Pants">
 				<armortype>2</armortype>
 				<armorrating>0</armorrating>
+				<slashing>0</slashing>
+				<piercing>-2</piercing>
+				<impact>0</impact>
+				<magic>5</magic>
 			</armor>
 			<armor name="Leather Boots">
 				<armortype>4</armortype>
 				<armorrating>2</armorrating>
+				<slashing>1</slashing>
+				<piercing>0</piercing>
+				<impact>0</impact>
+				<magic>0</magic>
 			</armor>
 			<armor name="Gay Sandals">
 				<armortype>4</armortype>
 				<armorrating>0</armorrating>
+				<slashing>0</slashing>
+				<piercing>0</piercing>
+				<impact>0</impact>
+				<magic>1</magic>
 			</armor>
 			<armor name="Woolen Gloves">
 				<armortype>3</armortype>
 				<armorrating>2</armorrating>
+				<slashing>0</slashing>
+				<piercing>0</piercing>
+				<impact>-4</impact>
+				<magic>1</magic>
 			</armor>
 			<armor name="Gay Leopard Gloves">
 				<armortype>3</armortype>
 				<armorrating>0</armorrating>
+				<slashing>-1</slashing>
+				<piercing>2</piercing>
+				<impact>1</impact>
+				<magic>3</magic>
 			</armor>
 		</armors>
 		

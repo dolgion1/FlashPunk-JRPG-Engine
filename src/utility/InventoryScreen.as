@@ -23,6 +23,14 @@ package utility
 		public const ARMOR_EQUIP_FEET_DISPLAY_TEXT:int = 7;
 		public const WEAPON_EQUIP_PRIMARY_DISPLAY_TEXT:int = 8;
 		public const WEAPON_EQUIP_SECONDARY_DISPLAY_TEXT:int = 9;
+		public const INFO_DISPLAY_TEXT_ONE:int = 10;
+		public const INFO_DISPLAY_TEXT_TWO:int = 11;
+		public const INFO_DISPLAY_TEXT_THREE:int = 12;
+		public const INFO_DISPLAY_TEXT_FOUR:int = 13;
+		public const INFO_DISPLAY_TEXT_FIVE:int = 14;
+		public const INFO_DISPLAY_TEXT_SIX:int = 15;
+		public const INFO_DISPLAY_TEXT_SEVEN:int = 16;
+		public const INFO_DISPLAY_TEXT_EIGHT:int = 17;
 		
 		public const WEAPON_ITEM_COLUMN:int = 0;
 		public const ARMOR_ITEM_COLUMN:int = 1;
@@ -180,6 +188,19 @@ package utility
 				}
 			}
 		}
+		
+		public function resetInfoDisplayTexts():void
+		{
+			displayTexts[INFO_DISPLAY_TEXT_ONE].displayText.text = "";
+			displayTexts[INFO_DISPLAY_TEXT_TWO].displayText.text = "";
+			displayTexts[INFO_DISPLAY_TEXT_THREE].displayText.text = "";
+			displayTexts[INFO_DISPLAY_TEXT_FOUR].displayText.text = "";
+			displayTexts[INFO_DISPLAY_TEXT_FIVE].displayText.text = "";
+			displayTexts[INFO_DISPLAY_TEXT_SIX].displayText.text = "";
+			displayTexts[INFO_DISPLAY_TEXT_SEVEN].displayText.text = "";
+			displayTexts[INFO_DISPLAY_TEXT_EIGHT].displayText.text = "";
+		}
+		
 		
 		public function initItemColumnDisplayTexts():void
 		{
@@ -749,6 +770,121 @@ package utility
 					}
 				}
 			}
+			
+			// function that lets the information of the item that is cursored currently
+			// appear in the information area
+			displayItemInformation();
+		}
+		
+		public function displayItemInformation():void
+		{
+			resetInfoDisplayTexts();
+			
+			var i:int = 0;
+			var itemName:String;
+			var itemType:int;
+			
+			if (currentCursorColumn == ARMOR_EQUIP_COLUMN)
+			{
+				if (equipment[currentCursorPositionKey] != null)
+				{
+					itemName = equipment[currentCursorPositionKey].name;
+					itemType = Item.ARMOR;
+				}
+			}
+			else if (currentCursorColumn == WEAPON_EQUIP_COLUMN)
+			{
+				if (equipment[currentCursorPositionKey] != null)
+				{
+					itemName = equipment[currentCursorPositionKey].name;
+					itemType = Item.WEAPON;
+				}
+			}
+			else if (currentCursorColumn == WEAPON_ITEM_COLUMN)
+			{
+				i = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1));
+				itemName = itemColumns[WEAPON_ITEM_COLUMN][i - 1].displayText.text;
+				itemType = Item.WEAPON;
+			}
+			else if (currentCursorColumn == ARMOR_ITEM_COLUMN)
+			{
+				i = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1));
+				itemName = itemColumns[ARMOR_ITEM_COLUMN][i - 1].displayText.text;
+				itemType = Item.ARMOR;
+			}
+			else if (currentCursorColumn == CONSUMABLE_ITEM_COLUMN)
+			{
+				i = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1));
+				itemName = itemColumns[CONSUMABLE_ITEM_COLUMN][i - 1].displayText.text;
+				itemType = Item.CONSUMABLE;
+			}
+			
+			// find the item object using its name
+			if (itemType == Item.WEAPON)
+			{
+				for each (var w:Weapon in items[Item.WEAPON])
+				{
+					if (w.name == itemName)
+					{
+						FP.log("got the instance of " + w.name);
+						setWeaponInfoDisplayTexts(w);
+						break;
+					}
+				}
+			}
+			else if (itemType == Item.ARMOR)
+			{
+				for each (var a:Armor in items[Item.ARMOR])
+				{
+					if (a.name == itemName)
+					{
+						FP.log("got the instance of " + a.name);
+						setArmorInfoDisplayTexts(a);
+						break;
+					}
+				}
+			}
+			else if (itemType == Item.CONSUMABLE)
+			{
+				for each (var c:Consumable in items[Item.CONSUMABLE])
+				{
+					if (c.name == itemName)
+					{
+						FP.log("got the instance of " + c.name);
+						setConsumableInfoDisplayTexts(c);
+						break;
+					}
+				}
+			}
+		}
+		
+		public function setWeaponInfoDisplayTexts(_weapon:Weapon):void
+		{
+			displayTexts[INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _weapon.name;
+			displayTexts[INFO_DISPLAY_TEXT_TWO].displayText.text = "Damage Type: " + Weapon.getDamageType(_weapon.damageType);
+			displayTexts[INFO_DISPLAY_TEXT_THREE].displayText.text = "Damage: " + _weapon.damageRating;
+			displayTexts[INFO_DISPLAY_TEXT_FIVE].displayText.text = "Attack Type: " + Weapon.getAttackType(_weapon.attackType);
+			
+			if (_weapon.twoHanded)
+				displayTexts[INFO_DISPLAY_TEXT_SIX].displayText.text = "Two Handed";
+			else
+				displayTexts[INFO_DISPLAY_TEXT_SIX].displayText.text = "One Handed";
+		}
+		
+		public function setArmorInfoDisplayTexts(_armor:Armor):void
+		{
+			displayTexts[INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _armor.name;
+			displayTexts[INFO_DISPLAY_TEXT_TWO].displayText.text = "Body Part: " + Armor.getArmorType(_armor.armorType);
+			displayTexts[INFO_DISPLAY_TEXT_THREE].displayText.text = "Armor: " + _armor.armorRating;
+			displayTexts[INFO_DISPLAY_TEXT_FIVE].displayText.text = "Slash Resistance: " + _armor.resistances[Weapon.SLASHING];
+			displayTexts[INFO_DISPLAY_TEXT_SIX].displayText.text = "Piercing Resistance: " + _armor.resistances[Weapon.PIERCING];
+			displayTexts[INFO_DISPLAY_TEXT_SEVEN].displayText.text = "Impact Resistance: " + _armor.resistances[Weapon.IMPACT];
+			displayTexts[INFO_DISPLAY_TEXT_EIGHT].displayText.text = "Magic Resistance: " + _armor.resistances[Weapon.MAGIC];
+		}
+		
+		public function setConsumableInfoDisplayTexts(_consumable:Consumable):void
+		{
+			
 		}
 		
 		public function initUIDatastructures(_uiDatastructures:Array):void
@@ -758,8 +894,6 @@ package utility
 			cursorPositionsNodes = _uiDatastructures[2];
 			columnKeys = _uiDatastructures[3];
 			displayTexts = _uiDatastructures[4];
-			//cursorPositionsValidity["WeaponItem1"] = true;
-			//FP.log("reset the validities");
 		}
 		
 		public function get visible():Boolean

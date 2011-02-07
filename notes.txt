@@ -15,7 +15,7 @@ the attack is targetted on the torso, which has armorResistance vs slashing +1, 
 torso's armorRating in that attack is now at 6. 
 Now it must be seen if the attacker successfully manages to attack the torso, so we look at the agility of the attacker,
 which is at 5 of 10, and the agility of the target, which is at 6 of 10. So, we have a chance to hit the target 
-being the average of 50% and 60% = 55% to miss, or 45% to hit. 
+being the average of 50% and 60% = 55% to miss, or 45% to hit. If the strike hits, we'll have a damage of 10 - 6 = 4;
 
 
 Temporary method of damage calculation:
