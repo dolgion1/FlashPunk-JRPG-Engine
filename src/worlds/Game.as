@@ -25,6 +25,7 @@ package worlds
 		public var player:Player;
 		public var npcs:Array = new Array();
 		public var items:Array = new Array();
+		public var chests:Array = new Array();
 		public var tiles:Tiles;
 		public var trees:Trees;
 		public var houses:Array;
@@ -64,6 +65,7 @@ package worlds
 			currentMapIndex = player.currentMapIndex;
 			npcs = dataloader.setupNPCs(maps);
 			items = dataloader.setupItems();
+			chests = dataloader.setupChests();
 			
 			// give all items to the player
 			player.items = items;
@@ -139,8 +141,11 @@ package worlds
 			// load player
 			add(player);
 			
-			// load npc
+			// load npcs
 			for each (var npc:NPC in npcs) add(npc);
+			
+			// load chests
+			for each (var chest:Chest in chests) add(chest);
 			
 			// load trees
 			trees = new Trees(currentMap.xml);

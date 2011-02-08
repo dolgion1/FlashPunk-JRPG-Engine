@@ -56,17 +56,15 @@ package entities
 		public function NPC(_maps:Array, 
 							_name:String, 
 							_spritesheetIndex:int, 
-							_x:int, 
-							_y:int, 
-							_mapIndex:int, 
+							_position:GlobalPosition,
 							_appointments:Array,
 							_dialogs:Array)
 		{
 			maps = _maps;
 			name = _name;
-			x = _x;
-			y = _y;
-			currentMapIndex = _mapIndex;
+			x = _position.x;
+			y = _position.y;
+			currentMapIndex = _position.mapIndex;
 			appointments = _appointments;
 			dialogs = _dialogs;
 			setupUpDialogsInTotal();

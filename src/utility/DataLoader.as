@@ -25,7 +25,9 @@ package utility
 		[Embed(source = "../../assets/scripts/map_data.xml", mimeType = "application/octet-stream")] private var mapData:Class;
 		[Embed(source = "../../assets/scripts/npc_data.xml", mimeType = "application/octet-stream")] private var npcData:Class;
 		[Embed(source = "../../assets/scripts/item_data.xml", mimeType = "application/octet-stream")] private var itemData:Class;
+		[Embed(source = "../../assets/scripts/chest_data.xml", mimeType = "application/octet-stream")] private var chestData:Class;
 		[Embed(source = "../../assets/scripts/ui_inventory_data.xml", mimeType = "application/octet-stream")] private var inventoryUIData:Class;
+		
 		
 		public function DataLoader() {}
 		
@@ -150,7 +152,7 @@ package utility
 					npcDialogs.push(npcDialog);
 				}
 				
-				npc = new NPC(maps, o.name, o.spritesheet, o.x, o.y, o.mapIndex, npcAppointments, npcDialogs);
+				npc = new NPC(maps, o.name, o.spritesheet, new GlobalPosition(o.mapIndex, o.x, o.y), npcAppointments, npcDialogs);
 				npcs.push(npc);
 			}
 			
@@ -197,6 +199,21 @@ package utility
 			items.push(armors);
 			
 			return items;
+		}
+		
+		public function setupChests():Array
+		{
+			var chestDataByteArray:ByteArray = new chestData;
+			var chestDataXML:XML = new XML(chestDataByteArray.readUTFBytes(chestDataByteArray.length));
+			var i:XML;
+			var chests:Array = new Array();
+			
+			for each (i in chestDataXML.chest)
+			{
+				chests.push(new Chest(new GlobalPosition(i.mapIndex, i.x, i.y), i.direction));
+			}
+			
+			return chests;
 		}
 		
 		public function setupInventoryUIData():Array

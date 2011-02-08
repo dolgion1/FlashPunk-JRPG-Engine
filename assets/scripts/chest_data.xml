@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<chest>
+		<x>100</x>
+		<y>100</y>
+		<mapIndex>0</mapIndex>
+		<direction>down</direction>
+	</chest>
+</data>

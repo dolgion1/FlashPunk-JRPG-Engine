@@ -166,11 +166,8 @@ package entities
 					if (collide("npc", x - 3, y))
 					{
 						npc = collide("npc", x - 3, y) as NPC;
-						if (Game.gameMode != Game.DIALOG_MODE) 
-						{
-							Game.gameMode = Game.DIALOG_MODE;
-							dialogPartner = npc.name;
-						}
+						Game.gameMode = Game.DIALOG_MODE;
+						dialogPartner = npc.name;
 					}
 				}
 				else if (curAnimation == "walk_right" || 
@@ -179,11 +176,8 @@ package entities
 					if (collide("npc", x + 3, y))
 					{
 						npc = collide("npc", x + 3, y) as NPC;
-						if (Game.gameMode != Game.DIALOG_MODE) 
-						{
-							Game.gameMode = Game.DIALOG_MODE;
-							dialogPartner = npc.name;
-						}
+						Game.gameMode = Game.DIALOG_MODE;
+						dialogPartner = npc.name;
 					}
 				}
 				else if (curAnimation == "walk_up" || 
@@ -192,23 +186,35 @@ package entities
 					if (collide("npc", x, y - 3))
 					{
 						npc = collide("npc", x, y - 3) as NPC;
-						if (Game.gameMode != Game.DIALOG_MODE) 
-						{
-							Game.gameMode = Game.DIALOG_MODE;
-							dialogPartner = npc.name;
-						}
+						Game.gameMode = Game.DIALOG_MODE;
+						dialogPartner = npc.name;
 					}	
 				}
-				else if (curAnimation == "walk_left" || 
-					curAnimation == "stand_up")
+				else if (curAnimation == "walk_down" || 
+					curAnimation == "stand_down")
 				{
 					if (collide("npc", x, y + 3))
 					{
 						npc = collide("npc", x, y + 3) as NPC;
-						if (Game.gameMode != Game.DIALOG_MODE) 
+						Game.gameMode = Game.DIALOG_MODE;
+						dialogPartner = npc.name;
+					}
+				}
+			}
+			
+			// Check if the player wants to open a chest
+			if (Input.pressed("action") && Game.gameMode == Game.NORMAL_MODE)
+			{
+				var chest:Chest;
+				if (curAnimation == "walk_up" || 
+					curAnimation == "stand_up")
+				{
+					if (collide("chest", x, y - 3))
+					{
+						chest = collide("chest", x, y - 3) as Chest;
+						if (chest.faceDirection == "down")
 						{
-							Game.gameMode = Game.DIALOG_MODE;
-							dialogPartner = npc.name;
+							FP.log("ready to open");
 						}
 					}
 				}
@@ -224,6 +230,7 @@ package entities
 		{
 			if (collide("solid", position.x, position.y)) return true;
 			else if (collide("npc", position.x, position.y)) return true;
+			else if (collide("chest", position.x, position.y)) return true;
 			else return false;
 		}
 		
