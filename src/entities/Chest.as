@@ -4,6 +4,7 @@ package entities
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Spritemap;
 	import utility.GlobalPosition;
+	import utility.Item;
 	/**
 	 * ...
 	 * @author dolgion1
@@ -46,6 +47,13 @@ package entities
 			items.push(new Array());
 			items.push(new Array());
 			items.push(new Array());
+		}
+		
+		public function empty():void
+		{
+			items[Item.WEAPON] = new Array();
+			items[Item.ARMOR] = new Array();
+			items[Item.CONSUMABLE] = new Array();
 		}
 		
 		private function setupSpritesheet():void

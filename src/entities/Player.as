@@ -208,6 +208,10 @@ package entities
 			if (Input.pressed("action") && Game.gameMode == Game.NORMAL_MODE)
 			{
 				var chest:Chest;
+				var w:Weapon;
+				var a:Armor;
+				var c:Consumable;
+				
 				if (curAnimation == "walk_up" || 
 					curAnimation == "stand_up")
 				{
@@ -217,21 +221,106 @@ package entities
 						if (chest.faceDirection == "down")
 						{
 							chest.chestSpritemap.play("open_face_down");
-							for each (var w:Weapon in chest.items[Item.WEAPON])
+							for each (w in chest.items[Item.WEAPON])
 							{
 								FP.log("Picked up " + w.name);
 								items[Item.WEAPON].push(w);
 							}
-							for each (var a:Armor in chest.items[Item.ARMOR])
+							for each (a in chest.items[Item.ARMOR])
 							{
 								FP.log("Picked up " + a.name);
 								items[Item.ARMOR].push(a);
 							}
-							for each (var c:Consumable in chest.items[Item.CONSUMABLE])
+							for each (c in chest.items[Item.CONSUMABLE])
 							{
 								FP.log("Picked up " + c.name);
 								items[Item.CONSUMABLE].push(c);
 							}
+							chest.empty();
+						}
+					}
+				}
+				else if (curAnimation == "walk_left" || 
+					curAnimation == "stand_left")
+				{
+					if (collide("chest", x - 3, y))
+					{
+						chest = collide("chest", x - 3, y) as Chest;
+						if (chest.faceDirection == "right")
+						{
+							chest.chestSpritemap.play("open_face_right");
+							for each (w in chest.items[Item.WEAPON])
+							{
+								FP.log("Picked up " + w.name);
+								items[Item.WEAPON].push(w);
+							}
+							for each (a in chest.items[Item.ARMOR])
+							{
+								FP.log("Picked up " + a.name);
+								items[Item.ARMOR].push(a);
+							}
+							for each (c in chest.items[Item.CONSUMABLE])
+							{
+								FP.log("Picked up " + c.name);
+								items[Item.CONSUMABLE].push(c);
+							}
+							chest.empty();
+						}
+					}
+				}
+				else if (curAnimation == "walk_right" || 
+					curAnimation == "stand_right")
+				{
+					if (collide("chest", x + 3, y))
+					{
+						chest = collide("chest", x + 3, y) as Chest;
+						if (chest.faceDirection == "left")
+						{
+							chest.chestSpritemap.play("open_face_left");
+							for each (w in chest.items[Item.WEAPON])
+							{
+								FP.log("Picked up " + w.name);
+								items[Item.WEAPON].push(w);
+							}
+							for each (a in chest.items[Item.ARMOR])
+							{
+								FP.log("Picked up " + a.name);
+								items[Item.ARMOR].push(a);
+							}
+							for each (c in chest.items[Item.CONSUMABLE])
+							{
+								FP.log("Picked up " + c.name);
+								items[Item.CONSUMABLE].push(c);
+							}
+							chest.empty();
+						}
+					}
+				}
+				else if (curAnimation == "walk_down" || 
+					curAnimation == "stand_down")
+				{
+					if (collide("chest", x, y + 3))
+					{
+						chest = collide("chest", x, y + 3) as Chest;
+						if (chest.faceDirection == "up")
+						{
+							chest.chestSpritemap.play("open_face_up");
+							for each (w in chest.items[Item.WEAPON])
+							{
+								FP.log("Picked up " + w.name);
+								items[Item.WEAPON].push(w);
+							}
+							for each (a in chest.items[Item.ARMOR])
+							{
+								FP.log("Picked up " + a.name);
+								items[Item.ARMOR].push(a);
+							}
+							for each (c in chest.items[Item.CONSUMABLE])
+							{
+								FP.log("Picked up " + c.name);
+								items[Item.CONSUMABLE].push(c);
+							}
+							chest.empty();
 						}
 					}
 				}

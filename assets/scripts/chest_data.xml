@@ -10,4 +10,14 @@
 			<item>Cotton Coat</item>
 		</items>	
 	</chest>
+	<chest>
+		<x>220</x>
+		<y>100</y>
+		<mapIndex>0</mapIndex>
+		<direction>left</direction>
+		<items>
+			<item>Cotton Coat</item>
+			<item>Woolen Gloves</item>
+		</items>	
+	</chest>
 </data>
