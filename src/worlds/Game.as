@@ -65,10 +65,10 @@ package worlds
 			currentMapIndex = player.currentMapIndex;
 			npcs = dataloader.setupNPCs(maps);
 			items = dataloader.setupItems();
-			chests = dataloader.setupChests();
+			chests = dataloader.setupChests(items);
 			
 			// give all items to the player
-			player.items = items;
+			// player.items = items;
 			
 			// prepare the stage
 			loadMap();

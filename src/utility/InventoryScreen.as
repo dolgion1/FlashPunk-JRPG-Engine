@@ -407,6 +407,13 @@ package utility
 			{
 				if (currentCursorColumn == ARMOR_EQUIP_COLUMN)
 				{
+					// if there are no armor items, don't move the cursor
+					// and change modes
+					if (items[ARMOR_ITEM_COLUMN].length == 0)
+					{
+						return;
+					}
+					
 					// move the cursor to the appropriate column's first position
 					// set the cursorEquip at the current position
 					cursorEquip.visible = true;
@@ -421,6 +428,13 @@ package utility
 				}
 				else if (currentCursorColumn == WEAPON_EQUIP_COLUMN)
 				{
+					// if there are no weapon items, don't move the cursor
+					// and change modes
+					if (items[WEAPON_ITEM_COLUMN].length == 0)
+					{
+						return;
+					}
+					
 					// move the cursor to the appropriate column's first position
 					// set the cursorEquip at the current position
 					cursorEquip.visible = true;
@@ -826,7 +840,6 @@ package utility
 				{
 					if (w.name == itemName)
 					{
-						FP.log("got the instance of " + w.name);
 						setWeaponInfoDisplayTexts(w);
 						break;
 					}
@@ -838,7 +851,6 @@ package utility
 				{
 					if (a.name == itemName)
 					{
-						FP.log("got the instance of " + a.name);
 						setArmorInfoDisplayTexts(a);
 						break;
 					}
@@ -850,7 +862,6 @@ package utility
 				{
 					if (c.name == itemName)
 					{
-						FP.log("got the instance of " + c.name);
 						setConsumableInfoDisplayTexts(c);
 						break;
 					}

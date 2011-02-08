@@ -17,8 +17,9 @@ package entities
 		
 		public var currentMapIndex:int;
 		public var faceDirection:String;
+		public var items:Array = new Array();
 		
-		private var chestSpritemap:Spritemap = new Spritemap(CHEST_SPRITESHEET, SPRITE_WIDTH, SPRITE_HEIGHT);
+		public var chestSpritemap:Spritemap = new Spritemap(CHEST_SPRITESHEET, SPRITE_WIDTH, SPRITE_HEIGHT);
 		
 		public function Chest(_position:GlobalPosition, _faceDirection:String)
 		{
@@ -40,7 +41,11 @@ package entities
 			currentMapIndex = _position.mapIndex;
 			
 			setHitbox(SPRITE_WIDTH, SPRITE_HEIGHT, 0, 0);
-			type = "chest"
+			type = "chest";
+			
+			items.push(new Array());
+			items.push(new Array());
+			items.push(new Array());
 		}
 		
 		private function setupSpritesheet():void

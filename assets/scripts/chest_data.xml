@@ -5,5 +5,9 @@
 		<y>100</y>
 		<mapIndex>0</mapIndex>
 		<direction>down</direction>
+		<items>
+			<item>Dagger</item>
+			<item>Cotton Coat</item>
+		</items>	
 	</chest>
 </data>

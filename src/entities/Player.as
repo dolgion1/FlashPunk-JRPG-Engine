@@ -3,6 +3,7 @@ package entities
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	import net.flashpunk.*;
+	import net.flashpunk.debug.Console;
 	import net.flashpunk.utils.*;
 	import net.flashpunk.graphics.*;
 	import utility.*;
@@ -66,6 +67,7 @@ package entities
 			
 			defineInputKeys();
 			initEquipment();
+			initItems();
 		}
 		
 		override public function update():void
@@ -214,7 +216,22 @@ package entities
 						chest = collide("chest", x, y - 3) as Chest;
 						if (chest.faceDirection == "down")
 						{
-							FP.log("ready to open");
+							chest.chestSpritemap.play("open_face_down");
+							for each (var w:Weapon in chest.items[Item.WEAPON])
+							{
+								FP.log("Picked up " + w.name);
+								items[Item.WEAPON].push(w);
+							}
+							for each (var a:Armor in chest.items[Item.ARMOR])
+							{
+								FP.log("Picked up " + a.name);
+								items[Item.ARMOR].push(a);
+							}
+							for each (var c:Consumable in chest.items[Item.CONSUMABLE])
+							{
+								FP.log("Picked up " + c.name);
+								items[Item.CONSUMABLE].push(c);
+							}
 						}
 					}
 				}
@@ -281,6 +298,13 @@ package entities
 			equipment["ArmorEquipLegs"] = null;
 			equipment["ArmorEquipHands"] = null;
 			equipment["ArmorEquipFeet"] = null;
+		}
+		
+		public function initItems():void
+		{
+			items.push(new Array());
+			items.push(new Array());
+			items.push(new Array());
 		}
 		
 		public function updateStats():void {

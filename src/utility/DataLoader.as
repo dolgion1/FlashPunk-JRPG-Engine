@@ -201,7 +201,7 @@ package utility
 			return items;
 		}
 		
-		public function setupChests():Array
+		public function setupChests(_items:Array):Array
 		{
 			var chestDataByteArray:ByteArray = new chestData;
 			var chestDataXML:XML = new XML(chestDataByteArray.readUTFBytes(chestDataByteArray.length));
@@ -210,7 +210,47 @@ package utility
 			
 			for each (i in chestDataXML.chest)
 			{
-				chests.push(new Chest(new GlobalPosition(i.mapIndex, i.x, i.y), i.direction));
+				var chest:Chest = new Chest(new GlobalPosition(i.mapIndex, i.x, i.y), i.direction);
+				
+				// look for items
+				for each (var itemName:String in i.items.item)
+				{
+					var found:Boolean = false;
+					
+					for each (var w:Weapon in _items[Item.WEAPON])
+					{
+						if (itemName == w.name)
+						{
+							chest.items[Item.WEAPON].push(w);
+							found = true;
+							break;
+						}
+					}
+					if (found) continue;
+					
+					for each (var a:Armor in _items[Item.ARMOR])
+					{
+						if (itemName == a.name)
+						{
+							chest.items[Item.ARMOR].push(a);
+							found = true;
+							break;
+						}
+					}
+					if (found) continue;
+					
+					for each (var c:Consumable in _items[Item.CONSUMABLE])
+					{
+						if (itemName == c.name)
+						{
+							chest.items[Item.CONSUMABLE].push(c);
+							found = true;
+							break;
+						}
+					}
+					if (found) continue;
+				}
+				chests.push(chest);
 			}
 			
 			return chests;

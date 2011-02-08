@@ -70,11 +70,11 @@ ATM - means is being worked on at the moment
 	2. [DONE] Allow Equipment to alter/modify those stats
 	3. [DONE] Display those stats in the character screen
 	
-11. Game items
+11. [ATM] Game items
 	1. [DONE] Storing items universally
 	2. [DONE] Loading those items and their properties from XML
-	3. Visually place items in the game world
-	4. Allow player to pick them up (from treasure chests or smth)
+	3. [ATM]Visually place items in the game world (treasure chests)
+	4. Allow player to pick them up 
 	
 12. Enemy NPCs
 	1. Have their own stats
