@@ -5,6 +5,8 @@ package entities
 	import net.flashpunk.graphics.Spritemap;
 	import utility.GlobalPosition;
 	import utility.Item;
+	import worlds.Game;
+	
 	/**
 	 * ...
 	 * @author dolgion1
@@ -47,6 +49,20 @@ package entities
 			items.push(new Array());
 			items.push(new Array());
 			items.push(new Array());
+		}
+		
+		override public function update():void
+		{
+			if (currentMapIndex != Game.currentMapIndex)
+			{
+				collidable = false;
+				visible = false;
+			}
+			else 
+			{
+				collidable = true;
+				visible = true;
+			}
 		}
 		
 		public function empty():void

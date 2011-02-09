@@ -6,8 +6,8 @@
 		<mapIndex>0</mapIndex>
 		<direction>down</direction>
 		<items>
-			<item>Dagger</item>
-			<item>Cotton Coat</item>
+			<item quantity="2" name="Dagger" />
+			<item quantity="1" name="Cotton Coat" />
 		</items>	
 	</chest>
 	<chest>
@@ -16,8 +16,9 @@
 		<mapIndex>0</mapIndex>
 		<direction>left</direction>
 		<items>
-			<item>Cotton Coat</item>
-			<item>Woolen Gloves</item>
+			<item quantity="1" name="Cotton Coat" />
+			<item quantity="1" name="Woolen Gloves" />
+			<item quantity="1" name="Steel Sword" />
 		</items>	
 	</chest>
 </data>

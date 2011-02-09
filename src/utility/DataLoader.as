@@ -206,23 +206,27 @@ package utility
 			var chestDataByteArray:ByteArray = new chestData;
 			var chestDataXML:XML = new XML(chestDataByteArray.readUTFBytes(chestDataByteArray.length));
 			var i:XML;
+			var chestInventoryItem:XML;
 			var chests:Array = new Array();
 			
 			for each (i in chestDataXML.chest)
 			{
 				var chest:Chest = new Chest(new GlobalPosition(i.mapIndex, i.x, i.y), i.direction);
+				var inventoryItem:InventoryItem;
 				
 				// look for items
-				for each (var itemName:String in i.items.item)
+				for each (chestInventoryItem in i.items.item)
 				{
 					var found:Boolean = false;
 					
 					for each (var w:Weapon in _items[Item.WEAPON])
 					{
-						if (itemName == w.name)
+						if (chestInventoryItem.@name == w.name)
 						{
-							chest.items[Item.WEAPON].push(w);
 							found = true;
+							inventoryItem = new InventoryItem();
+							inventoryItem.setWeapon(w, chestInventoryItem.@quantity);
+							chest.items[Item.WEAPON].push(inventoryItem);
 							break;
 						}
 					}
@@ -230,10 +234,12 @@ package utility
 					
 					for each (var a:Armor in _items[Item.ARMOR])
 					{
-						if (itemName == a.name)
+						if (chestInventoryItem.@name == a.name)
 						{
-							chest.items[Item.ARMOR].push(a);
 							found = true;
+							inventoryItem = new InventoryItem();
+							inventoryItem.setArmor(a, chestInventoryItem.@quantity);
+							chest.items[Item.ARMOR].push(inventoryItem);
 							break;
 						}
 					}
@@ -241,10 +247,12 @@ package utility
 					
 					for each (var c:Consumable in _items[Item.CONSUMABLE])
 					{
-						if (itemName == c.name)
+						if (chestInventoryItem.@name == c.name)
 						{
-							chest.items[Item.CONSUMABLE].push(c);
 							found = true;
+							inventoryItem = new InventoryItem();
+							inventoryItem.setConsumable(c, chestInventoryItem.@quantity);
+							chest.items[Item.CONSUMABLE].push(inventoryItem);
 							break;
 						}
 					}

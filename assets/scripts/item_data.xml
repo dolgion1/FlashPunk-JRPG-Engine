@@ -15,7 +15,7 @@
 			<weapon name="Steel Sword">
 				<damagetype>0</damagetype>
 				<attacktype>0</attacktype>
-				<twohanded>true</twohanded>
+				<twohanded>false</twohanded>
 				<damagerating>5</damagerating>
 			</weapon>
 			<weapon name="Dagger">

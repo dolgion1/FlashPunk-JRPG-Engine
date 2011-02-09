@@ -64,6 +64,7 @@ ATM - means is being worked on at the moment
 	4. [DONE] Movement of the FF-style cursor
 	5. [DONE] Load in UI Data from XML
 	6. [DONE] Equipping and highlighting respective items
+	7. [DONE] Correctly handle item quantities
 	
 10. [DONE] Character Stats and screen
 	1. [DONE] Store character stats (Strength, Spirituality, etc) in member variables
@@ -73,8 +74,11 @@ ATM - means is being worked on at the moment
 11. [ATM] Game items
 	1. [DONE] Storing items universally
 	2. [DONE] Loading those items and their properties from XML
-	3. [ATM]Visually place items in the game world (treasure chests)
-	4. Allow player to pick them up 
+	3. [DONE] Visually place items in the game world (treasure chests)
+	4. [DONE] Allow player to pick them up 
+	5. [ATM] Include consumables in the item data
+	6. Consumables can be consumed, decreasing quantity
+	7. Code that allows for various effects of consumables
 	
 12. Enemy NPCs
 	1. Have their own stats

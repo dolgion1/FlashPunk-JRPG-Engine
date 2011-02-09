@@ -208,9 +208,9 @@ package entities
 			if (Input.pressed("action") && Game.gameMode == Game.NORMAL_MODE)
 			{
 				var chest:Chest;
-				var w:Weapon;
-				var a:Armor;
-				var c:Consumable;
+				var w:InventoryItem;
+				var a:InventoryItem;
+				var c:InventoryItem;
 				
 				if (curAnimation == "walk_up" || 
 					curAnimation == "stand_up")
@@ -223,18 +223,18 @@ package entities
 							chest.chestSpritemap.play("open_face_down");
 							for each (w in chest.items[Item.WEAPON])
 							{
-								FP.log("Picked up " + w.name);
-								items[Item.WEAPON].push(w);
+								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
+								addWeapon(w);
 							}
 							for each (a in chest.items[Item.ARMOR])
 							{
-								FP.log("Picked up " + a.name);
-								items[Item.ARMOR].push(a);
+								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
+								addArmor(a);
 							}
 							for each (c in chest.items[Item.CONSUMABLE])
 							{
-								FP.log("Picked up " + c.name);
-								items[Item.CONSUMABLE].push(c);
+								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
+								addConsumable(c);
 							}
 							chest.empty();
 						}
@@ -251,18 +251,18 @@ package entities
 							chest.chestSpritemap.play("open_face_right");
 							for each (w in chest.items[Item.WEAPON])
 							{
-								FP.log("Picked up " + w.name);
-								items[Item.WEAPON].push(w);
+								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
+								addWeapon(w);
 							}
 							for each (a in chest.items[Item.ARMOR])
 							{
-								FP.log("Picked up " + a.name);
-								items[Item.ARMOR].push(a);
+								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
+								addArmor(a);
 							}
 							for each (c in chest.items[Item.CONSUMABLE])
 							{
-								FP.log("Picked up " + c.name);
-								items[Item.CONSUMABLE].push(c);
+								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
+								addConsumable(c);
 							}
 							chest.empty();
 						}
@@ -279,18 +279,18 @@ package entities
 							chest.chestSpritemap.play("open_face_left");
 							for each (w in chest.items[Item.WEAPON])
 							{
-								FP.log("Picked up " + w.name);
-								items[Item.WEAPON].push(w);
+								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
+								addWeapon(w);
 							}
 							for each (a in chest.items[Item.ARMOR])
 							{
-								FP.log("Picked up " + a.name);
-								items[Item.ARMOR].push(a);
+								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
+								addArmor(a);
 							}
 							for each (c in chest.items[Item.CONSUMABLE])
 							{
-								FP.log("Picked up " + c.name);
-								items[Item.CONSUMABLE].push(c);
+								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
+								addConsumable(c);
 							}
 							chest.empty();
 						}
@@ -307,18 +307,18 @@ package entities
 							chest.chestSpritemap.play("open_face_up");
 							for each (w in chest.items[Item.WEAPON])
 							{
-								FP.log("Picked up " + w.name);
-								items[Item.WEAPON].push(w);
+								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
+								addWeapon(w);
 							}
 							for each (a in chest.items[Item.ARMOR])
 							{
-								FP.log("Picked up " + a.name);
-								items[Item.ARMOR].push(a);
+								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
+								addArmor(a);
 							}
 							for each (c in chest.items[Item.CONSUMABLE])
 							{
-								FP.log("Picked up " + c.name);
-								items[Item.CONSUMABLE].push(c);
+								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
+								addConsumable(c);
 							}
 							chest.empty();
 						}
@@ -404,8 +404,6 @@ package entities
 				damageType = equipment["WeaponEquipPrimary"].damageType;
 				damageRating = equipment["WeaponEquipPrimary"].damageRating;
 				attackType = equipment["WeaponEquipPrimary"].attackType;
-				
-				FP.log("primary weapon is equipped");
 			}
 			
 			armorRating = 0;
@@ -421,6 +419,48 @@ package entities
 		{
 			FP.log("Combat Stats: " + damageType + ", " + damageRating + ", " + attackType + ", " + armorRating);
 			return new Array(experience, strength, agility, spirituality, damageRating, damageType, attackType, armorRating);
+		}
+		
+		public function addWeapon(_weapon:InventoryItem):void
+		{
+			for each (var i:InventoryItem in items[Item.WEAPON])
+			{
+				if (i.weapon.name == _weapon.weapon.name)
+				{
+					i.quantity += _weapon.quantity;
+					return;
+				}
+			}
+			
+			items[Item.WEAPON].push(_weapon);
+		}
+		
+		public function addArmor(_armor:InventoryItem):void
+		{
+			for each (var i:InventoryItem in items[Item.ARMOR])
+			{
+				if (i.armor.name == _armor.armor.name)
+				{
+					i.quantity += _armor.quantity;
+					return;
+				}
+			}
+			
+			items[Item.ARMOR].push(_armor);
+		}
+		
+		public function addConsumable(_consumable:InventoryItem):void
+		{
+			for each (var i:InventoryItem in items[Item.CONSUMABLE])
+			{
+				if (i.consumable.name == _consumable.consumable.name)
+				{
+					i.quantity += _consumable.quantity;
+					return;
+				}
+			}
+			
+			items[Item.CONSUMABLE].push(_consumable);
 		}
 	}
 }

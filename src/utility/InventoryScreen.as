@@ -126,9 +126,6 @@ package utility
 			else displayTexts[WEAPON_EQUIP_SECONDARY_DISPLAY_TEXT].displayText.text = "Secondary Weapon: ";
 		}
 		
-		
-		
-		
 		public function populateItemColumns():void
 		{
 			resetItemColumnDisplayTexts();
@@ -157,7 +154,19 @@ package utility
 						break;
 					}
 					
-					itemColumns[i][j].displayText.text = items[i][j].name;
+					if (i == Item.WEAPON)
+					{
+						itemColumns[i][j].displayText.text = items[i][j].weapon.name;
+					}
+					else if (i == Item.ARMOR)
+					{
+						itemColumns[i][j].displayText.text = items[i][j].armor.name;
+					}
+					else if (i == Item.CONSUMABLE)
+					{
+						itemColumns[i][j].displayText.text = items[i][j].consumable.name;
+					}
+					
 					cursorPositionsValidity[columnKeys[i][j]] = true;
 				}
 			}
@@ -268,7 +277,7 @@ package utility
 				
 				if (currentCursorColumn == ARMOR_ITEM_COLUMN)
 				{
-					var armor:Armor = items[currentCursorColumn][itemsStartIndex[currentCursorColumn] + i];
+					var armor:Armor = items[currentCursorColumn][itemsStartIndex[currentCursorColumn] + i].armor;
 					switch (currentEquipmentKey)
 					{
 						case "ArmorEquipHead": 
@@ -335,12 +344,13 @@ package utility
 				}
 				else if (currentCursorColumn == WEAPON_ITEM_COLUMN)
 				{
-					var weapon:Weapon = items[currentCursorColumn][itemsStartIndex[currentCursorColumn] + i];
+					var inventoryItem:InventoryItem = items[currentCursorColumn][itemsStartIndex[currentCursorColumn] + i];
 					switch (currentEquipmentKey)
 					{
 						case "WeaponEquipPrimary":
 						{
-							if (weapon.equipped)
+							if (inventoryItem.weapon.equipped && 
+								inventoryItem.quantity < 2)
 							{
 								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
 							}
@@ -358,8 +368,10 @@ package utility
 							{
 								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
 							}
-							else if (weapon.twoHanded || weapon.equipped) // grey out the two handed weapons
+							else if (inventoryItem.weapon.twoHanded || 
+									 (inventoryItem.weapon.equipped && inventoryItem.quantity < 2)) 
 							{
+								// grey out if two handed weapon or if its equipped and no other left
 								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
 							}
 							else
@@ -456,60 +468,68 @@ package utility
 				index += itemsStartIndex[currentCursorColumn];
 				
 				var validSelection:Boolean = false;
+				var itemType:int;
 				
 				switch (currentEquipmentKey)
 				{
 					case "ArmorEquipHead": 
 					{
-						if ((items[currentCursorColumn][index].armorType == Armor.HEAD) &&
-							(!items[currentCursorColumn][index].equipped))
+						if ((items[currentCursorColumn][index].armor.armorType == Armor.HEAD) &&
+							(!items[currentCursorColumn][index].armor.equipped))
 						{
 							validSelection = true;
 						}
+						itemType = Item.ARMOR;
 						break;
 					}
 					case "ArmorEquipTorso":
 					{
-						if ((items[currentCursorColumn][index].armorType == Armor.TORSO) &&
-							(!items[currentCursorColumn][index].equipped))
+						if ((items[currentCursorColumn][index].armor.armorType == Armor.TORSO) &&
+							(!items[currentCursorColumn][index].armor.equipped))
 						{
 							validSelection = true;
 						}
+						itemType = Item.ARMOR;
 						break;
 					}
 					case "ArmorEquipLegs": 
 					{
-						if ((items[currentCursorColumn][index].armorType == Armor.LEGS) &&
-							(!items[currentCursorColumn][index].equipped))
+						if ((items[currentCursorColumn][index].armor.armorType == Armor.LEGS) &&
+							(!items[currentCursorColumn][index].armor.equipped))
 						{
 							validSelection = true;
 						}
+						itemType = Item.ARMOR;
 						break;
 					}
 					case "ArmorEquipHands":
 					{
-						if ((items[currentCursorColumn][index].armorType == Armor.HANDS) &&
-							(!items[currentCursorColumn][index].equipped))
+						if ((items[currentCursorColumn][index].armor.armorType == Armor.HANDS) &&
+							(!items[currentCursorColumn][index].armor.equipped))
 						{
 							validSelection = true;
 						}
+						itemType = Item.ARMOR;
 						break;
 					}
 					case "ArmorEquipFeet":
 					{
-						if ((items[currentCursorColumn][index].armorType == Armor.FEET) &&
-							(!items[currentCursorColumn][index].equipped))
+						if ((items[currentCursorColumn][index].armor.armorType == Armor.FEET) &&
+							(!items[currentCursorColumn][index].armor.equipped))
 						{
 							validSelection = true;
 						}
+						itemType = Item.ARMOR;
 						break;
 					}
 					case "WeaponEquipPrimary":
 					{
-						if (!items[currentCursorColumn][index].equipped)
+						if ((items[currentCursorColumn][index].quantity > 1 && 
+							items[currentCursorColumn][index].weapon.equipped) ||
+							(!items[currentCursorColumn][index].weapon.equipped))
 						{
 							validSelection = true;
-							if (items[currentCursorColumn][index].twoHanded)
+							if (items[currentCursorColumn][index].weapon.twoHanded)
 							{
 								if (equipment["WeaponEquipSecondary"]!= null)
 								{
@@ -518,28 +538,33 @@ package utility
 								}
 							}
 						}
+						
+						itemType = Item.WEAPON;
 						break;
 					}
 					case "WeaponEquipSecondary":
 					{
-						if (!items[currentCursorColumn][index].equipped)
+						if ((items[currentCursorColumn][index].quantity > 1 && 
+							items[currentCursorColumn][index].weapon.equipped) ||
+							(!items[currentCursorColumn][index].weapon.equipped))
 						{
 							if (equipment["WeaponEquipPrimary"] != null)
 							{
 								if ((!equipment["WeaponEquipPrimary"].twoHanded) &&
-									(!items[currentCursorColumn][index].twoHanded))
+									(!items[currentCursorColumn][index].weapon.twoHanded))
 								{
 									validSelection = true;
 								}
 							}
 							else
 							{
-								if (!items[currentCursorColumn][index].twoHanded)
+								if (!items[currentCursorColumn][index].weapon.twoHanded)
 								{
 									validSelection = true;
 								}
 							}
 						}
+						itemType = Item.WEAPON;
 						break;
 					}
 				}
@@ -551,9 +576,17 @@ package utility
 						equipment[currentEquipmentKey].equipped = false;
 					}
 					
-					equipment[currentEquipmentKey] = items[currentCursorColumn][index];
-
-					items[currentCursorColumn][index].equipped = true;
+					if (itemType == Item.WEAPON)
+					{
+						equipment[currentEquipmentKey] = items[currentCursorColumn][index].weapon;
+						items[currentCursorColumn][index].weapon.equipped = true;
+					}
+					else if (itemType == Item.ARMOR)
+					{
+						equipment[currentEquipmentKey] = items[currentCursorColumn][index].armor;
+						items[currentCursorColumn][index].armor.equipped = true;
+					}
+					
 					populateEquipmentColumns();
 					
 					currentMode = NORMAL_MODE;
@@ -836,9 +869,9 @@ package utility
 			// find the item object using its name
 			if (itemType == Item.WEAPON)
 			{
-				for each (var w:Weapon in items[Item.WEAPON])
+				for each (var w:InventoryItem in items[Item.WEAPON])
 				{
-					if (w.name == itemName)
+					if (w.weapon.name == itemName)
 					{
 						setWeaponInfoDisplayTexts(w);
 						break;
@@ -847,9 +880,9 @@ package utility
 			}
 			else if (itemType == Item.ARMOR)
 			{
-				for each (var a:Armor in items[Item.ARMOR])
+				for each (var a:InventoryItem in items[Item.ARMOR])
 				{
-					if (a.name == itemName)
+					if (a.armor.name == itemName)
 					{
 						setArmorInfoDisplayTexts(a);
 						break;
@@ -858,9 +891,9 @@ package utility
 			}
 			else if (itemType == Item.CONSUMABLE)
 			{
-				for each (var c:Consumable in items[Item.CONSUMABLE])
+				for each (var c:InventoryItem in items[Item.CONSUMABLE])
 				{
-					if (c.name == itemName)
+					if (c.consumable.name == itemName)
 					{
 						setConsumableInfoDisplayTexts(c);
 						break;
@@ -869,31 +902,33 @@ package utility
 			}
 		}
 		
-		public function setWeaponInfoDisplayTexts(_weapon:Weapon):void
+		public function setWeaponInfoDisplayTexts(_weapon:InventoryItem):void
 		{
-			displayTexts[INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _weapon.name;
-			displayTexts[INFO_DISPLAY_TEXT_TWO].displayText.text = "Damage Type: " + Weapon.getDamageType(_weapon.damageType);
-			displayTexts[INFO_DISPLAY_TEXT_THREE].displayText.text = "Damage: " + _weapon.damageRating;
-			displayTexts[INFO_DISPLAY_TEXT_FIVE].displayText.text = "Attack Type: " + Weapon.getAttackType(_weapon.attackType);
+			displayTexts[INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _weapon.weapon.name;
+			displayTexts[INFO_DISPLAY_TEXT_TWO].displayText.text = "Damage Type: " + Weapon.getDamageType(_weapon.weapon.damageType);
+			displayTexts[INFO_DISPLAY_TEXT_THREE].displayText.text = "Damage: " + _weapon.weapon.damageRating;
+			displayTexts[INFO_DISPLAY_TEXT_FOUR].displayText.text = "Quantity: " + _weapon.quantity;
+			displayTexts[INFO_DISPLAY_TEXT_FIVE].displayText.text = "Attack Type: " + Weapon.getAttackType(_weapon.weapon.attackType);
 			
-			if (_weapon.twoHanded)
+			if (_weapon.weapon.twoHanded)
 				displayTexts[INFO_DISPLAY_TEXT_SIX].displayText.text = "Two Handed";
 			else
 				displayTexts[INFO_DISPLAY_TEXT_SIX].displayText.text = "One Handed";
 		}
 		
-		public function setArmorInfoDisplayTexts(_armor:Armor):void
+		public function setArmorInfoDisplayTexts(_armor:InventoryItem):void
 		{
-			displayTexts[INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _armor.name;
-			displayTexts[INFO_DISPLAY_TEXT_TWO].displayText.text = "Body Part: " + Armor.getArmorType(_armor.armorType);
-			displayTexts[INFO_DISPLAY_TEXT_THREE].displayText.text = "Armor: " + _armor.armorRating;
-			displayTexts[INFO_DISPLAY_TEXT_FIVE].displayText.text = "Slash Resistance: " + _armor.resistances[Weapon.SLASHING];
-			displayTexts[INFO_DISPLAY_TEXT_SIX].displayText.text = "Piercing Resistance: " + _armor.resistances[Weapon.PIERCING];
-			displayTexts[INFO_DISPLAY_TEXT_SEVEN].displayText.text = "Impact Resistance: " + _armor.resistances[Weapon.IMPACT];
-			displayTexts[INFO_DISPLAY_TEXT_EIGHT].displayText.text = "Magic Resistance: " + _armor.resistances[Weapon.MAGIC];
+			displayTexts[INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _armor.armor.name;
+			displayTexts[INFO_DISPLAY_TEXT_TWO].displayText.text = "Body Part: " + Armor.getArmorType(_armor.armor.armorType);
+			displayTexts[INFO_DISPLAY_TEXT_THREE].displayText.text = "Armor: " + _armor.armor.armorRating;
+			displayTexts[INFO_DISPLAY_TEXT_FOUR].displayText.text = "Quantity: " + _armor.quantity;
+			displayTexts[INFO_DISPLAY_TEXT_FIVE].displayText.text = "Slash Resistance: " + _armor.armor.resistances[Weapon.SLASHING];
+			displayTexts[INFO_DISPLAY_TEXT_SIX].displayText.text = "Piercing Resistance: " + _armor.armor.resistances[Weapon.PIERCING];
+			displayTexts[INFO_DISPLAY_TEXT_SEVEN].displayText.text = "Impact Resistance: " + _armor.armor.resistances[Weapon.IMPACT];
+			displayTexts[INFO_DISPLAY_TEXT_EIGHT].displayText.text = "Magic Resistance: " + _armor.armor.resistances[Weapon.MAGIC];
 		}
 		
-		public function setConsumableInfoDisplayTexts(_consumable:Consumable):void
+		public function setConsumableInfoDisplayTexts(_consumable:InventoryItem):void
 		{
 			
 		}
