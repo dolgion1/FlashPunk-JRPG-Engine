@@ -3,6 +3,7 @@ package utility
 	import entities.Cursor;
 	import entities.CursorEquip;
 	import entities.DisplayText;
+	import entities.Player;
 	import entities.TextBox;
 	import net.flashpunk.FP;
 	import flash.geom.Point;
@@ -49,6 +50,7 @@ package utility
 		public var itemsHeader:DisplayText;
 		public var detailsHeader:DisplayText;
 		
+		public var player:Player;
 		public var items:Array = new Array();
 		public var equipment:Dictionary = new Dictionary();
 		
@@ -88,10 +90,11 @@ package utility
 			cursorEquip.visible = false;
 		}
 		
-		public function initialize(_items:Array, _equipment:Dictionary):void
+		public function initialize(_player:Player):void
 		{
-			items = _items;
-			equipment = _equipment;
+			player = _player;
+			items = _player.items;
+			equipment = _player.equipment;
 			
 			currentMode = NORMAL_MODE;
 			currentCursorPositionKey = "ArmorEquipHead";
@@ -459,6 +462,44 @@ package utility
 					currentMode = EQUIP_MODE;
 					highlightValidEquipment();
 				}
+				else if (currentCursorColumn == CONSUMABLE_ITEM_COLUMN)
+				{
+					// find the consumable in the items array
+					var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
+					consumableIndex += itemsStartIndex[currentCursorColumn];
+					
+					// alter the player stats
+					player.consume(items[Item.CONSUMABLE][index].consumable);
+					
+					// decrease quantity of the consumable. if it's now at 0, delete the inventoryItem
+					// from the items array and update the itemsColumn
+					items[Item.CONSUMABLE][consumableIndex].quantity--;
+					
+					if (items[Item.CONSUMABLE][consumableIndex].quantity < 1)
+					{
+						items[Item.CONSUMABLE].splice(consumableIndex, 1);
+						populateItemColumns();
+						
+						if (items[Item.CONSUMABLE].length < maxRows)
+						{
+							cursorPositionsValidity["ConsumableItem" + (items[Item.CONSUMABLE].length + 1)] = false;
+							itemsEndIndex[CONSUMABLE_ITEM_COLUMN]--;
+							
+							if (items[Item.CONSUMABLE].length > 0)
+							{
+								cursor.position = cursorPositions["ConsumableItem" + items[Item.CONSUMABLE].length];
+								currentCursorPositionKey = "ConsumableItem" + items[Item.CONSUMABLE].length;
+							}
+							else 
+							{
+								cursor.position = cursorPositions["ArmorEquipHead"];
+								currentCursorPositionKey = "ArmorEquipHead";
+								currentCursorColumn = ARMOR_EQUIP_COLUMN;
+							}
+						}
+					}
+					displayItemInformation();
+				}
 			}
 			else if (currentMode == EQUIP_MODE)
 			{
@@ -660,7 +701,6 @@ package utility
 							case "left": newCursorPositionKey = cursorPositionsNodes[currentCursorPositionKey].leftKey; break;
 							case "right": newCursorPositionKey = cursorPositionsNodes[currentCursorPositionKey].rightKey; break;
 						}
-						
 						if (cursorPositionsValidity[newCursorPositionKey])
 						{
 							currentCursorPositionKey = newCursorPositionKey;
@@ -930,7 +970,9 @@ package utility
 		
 		public function setConsumableInfoDisplayTexts(_consumable:InventoryItem):void
 		{
-			
+			displayTexts[INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _consumable.consumable.name;
+			displayTexts[INFO_DISPLAY_TEXT_TWO].displayText.text = "Effect: " + _consumable.consumable.description;
+			displayTexts[INFO_DISPLAY_TEXT_THREE].displayText.text = "Quantity: " + _consumable.quantity;
 		}
 		
 		public function initUIDatastructures(_uiDatastructures:Array):void

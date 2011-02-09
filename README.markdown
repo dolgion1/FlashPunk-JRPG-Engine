@@ -12,6 +12,7 @@ FEATURES
 * Character Stats and Inventory/Equipment screens
 * NPCs with pathfinding
 * Multiple-Choice Dialog
+* Items and Item Containers
 
 PLANNED FEATUERS
 ================
@@ -26,10 +27,11 @@ PLANNED FEATUERS
 HOW TO PLAY
 ===========
 
-Movement: WASDP and Arrow Buttons
-Initiate Conversation: SPACE
-World Map: M
-Inventory: I
-Character Stats: C
-Cancel: X
-Exit: ESC
+Movement: WASDP and Arrow Buttons   
+Initiate Conversation: SPACE   
+Open Chest: SPACE   
+World Map: M   
+Inventory: I   
+Character Stats: C   
+Cancel: X   
+Exit: ESC   

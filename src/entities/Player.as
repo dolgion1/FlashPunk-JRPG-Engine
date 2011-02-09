@@ -35,6 +35,12 @@ package entities
 		public var dialogsInTotal:Dictionary = new Dictionary();
 		public var dialogCounters:Dictionary = new Dictionary();
 		
+		// character status variables
+		public var health:int = 10;
+		public var maxHealth:int = 100;
+		public var mana:int = 5;
+		public var maxMana:int = 50;
+		
 		// character stats
 		public var experience:int = 0;
 		public var strength:int = 10; // determines what weapon and armor can be used and inventory capacity
@@ -418,7 +424,8 @@ package entities
 		public function get stats():Array
 		{
 			FP.log("Combat Stats: " + damageType + ", " + damageRating + ", " + attackType + ", " + armorRating);
-			return new Array(experience, strength, agility, spirituality, damageRating, damageType, attackType, armorRating);
+			return new Array(health, mana, strength, agility, spirituality, experience, 
+							 damageRating, damageType, attackType, armorRating);
 		}
 		
 		public function addWeapon(_weapon:InventoryItem):void
@@ -461,6 +468,43 @@ package entities
 			}
 			
 			items[Item.CONSUMABLE].push(_consumable);
+		}
+		
+		public function consume(_consumable:Consumable):void
+		{
+			for each (var statusAlteration:StatusAlteration in _consumable.statusAlterations)
+			{
+				switch (statusAlteration.statusVariable)
+				{
+					case (Constants.STATUS_HEALTH): 
+					{
+						health += statusAlteration.alteration;
+						if (health > maxHealth) health = maxHealth;
+						break;
+					}
+					case (Constants.STATUS_MANA): 
+					{
+						mana += statusAlteration.alteration;
+						if (mana > maxMana) mana = maxMana;
+						break;
+					}
+					case (Constants.STATUS_STRENGTH): 
+					{
+						strength += statusAlteration.alteration;
+						break;
+					}
+					case (Constants.STATUS_AGILITY): 
+					{
+						agility += statusAlteration.alteration;
+						break;
+					}
+					case (Constants.STATUS_SPIRITUALITY): 
+					{
+						spirituality += statusAlteration.alteration;
+						break;
+					}
+				}
+			}
 		}
 	}
 }

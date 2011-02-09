@@ -123,8 +123,27 @@
 			</armor>
 		</armors>
 		
+		<!-->
+			STATUS VARIABLES:
+				Health - 0
+				Mana - 1
+				Strength - 2
+				Agility - 3
+				Spirituality - 4
+		</!-->
 		<consumables>
-			
+			<consumable name="Health Potion lvl 1" temporary="false" duration="-1" description="HP +50">
+				<statusalteration statusVariable="0" alteration="50" />
+			</consumable>
+			<consumable name="Health Potion lvl 2" temporary="false" duration="-1" description="HP +250">
+				<statusalteration statusVariable="0" alteration="250" />
+			</consumable>
+			<consumable name="Health Potion lvl 3" temporary="false" duration="-1" description="HP +500">
+				<statusalteration statusVariable="0" alteration="500" /> 
+			</consumable>
+			<consumable name="Agility Booster" temporary="true" duration="5" description="Agility +5">
+				<statusalteration statusVariable="3" alteration="5" />
+			</consumable>
 		</consumables>
 	</items>
 </data>

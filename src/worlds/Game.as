@@ -426,7 +426,7 @@ package worlds
 		{
 			gameMode = INVENTORY_SCREEN_MODE;
 			inventoryScreen.visible = true;
-			inventoryScreen.initialize(player.items, player.equipment);
+			inventoryScreen.initialize(player);
 		}
 		
 		public function closeInventoryScreen():void

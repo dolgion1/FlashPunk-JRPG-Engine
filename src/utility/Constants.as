@@ -10,6 +10,17 @@ package utility
 	 */
 	public class Constants
 	{
+		public static const STATUS_HEALTH:int = 0;
+		public static const STATUS_MANA:int = 1;
+		public static const STATUS_STRENGTH:int = 2;
+		public static const STATUS_AGILITY:int = 3;
+		public static const STATUS_SPIRITUALITY:int = 4;
+		public static const STATUS_EXPERIENCE:int = 5;
+		public static const STATUS_DAMAGE:int = 6;
+		public static const STATUS_DAMAGE_TYPE:int = 7;
+		public static const STATUS_ATTACK_TYPE:int = 8;
+		public static const STATUS_ARMOR:int = 9;
+		
 		[Embed(source = "../../assets/scripts/constants_data.xml", mimeType = "application/octet-stream")] 
 		private static var constantsData:Class;
 

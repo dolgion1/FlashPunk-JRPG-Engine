@@ -8,6 +8,7 @@
 		<items>
 			<item quantity="2" name="Dagger" />
 			<item quantity="1" name="Cotton Coat" />
+			<item quantity="3" name="Health Potion lvl 1" />
 		</items>	
 	</chest>
 	<chest>
@@ -19,6 +20,7 @@
 			<item quantity="1" name="Cotton Coat" />
 			<item quantity="1" name="Woolen Gloves" />
 			<item quantity="1" name="Steel Sword" />
+			<item quantity="3" name="Agility Booster" />
 		</items>	
 	</chest>
 </data>

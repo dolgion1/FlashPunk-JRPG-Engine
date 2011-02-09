@@ -167,6 +167,7 @@ package utility
 			var items:Array = new Array();
 			var weapons:Array = new Array();
 			var armors:Array = new Array();
+			var consumables:Array = new Array();
 			
 			for each (i in itemDataXML.items.weapons.weapon)
 			{
@@ -195,8 +196,31 @@ package utility
 				armors.push(armor);
 			}
 			
+			for each (i in itemDataXML.items.consumables.consumable)
+			{
+				var consumable:Consumable = new Consumable();
+				consumable.name = i.@name;
+				consumable.description = i.@description;
+				
+				if (i.@temporary == "true") consumable.temporary = true;
+				else consumable.temporary = false;
+				
+				consumable.duration = i.@duration;
+				
+				for each (var j:XML in i.statusalteration)
+				{
+					var statusAlteration:StatusAlteration = new StatusAlteration();
+					statusAlteration.statusVariable = j.@statusVariable;
+					statusAlteration.alteration = j.@alteration;
+					consumable.statusAlterations.push(statusAlteration);
+				}
+				
+				consumables.push(consumable);
+			}
+			
 			items.push(weapons);
 			items.push(armors);
+			items.push(consumables);
 			
 			return items;
 		}

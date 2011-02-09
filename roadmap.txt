@@ -76,9 +76,9 @@ ATM - means is being worked on at the moment
 	2. [DONE] Loading those items and their properties from XML
 	3. [DONE] Visually place items in the game world (treasure chests)
 	4. [DONE] Allow player to pick them up 
-	5. [ATM] Include consumables in the item data
-	6. Consumables can be consumed, decreasing quantity
-	7. Code that allows for various effects of consumables
+	5. [DONE] Include consumables in the item data
+	6. [DONE] Consumables can be consumed, decreasing quantity
+	7. [ATM] Code that allows for various effects of consumables (temporary effects are next)
 	
 12. Enemy NPCs
 	1. Have their own stats
