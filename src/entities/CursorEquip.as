@@ -4,20 +4,20 @@ package entities
 	import net.flashpunk.Entity;
 	import net.flashpunk.FP;
 	import net.flashpunk.graphics.Image;
+	import utility.GFX;
+	
 	/**
 	 * ...
 	 * @author dolgion
 	 */
 	public class CursorEquip extends Entity
 	{
-		[Embed(source = "../../assets/gfx/cursor_equip.png")] public const CURSOR_EQUIP:Class;
-		
 		public var xOffset:int;
 		public var yOffset:int;
 		
 		public function CursorEquip(_xOffset:int, _yOffset:int)
 		{
-			graphic = new Image(CURSOR_EQUIP);
+			graphic = new Image(GFX.CURSOR_EQUIP);
 			xOffset = _xOffset;
 			yOffset = _yOffset;
 		}

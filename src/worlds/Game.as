@@ -71,7 +71,7 @@ package worlds
 			loadMap();
 			
 			// set up cam
-			cam = new Camera(Constants.cameraOffset, Player.speed);
+			cam = new Camera(GC.cameraOffset, GC.PLAYER_MOVEMENT_SPEED);
 			cam.adjustToPlayer(currentMap.height, currentMap.width, player);
 			
 			defineInputKeys();
@@ -151,7 +151,7 @@ package worlds
 			add(trees);
 			
 			// load houses
-			if (currentMap.type == Map.INDOOR)
+			if (currentMap.type == GC.MAP_INDOOR)
 			{
 				// load up all houses of the parent map
 				i = 0;
@@ -260,7 +260,7 @@ package worlds
 						{
 							npcDialogBox.nextPage();
 						}
-						else if ((dialogManager.currentTurn == dialogManager.NPC_TURN))
+						else if ((dialogManager.currentTurn == GC.DIALOG_NPC_TURN))
 						{
 							npcDialogBox.line = dialogManager.nextNPCLine(playerDialogBox.chosenVersion - 1);
 						}
@@ -283,7 +283,7 @@ package worlds
 				
 				if (Input.pressed("up"))
 				{
-					if (dialogManager.currentTurn == dialogManager.NPC_TURN)
+					if (dialogManager.currentTurn == GC.DIALOG_NPC_TURN)
 					{
 						playerDialogBox.selectionUp();
 					}
@@ -291,7 +291,7 @@ package worlds
 				
 				if (Input.pressed("down"))
 				{
-					if (dialogManager.currentTurn == dialogManager.NPC_TURN)
+					if (dialogManager.currentTurn == GC.DIALOG_NPC_TURN)
 					{
 						playerDialogBox.selectionDown();
 					}
@@ -387,7 +387,7 @@ package worlds
 			removeAll();
 			worldMap = new WorldMap();
 			
-			if (currentMap.type == Map.INDOOR)
+			if (currentMap.type == GC.MAP_INDOOR)
 			{
 				worldMapMarker = new WorldMapMarker(player, maps[currentMap.outsideMapIndex], true, enteredHouse);
 			}
@@ -438,11 +438,12 @@ package worlds
 		public function checkSwitchToNewMap():Boolean
 		{
 			var direction:int = checkMapBoundaries();
-			if (direction != Map.NONE)
+			
+			if (direction != GC.MAP_NONE)
 			{
-				if (currentMap.type == Map.INDOOR)
+				if (currentMap.type == GC.MAP_INDOOR)
 				{
-					player.x = enteredHouse.x + (enteredHouse.width / 2) - (player.SPRITE_WIDTH / 2);
+					player.x = enteredHouse.x + (enteredHouse.width / 2) - (GC.PLAYER_SPRITE_WIDTH / 2);
 					player.y = enteredHouse.y + enteredHouse.height + 5;
 					currentMapIndex = currentMap.outsideMapIndex;
 					return true;
@@ -451,22 +452,22 @@ package worlds
 					currentMapIndex = currentMap.exits[direction]
 					switch (direction)
 					{
-						case Map.EAST:
+						case GC.MAP_EAST:
 						{
 							player.x = 0
 							return true;
 						}
-						case Map.WEST:
+						case GC.MAP_WEST:
 						{
-							player.x = maps[currentMapIndex].width - player.SPRITE_WIDTH;
+							player.x = maps[currentMapIndex].width - GC.PLAYER_SPRITE_WIDTH;
 							return true;
 						}
-						case Map.NORTH:
+						case GC.MAP_NORTH:
 						{
-							player.y = maps[currentMapIndex].height - player.SPRITE_HEIGHT;
+							player.y = maps[currentMapIndex].height - GC.PLAYER_SPRITE_HEIGHT;
 							return true;
 						}
-						case Map.SOUTH:
+						case GC.MAP_SOUTH:
 						{
 							player.y = 0;
 							return true;
@@ -479,7 +480,7 @@ package worlds
 				enteredHouse = player.enteringHouse() as House;
 				currentMapIndex = currentMap.childMaps[enteredHouse.insideMapIndex];
 				player.x = maps[currentMapIndex].width / 2;
-				player.y = maps[currentMapIndex].height - player.SPRITE_HEIGHT - 10;
+				player.y = maps[currentMapIndex].height - GC.PLAYER_SPRITE_HEIGHT - 10;
 				return true;
 			}
 			
@@ -488,13 +489,13 @@ package worlds
 		
 		public function checkMapBoundaries():int
 		{
-			if (player.x < 0) return Map.WEST;
-			else if (player.x > currentMap.width) return Map.EAST;
+			if (player.x < 0) return GC.MAP_WEST;
+			else if (player.x > currentMap.width) return GC.MAP_EAST;
 			
-			if (player.y < 0) return Map.NORTH;
-			else if (player.y > currentMap.height) return Map.SOUTH;
+			if (player.y < 0) return GC.MAP_NORTH;
+			else if (player.y > currentMap.height) return GC.MAP_SOUTH;
 			
-			return Map.NONE;
+			return GC.MAP_NONE;
 		}
 		
 		public function defineInputKeys():void

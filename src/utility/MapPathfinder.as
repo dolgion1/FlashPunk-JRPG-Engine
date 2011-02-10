@@ -8,14 +8,12 @@ package utility
 	 */
 	public class MapPathfinder
 	{
-		
 		private var maps:Array = new Array();
 		private var mapPath:Array = new Array();
 		private var startMapIndex:int;
 		private var endMapIndex:int;
 		private var queue:Array = new Array();
 		private var visitedMaps:Array = new Array();
-		private var tileSize:int = 48;
 		
 		public function MapPathfinder() {}
 		
@@ -45,7 +43,7 @@ package utility
 			var currentMap:Map = maps[mapPath[mapPathIndex]];
 			var nextMap:Map = maps[mapPath[mapPathIndex + 1]];
 			
-			if (currentMap.type == Map.OUTDOOR && nextMap.type == Map.OUTDOOR)
+			if (currentMap.type == GC.MAP_OUTDOOR && nextMap.type == GC.MAP_OUTDOOR)
 			{
 				// find the direction to the next map
 				var exitDirection:int;
@@ -56,15 +54,16 @@ package utility
 						// i is now the direction
 						switch (i)
 						{
-							case (Map.NORTH): exitPoint = new GlobalPosition(currentMap.index, x, 0); break;
-							case (Map.EAST): exitPoint = new GlobalPosition(currentMap.index, currentMap.width - tileSize, y); break;
-							case (Map.SOUTH): exitPoint = new GlobalPosition(currentMap.index, x, currentMap.height - tileSize); break;
-							case (Map.WEST): exitPoint = new GlobalPosition(currentMap.index, 0, y); break;
+							case (GC.MAP_NORTH): exitPoint = new GlobalPosition(currentMap.index, x, 0); break;
+							case (GC.MAP_NORTH): exitPoint = new GlobalPosition(currentMap.index, x, 0); break;
+							case (GC.MAP_EAST): exitPoint = new GlobalPosition(currentMap.index, currentMap.width - GC.MAP_PATHFINDER_TILE_SIZE, y); break;
+							case (GC.MAP_SOUTH): exitPoint = new GlobalPosition(currentMap.index, x, currentMap.height - GC.MAP_PATHFINDER_TILE_SIZE); break;
+							case (GC.MAP_WEST): exitPoint = new GlobalPosition(currentMap.index, 0, y); break;
 						}
 					}
 				}
 			}
-			else if (currentMap.type == Map.OUTDOOR && nextMap.type == Map.INDOOR)
+			else if (currentMap.type == GC.MAP_OUTDOOR && nextMap.type == GC.MAP_INDOOR)
 			{
 				// go to one of the child maps
 				var exit:GlobalPosition;
@@ -77,7 +76,7 @@ package utility
 					}
 				}
 			}
-			else if (currentMap.type == Map.INDOOR)
+			else if (currentMap.type == GC.MAP_INDOOR)
 			{
 				exitPoint = new GlobalPosition(currentMap.index, currentMap.transitionPoints[0].x, currentMap.transitionPoints[0].y);
 			}
@@ -92,7 +91,7 @@ package utility
 			var newMap:Map = maps[mapPath[mapPathIndex]];
 			var startingPoint:Point = new Point();
 			
-			if (previousMap.type == Map.OUTDOOR && newMap.type == Map.OUTDOOR)
+			if (previousMap.type == GC.MAP_OUTDOOR && newMap.type == GC.MAP_OUTDOOR)
 			{
 				// find from which direction the npc came
 				for (i = 0; i < previousMap.exits.length; i++)
@@ -101,15 +100,15 @@ package utility
 					{
 						switch (i)
 						{
-							case Map.NORTH: startingPoint.y = newMap.height - tileSize; startingPoint.x = x; break;
-							case Map.EAST: startingPoint.x = 0; startingPoint.y = y; break;
-							case Map.SOUTH: startingPoint.y = 0; startingPoint.x = x; break;
-							case Map.WEST: startingPoint.x = newMap.width - tileSize; startingPoint.y = y; break;
+							case GC.MAP_NORTH: startingPoint.y = newMap.height - GC.MAP_PATHFINDER_TILE_SIZE; startingPoint.x = x; break;
+							case GC.MAP_EAST: startingPoint.x = 0; startingPoint.y = y; break;
+							case GC.MAP_SOUTH: startingPoint.y = 0; startingPoint.x = x; break;
+							case GC.MAP_WEST: startingPoint.x = newMap.width - GC.MAP_PATHFINDER_TILE_SIZE; startingPoint.y = y; break;
 						}
 					}
 				}
 			}
-			else if (previousMap.type == Map.OUTDOOR && newMap.type == Map.INDOOR)
+			else if (previousMap.type == GC.MAP_OUTDOOR && newMap.type == GC.MAP_INDOOR)
 			{
 				startingPoint.x = newMap.transitionPoints[0].x;
 				startingPoint.y = newMap.transitionPoints[0].y;
@@ -142,7 +141,7 @@ package utility
 				return true;
 			}
 			
-			if (maps[curMapIndex].type == Map.INDOOR)
+			if (maps[curMapIndex].type == GC.MAP_INDOOR)
 			{
 				// If the map is indoors, there are only 2 possible outcomes
 				// 1. It is the starting map
@@ -165,7 +164,7 @@ package utility
 					return false;
 				}
 			}
-			else if (maps[curMapIndex].type == Map.OUTDOOR)
+			else if (maps[curMapIndex].type == GC.MAP_OUTDOOR)
 			{
 				// go through children maps
 				for (i = 0; i < maps[curMapIndex].childMaps.length; i++)
@@ -184,7 +183,7 @@ package utility
 				// go through children maps
 				for (i = 0; i < maps[curMapIndex].exits.length; i++)
 				{
-					if (maps[curMapIndex].exits[i] != Map.NONE) 
+					if (maps[curMapIndex].exits[i] != GC.MAP_NONE) 
 					{
 						if (visitedMaps.indexOf(maps[curMapIndex].exits[i], 0) == ( -1))
 						{

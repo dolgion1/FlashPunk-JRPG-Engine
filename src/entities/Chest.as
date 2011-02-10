@@ -3,8 +3,7 @@ package entities
 	import flash.geom.Point;
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Spritemap;
-	import utility.GlobalPosition;
-	import utility.Item;
+	import utility.*;
 	import worlds.Game;
 	
 	/**
@@ -13,16 +12,11 @@ package entities
 	 */
 	public class Chest extends Entity
 	{
-		[Embed(source = "../../assets/gfx/chest.png")] private var CHEST_SPRITESHEET:Class;
-		
-		public const SPRITE_WIDTH:int = 20;
-		public const SPRITE_HEIGHT:int = 28;
-		
 		public var currentMapIndex:int;
 		public var faceDirection:String;
 		public var items:Array = new Array();
 		
-		public var chestSpritemap:Spritemap = new Spritemap(CHEST_SPRITESHEET, SPRITE_WIDTH, SPRITE_HEIGHT);
+		public var chestSpritemap:Spritemap = new Spritemap(GFX.CHEST_SPRITESHEET, GC.CHEST_SPRITE_WIDTH, GC.CHEST_SPRITE_HEIGHT);
 		
 		public function Chest(_position:GlobalPosition, _faceDirection:String)
 		{
@@ -43,8 +37,8 @@ package entities
 			y = _position.y;
 			currentMapIndex = _position.mapIndex;
 			
-			setHitbox(SPRITE_WIDTH, SPRITE_HEIGHT, 0, 0);
-			type = "chest";
+			setHitbox(GC.CHEST_SPRITE_WIDTH, GC.CHEST_SPRITE_HEIGHT, 0, 0);
+			type = GC.TYPE_CHEST;
 			
 			items.push(new Array());
 			items.push(new Array());
@@ -67,9 +61,9 @@ package entities
 		
 		public function empty():void
 		{
-			items[Item.WEAPON] = new Array();
-			items[Item.ARMOR] = new Array();
-			items[Item.CONSUMABLE] = new Array();
+			items[GC.ITEM_WEAPON] = new Array();
+			items[GC.ITEM_ARMOR] = new Array();
+			items[GC.ITEM_CONSUMABLE] = new Array();
 		}
 		
 		private function setupSpritesheet():void

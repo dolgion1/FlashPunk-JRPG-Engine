@@ -32,10 +32,10 @@ package utility
 		
 		public function get daytimeString():String
 		{
-			if (hours >= 0 && hours < 6) return "Night";
-			else if (hours >= 6 && hours < 12) return "Morning";
-			else if (hours >= 12 && hours < 18) return "Afternoon";
-			else if (hours >= 18 && hours < 24) return "Evening";
+			if (hours >= 0 && hours < 6) return GC.NIGHT_STRING;
+			else if (hours >= 6 && hours < 12) return GC.MORNING_STRING;
+			else if (hours >= 12 && hours < 18) return GC.AFTERNOON_STRING;
+			else if (hours >= 18 && hours < 24) return GC.EVENING_STRING;
 			else return "";
 		}
 		

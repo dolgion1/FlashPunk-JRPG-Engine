@@ -3,7 +3,7 @@
 	import net.flashpunk.Engine;
 	import net.flashpunk.FP;
 	import worlds.Game;
-	import utility.Constants;
+	import utility.GC;
 	
 	/**
 	 * ...
@@ -18,7 +18,7 @@
 		{
 			super(624, 480, 60, false);
 			FP.console.enable();
-			Constants.loadData();
+			GC.loadData();
 			FP.world = new Game();
 			
 		}

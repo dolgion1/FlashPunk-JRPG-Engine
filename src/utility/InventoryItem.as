@@ -18,21 +18,21 @@ package utility
 		{
 			weapon = _weapon;
 			quantity = _quantity;
-			itemType = Item.WEAPON;
+			itemType = GC.ITEM_TYPE_WEAPON;
 		}
 		
 		public function setArmor(_armor:Armor, _quantity:int):void
 		{
 			armor = _armor;
 			quantity = _quantity;
-			itemType = Item.ARMOR;
+			itemType = GC.ITEM_TYPE_ARMOR;
 		}
 		
 		public function setConsumable(_consumable:Consumable, _quantity:int):void
 		{
 			consumable = _consumable;
 			quantity = _quantity;
-			itemType = Item.CONSUMABLE;
+			itemType = GC.ITEM_TYPE_CONSUMABLE;
 		}
 	}
 

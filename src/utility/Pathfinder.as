@@ -9,10 +9,6 @@ package utility
 	 */
 	public class Pathfinder
 	{
-		public const NORMAL_COST:int = 10;
-		public const DIAGONAL_COST:int = 14;
-		public const TILE_SIZE:int = 48;
-
 		public var gridSquares:Array = new Array();
 		public var closedNodes:Array;
 		public var openNodes:Array;
@@ -33,7 +29,6 @@ package utility
 			endSquare = getGridSquare(_endPoint.point);
 			if (!endSquare.walkable) 
 			{
-				trace("The end square is not walkable. x:" + endSquare.x + " y:" + endSquare.y + " map:" + _startPoint.mapIndex);
 				return null;
 			}
 			
@@ -64,10 +59,10 @@ package utility
 			
 			// store all the points
 			var testPoints:Array = new Array();
-			testPoints.push(new Point(node.square.x, node.square.y - TILE_SIZE)); // above
-			testPoints.push(new Point(node.square.x + TILE_SIZE, node.square.y)); // to the right
-			testPoints.push(new Point(node.square.x, node.square.y + TILE_SIZE)); // below
-			testPoints.push(new Point(node.square.x - TILE_SIZE, node.square.y)); // to the left
+			testPoints.push(new Point(node.square.x, node.square.y - GC.PATHFINDER_TILE_SIZE)); // above
+			testPoints.push(new Point(node.square.x + GC.PATHFINDER_TILE_SIZE, node.square.y)); // to the right
+			testPoints.push(new Point(node.square.x, node.square.y + GC.PATHFINDER_TILE_SIZE)); // below
+			testPoints.push(new Point(node.square.x - GC.PATHFINDER_TILE_SIZE, node.square.y)); // to the left
 			
 			/*
 			 * For diagonal movement: be aware, it's almost certain they'll get stuck in 
@@ -101,7 +96,7 @@ package utility
 				if (isClosedNode) continue;
 				
 				// at this point it's okay to enter the square into openNodes as a new node
-				var movementCost:int = NORMAL_COST;
+				var movementCost:int = GC.PATHFINDER_NORMAL_COST;
 
 				// setting the cost, in case diagonal movement is enabled
 				// if (i > 3) movementCost = DIAGONAL_COST;
@@ -143,8 +138,8 @@ package utility
 			var deltaX:Number = Math.abs(_startSquare.x - _endSquare.x);
 			var deltaY:Number = Math.abs(_startSquare.y - _endSquare.y);
 			
-			var horizontalSteps:int = deltaX / TILE_SIZE;
-			var verticalSteps:int = deltaY / TILE_SIZE;
+			var horizontalSteps:int = deltaX / GC.PATHFINDER_TILE_SIZE;
+			var verticalSteps:int = deltaY / GC.PATHFINDER_TILE_SIZE;
 			
 			return ((horizontalSteps + verticalSteps) * 10);
 		}
@@ -172,10 +167,10 @@ package utility
 			for (var i:int = 0; i < gridSquares.length; i++)
 			{
 				// check the x coordinate
-				if (gridSquares[i].x <= _position.x && gridSquares[i].x + TILE_SIZE > _position.x)
+				if (gridSquares[i].x <= _position.x && gridSquares[i].x + GC.PATHFINDER_TILE_SIZE > _position.x)
 				{
 					// if it's in the range of x, check the y coordinate
-					if (gridSquares[i].y <= _position.y && gridSquares[i].y + TILE_SIZE > _position.y)
+					if (gridSquares[i].y <= _position.y && gridSquares[i].y + GC.PATHFINDER_TILE_SIZE > _position.y)
 					{
 						return gridSquares[i];
 					}

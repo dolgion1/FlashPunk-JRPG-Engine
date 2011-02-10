@@ -13,31 +13,16 @@ package entities
 	 */
 	public class NPC extends Entity
 	{
-		public const NONE:int = 0;
-		public const WALK:int = 1;
-		
-		public const MIN_DISTANCE:Number = 10;
-		public const SPAWN_END:int = 2;
-		
-		[Embed(source = "../../assets/gfx/npc_01.png")] private var NPC_SPRITESHEET_01:Class;
-		[Embed(source = "../../assets/gfx/npc_02.png")] private var NPC_SPRITESHEET_02:Class;
-		
-		public var spritesheets:Array = new Array(NPC_SPRITESHEET_01, NPC_SPRITESHEET_02);
-		public const SPRITE_WIDTH:int = 25;
-		public const SPRITE_HEIGHT:int = 29;
-		public const HITBOX_WIDTH:int = 16;
-		public const HITBOX_HEIGHT:int = 23;
-		public const HITBOX_X_OFFSET:int = -4;
-		public const HITBOX_Y_OFFSET:int = -3;
+		public var spritesheets:Array = new Array(GFX.NPC_SPRITESHEET_01, GFX.NPC_SPRITESHEET_02);
 		
 		public var spritesheetIndex:int;
 		public var npcSpritemap:Spritemap;
 		public var curAnimation:String = "walk_down";
-		public var speed:int = 1;
+		public var speed:int = GC.NPC_MOVEMENT_SPEED;
 		public var currentMapIndex:int;
 		public var name:String;
 		
-		public var currentActivity:Number = NONE;
+		public var currentActivity:Number = GC.NPC_ACTIVITY_NONE;
 		public var path:Array = new Array();
 		public var pathIndex:int;
 		public var pathfinder:Pathfinder = new Pathfinder();
@@ -73,8 +58,8 @@ package entities
 			setupSpritesheet();
 			graphic = npcSpritemap;
 			npcSpritemap.play(curAnimation);
-			setHitbox(HITBOX_WIDTH, HITBOX_HEIGHT, HITBOX_X_OFFSET, HITBOX_Y_OFFSET);
-			type = "npc"
+			setHitbox(GC.NPC_HITBOX_WIDTH, GC.NPC_HITBOX_HEIGHT, GC.NPC_HITBOX_X_OFFSET, GC.NPC_HITBOX_Y_OFFSET);
+			type = GC.TYPE_NPC;
 		}
 		
 		override public function update():void
@@ -93,7 +78,7 @@ package entities
 				}
 				npcSpritemap.play(curAnimation);
 				
-				if (currentActivity == WALK && (Game.gameMode != Game.DIALOG_MODE))
+				if (currentActivity == GC.NPC_ACTIVITY_WALK && (Game.gameMode != Game.DIALOG_MODE))
 				{
 					walkProcedure();
 				}
@@ -103,14 +88,14 @@ package entities
 		public function walkProcedure():void
 		{
 			var distance:Number = FP.distance(x, y, path[pathIndex].x, path[pathIndex].y);
-			if (distance < MIN_DISTANCE) 
+			if (distance < GC.NPC_PATHFINDING_MIN_DISTANCE) 
 			{
 				pathIndex++;
 				
 				// if the NPC just entered a new map, we don't want to activate
 				// collision detection if the player happens to stand on the spawning
 				// point of the NPC, or else they will get stuck
-				if (justSpawned && (collide("player", x, y) == null))
+				if (justSpawned && (collide(GC.TYPE_PLAYER, x, y) == null))
 				{
 					justSpawned = false;
 				}
@@ -128,7 +113,7 @@ package entities
 							// the NPC finally arrived, because the 
 							// end point is the position that the NPC 
 							// is currently at
-							currentActivity = NONE;
+							currentActivity = GC.NPC_ACTIVITY_NONE;
 							
 							// determine the idle animation
 							switch (curAnimation)
@@ -241,20 +226,20 @@ package entities
 			// when all is okay, get the walking procedure going
 			if ((path != null) && (path.length > 1))
 			{
-				currentActivity = WALK;
+				currentActivity = GC.NPC_ACTIVITY_WALK;
 				pathIndex = 0;
 			}
 		}
 		
 		public function colliding():Boolean
 		{
-			if (collide("player", x, y)) return true;
+			if (collide(GC.TYPE_PLAYER, x, y)) return true;
 			else return false;
 		}
 		
 		public function setupSpritesheet():void
 		{
-			npcSpritemap = new Spritemap(spritesheets[spritesheetIndex], SPRITE_WIDTH, SPRITE_HEIGHT);
+			npcSpritemap = new Spritemap(spritesheets[spritesheetIndex], GC.NPC_SPRITE_WIDTH, GC.NPC_SPRITE_HEIGHT);
 			npcSpritemap.add("walk_down", [0, 1], 5, true);
 			npcSpritemap.add("walk_up", [2, 3], 5, true);
 			npcSpritemap.add("walk_left", [4, 5], 5, true);

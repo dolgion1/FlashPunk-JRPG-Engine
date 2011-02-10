@@ -15,17 +15,6 @@ package entities
 	 */
 	public class Player extends Entity
 	{
-		[Embed(source = "../../assets/gfx/player.png")]
-		public const PLAYER:Class;
-		public const SPRITE_WIDTH:Number = 23;
-		public const SPRITE_HEIGHT:Number = 28;
-		public const HITBOX_WIDTH:int = 16;
-		public const HITBOX_HEIGHT:int = 23;
-		public const HITBOX_X_OFFSET:int = -4;
-		public const HITBOX_Y_OFFSET:int = -3;
-		
-		public static var speed:Number = 2;
-		public static var diagonalSpeed:Number = 1.4;
 		public var playerSpritemap:Spritemap;
 		public var curAnimation:String = "stand_down";
 		public var currentMapIndex:int;
@@ -69,8 +58,8 @@ package entities
 			dialogs = _dialogs;
 			setupUpDialogsInTotal();
 			
-			setHitbox(HITBOX_WIDTH, HITBOX_HEIGHT, HITBOX_X_OFFSET, HITBOX_Y_OFFSET);
-			type = "player";
+			setHitbox(GC.PLAYER_HITBOX_WIDTH, GC.PLAYER_HITBOX_HEIGHT, GC.PLAYER_HITBOX_X_OFFSET, GC.PLAYER_HITBOX_Y_OFFSET);
+			type = GC.TYPE_PLAYER;
 			
 			defineInputKeys();
 			initEquipment();
@@ -105,10 +94,10 @@ package entities
 			{
 				if (Input.check("walk_left"))
 				{
-					newX = x - speed;
+					newX = x - GC.PLAYER_MOVEMENT_SPEED;
 					if (!colliding(new Point(newX, y)))
 					{
-						xSpeed = speed * (-1);
+						xSpeed = GC.PLAYER_MOVEMENT_SPEED * (-1);
 						curAnimation = "walk_left";
 					}
 					else {
@@ -117,10 +106,10 @@ package entities
 				}
 				else if (Input.check("walk_right"))
 				{
-					newX = x + speed;
+					newX = x + GC.PLAYER_MOVEMENT_SPEED;
 					if (!colliding(new Point(newX, y)))
 					{
-						xSpeed = speed;
+						xSpeed = GC.PLAYER_MOVEMENT_SPEED;
 						curAnimation = "walk_right";
 					}
 					else {
@@ -131,10 +120,10 @@ package entities
 				
 				if (Input.check("walk_up"))
 				{
-					newY = y - speed;
+					newY = y - GC.PLAYER_MOVEMENT_SPEED;
 					if (!colliding(new Point(x, newY)))
 					{
-						ySpeed = speed * (-1);
+						ySpeed = GC.PLAYER_MOVEMENT_SPEED * (-1);
 						curAnimation = "walk_up";
 					}
 					else {
@@ -143,10 +132,10 @@ package entities
 				}
 				else if (Input.check("walk_down"))
 				{
-					newY = y + speed;
+					newY = y + GC.PLAYER_MOVEMENT_SPEED;
 					if (!colliding(new Point(x, newY)))
 					{
-						ySpeed = speed;
+						ySpeed = GC.PLAYER_MOVEMENT_SPEED;
 						curAnimation = "walk_down";
 					}
 					else {
@@ -167,8 +156,8 @@ package entities
 				}
 				else if (verticalMovement && horizontalMovement)
 				{
-					x += xSpeed / 1.4;
-					y += ySpeed / 1.4;
+					x += xSpeed / GC.PLAYER_DIAGONAL_MOVEMENT_SPEED;
+					y += ySpeed / GC.PLAYER_DIAGONAL_MOVEMENT_SPEED;
 				}
 				else
 				{
@@ -186,9 +175,9 @@ package entities
 				if (curAnimation == "walk_left" || 
 					curAnimation == "stand_left")
 				{
-					if (collide("npc", x - 3, y))
+					if (collide(GC.TYPE_NPC, x - 3, y))
 					{
-						npc = collide("npc", x - 3, y) as NPC;
+						npc = collide(GC.TYPE_NPC, x - 3, y) as NPC;
 						Game.gameMode = Game.DIALOG_MODE;
 						dialogPartner = npc.name;
 					}
@@ -196,9 +185,9 @@ package entities
 				else if (curAnimation == "walk_right" || 
 					curAnimation == "stand_right")
 				{
-					if (collide("npc", x + 3, y))
+					if (collide(GC.TYPE_NPC, x + 3, y))
 					{
-						npc = collide("npc", x + 3, y) as NPC;
+						npc = collide(GC.TYPE_NPC, x + 3, y) as NPC;
 						Game.gameMode = Game.DIALOG_MODE;
 						dialogPartner = npc.name;
 					}
@@ -206,9 +195,9 @@ package entities
 				else if (curAnimation == "walk_up" || 
 					curAnimation == "stand_up")
 				{
-					if (collide("npc", x, y - 3))
+					if (collide(GC.TYPE_NPC, x, y - 3))
 					{
-						npc = collide("npc", x, y - 3) as NPC;
+						npc = collide(GC.TYPE_NPC, x, y - 3) as NPC;
 						Game.gameMode = Game.DIALOG_MODE;
 						dialogPartner = npc.name;
 					}	
@@ -216,9 +205,9 @@ package entities
 				else if (curAnimation == "walk_down" || 
 					curAnimation == "stand_down")
 				{
-					if (collide("npc", x, y + 3))
+					if (collide(GC.TYPE_NPC, x, y + 3))
 					{
-						npc = collide("npc", x, y + 3) as NPC;
+						npc = collide(GC.TYPE_NPC, x, y + 3) as NPC;
 						Game.gameMode = Game.DIALOG_MODE;
 						dialogPartner = npc.name;
 					}
@@ -238,23 +227,23 @@ package entities
 				if (curAnimation == "walk_up" || 
 					curAnimation == "stand_up")
 				{
-					if (collide("chest", x, y - 3))
+					if (collide(GC.TYPE_CHEST, x, y - 3))
 					{
-						chest = collide("chest", x, y - 3) as Chest;
+						chest = collide(GC.TYPE_CHEST, x, y - 3) as Chest;
 						if (chest.faceDirection == "down")
 						{
 							chest.chestSpritemap.play("open_face_down");
-							for each (w in chest.items[Item.WEAPON])
+							for each (w in chest.items[GC.ITEM_TYPE_WEAPON])
 							{
 								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
 								addWeapon(w);
 							}
-							for each (a in chest.items[Item.ARMOR])
+							for each (a in chest.items[GC.ITEM_TYPE_ARMOR])
 							{
 								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
 								addArmor(a);
 							}
-							for each (c in chest.items[Item.CONSUMABLE])
+							for each (c in chest.items[GC.ITEM_TYPE_CONSUMABLE])
 							{
 								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
 								addConsumable(c);
@@ -266,23 +255,23 @@ package entities
 				else if (curAnimation == "walk_left" || 
 					curAnimation == "stand_left")
 				{
-					if (collide("chest", x - 3, y))
+					if (collide(GC.TYPE_CHEST, x - 3, y))
 					{
-						chest = collide("chest", x - 3, y) as Chest;
+						chest = collide(GC.TYPE_CHEST, x - 3, y) as Chest;
 						if (chest.faceDirection == "right")
 						{
 							chest.chestSpritemap.play("open_face_right");
-							for each (w in chest.items[Item.WEAPON])
+							for each (w in chest.items[GC.ITEM_TYPE_WEAPON])
 							{
 								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
 								addWeapon(w);
 							}
-							for each (a in chest.items[Item.ARMOR])
+							for each (a in chest.items[GC.ITEM_TYPE_ARMOR])
 							{
 								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
 								addArmor(a);
 							}
-							for each (c in chest.items[Item.CONSUMABLE])
+							for each (c in chest.items[GC.ITEM_TYPE_CONSUMABLE])
 							{
 								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
 								addConsumable(c);
@@ -294,23 +283,23 @@ package entities
 				else if (curAnimation == "walk_right" || 
 					curAnimation == "stand_right")
 				{
-					if (collide("chest", x + 3, y))
+					if (collide(GC.TYPE_CHEST, x + 3, y))
 					{
-						chest = collide("chest", x + 3, y) as Chest;
+						chest = collide(GC.TYPE_CHEST, x + 3, y) as Chest;
 						if (chest.faceDirection == "left")
 						{
 							chest.chestSpritemap.play("open_face_left");
-							for each (w in chest.items[Item.WEAPON])
+							for each (w in chest.items[GC.ITEM_TYPE_WEAPON])
 							{
 								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
 								addWeapon(w);
 							}
-							for each (a in chest.items[Item.ARMOR])
+							for each (a in chest.items[GC.ITEM_TYPE_ARMOR])
 							{
 								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
 								addArmor(a);
 							}
-							for each (c in chest.items[Item.CONSUMABLE])
+							for each (c in chest.items[GC.ITEM_TYPE_CONSUMABLE])
 							{
 								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
 								addConsumable(c);
@@ -322,23 +311,23 @@ package entities
 				else if (curAnimation == "walk_down" || 
 					curAnimation == "stand_down")
 				{
-					if (collide("chest", x, y + 3))
+					if (collide(GC.TYPE_CHEST, x, y + 3))
 					{
-						chest = collide("chest", x, y + 3) as Chest;
+						chest = collide(GC.TYPE_CHEST, x, y + 3) as Chest;
 						if (chest.faceDirection == "up")
 						{
 							chest.chestSpritemap.play("open_face_up");
-							for each (w in chest.items[Item.WEAPON])
+							for each (w in chest.items[GC.ITEM_TYPE_WEAPON])
 							{
 								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
 								addWeapon(w);
 							}
-							for each (a in chest.items[Item.ARMOR])
+							for each (a in chest.items[GC.ITEM_TYPE_ARMOR])
 							{
 								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
 								addArmor(a);
 							}
-							for each (c in chest.items[Item.CONSUMABLE])
+							for each (c in chest.items[GC.ITEM_TYPE_CONSUMABLE])
 							{
 								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
 								addConsumable(c);
@@ -352,14 +341,14 @@ package entities
 		
 		public function enteringHouse():Entity
 		{
-			return collide("house", x, y - 3);
+			return collide(GC.TYPE_HOUSE, x, y - 3);
 		}
 		
 		public function colliding(position:Point):Boolean
 		{
-			if (collide("solid", position.x, position.y)) return true;
-			else if (collide("npc", position.x, position.y)) return true;
-			else if (collide("chest", position.x, position.y)) return true;
+			if (collide(GC.TYPE_TILES, position.x, position.y)) return true;
+			else if (collide(GC.TYPE_NPC, position.x, position.y)) return true;
+			else if (collide(GC.TYPE_CHEST, position.x, position.y)) return true;
 			else return false;
 		}
 		
@@ -374,7 +363,7 @@ package entities
 		
 		public function setupSpritesheet():void
 		{
-			playerSpritemap = new Spritemap(PLAYER, SPRITE_WIDTH, SPRITE_HEIGHT);
+			playerSpritemap = new Spritemap(GFX.PLAYER, GC.PLAYER_SPRITE_WIDTH, GC.PLAYER_SPRITE_HEIGHT);
 			playerSpritemap.add("walk_down", [0, 1, 2, 3, 4, 5, 6, 7], 9, true);
 			playerSpritemap.add("walk_up", [8, 9, 10, 11, 12, 13, 14, 15], 9, true);
 			playerSpritemap.add("walk_right", [16, 17, 18, 19, 20, 21], 9, true);
@@ -446,7 +435,7 @@ package entities
 		
 		public function addWeapon(_weapon:InventoryItem):void
 		{
-			for each (var i:InventoryItem in items[Item.WEAPON])
+			for each (var i:InventoryItem in items[GC.ITEM_TYPE_WEAPON])
 			{
 				if (i.weapon.name == _weapon.weapon.name)
 				{
@@ -455,12 +444,12 @@ package entities
 				}
 			}
 			
-			items[Item.WEAPON].push(_weapon);
+			items[GC.ITEM_TYPE_WEAPON].push(_weapon);
 		}
 		
 		public function addArmor(_armor:InventoryItem):void
 		{
-			for each (var i:InventoryItem in items[Item.ARMOR])
+			for each (var i:InventoryItem in items[GC.ITEM_TYPE_ARMOR])
 			{
 				if (i.armor.name == _armor.armor.name)
 				{
@@ -469,12 +458,12 @@ package entities
 				}
 			}
 			
-			items[Item.ARMOR].push(_armor);
+			items[GC.ITEM_TYPE_ARMOR].push(_armor);
 		}
 		
 		public function addConsumable(_consumable:InventoryItem):void
 		{
-			for each (var i:InventoryItem in items[Item.CONSUMABLE])
+			for each (var i:InventoryItem in items[GC.ITEM_TYPE_CONSUMABLE])
 			{
 				if (i.consumable.name == _consumable.consumable.name)
 				{
@@ -483,7 +472,7 @@ package entities
 				}
 			}
 			
-			items[Item.CONSUMABLE].push(_consumable);
+			items[GC.ITEM_TYPE_CONSUMABLE].push(_consumable);
 		}
 		
 		public function consume(_consumable:Consumable):void
@@ -492,30 +481,30 @@ package entities
 			{
 				switch (statusAlteration.statusVariable)
 				{
-					case (Constants.STATUS_HEALTH): 
+					case (GC.STATUS_HEALTH): 
 					{
 						health += statusAlteration.alteration;
 						if (health > maxHealth) health = maxHealth;
 						break;
 					}
-					case (Constants.STATUS_MANA): 
+					case (GC.STATUS_MANA): 
 					{
 						mana += statusAlteration.alteration;
 						if (mana > maxMana) mana = maxMana;
 						break;
 					}
-					case (Constants.STATUS_STRENGTH): 
+					case (GC.STATUS_STRENGTH): 
 					{
 						strength += statusAlteration.alteration;
 						break;
 					}
-					case (Constants.STATUS_AGILITY): 
+					case (GC.STATUS_AGILITY): 
 					{
 						FP.log("boosted agility");
 						agility += statusAlteration.alteration;
 						break;
 					}
-					case (Constants.STATUS_SPIRITUALITY): 
+					case (GC.STATUS_SPIRITUALITY): 
 					{
 						spirituality += statusAlteration.alteration;
 						break;
@@ -540,17 +529,17 @@ package entities
 					{
 						switch (sa.statusVariable)
 						{
-							case (Constants.STATUS_STRENGTH): 
+							case (GC.STATUS_STRENGTH): 
 							{
 								strength -= sa.alteration;
 								break;
 							}
-							case (Constants.STATUS_AGILITY):
+							case (GC.STATUS_AGILITY):
 							{
 								agility -= sa.alteration;
 								break;
 							}
-							case (Constants.STATUS_STRENGTH): 
+							case (GC.STATUS_STRENGTH): 
 							{
 								spirituality -= sa.alteration;
 								break;

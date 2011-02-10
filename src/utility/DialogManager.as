@@ -2,15 +2,13 @@ package utility
 {
 	import entities.NPC;
 	import entities.Player;
+	
 	/**
 	 * ...
 	 * @author dolgion
 	 */
 	public class DialogManager
 	{
-		public const NPC_TURN:int = 0;
-		public const PLAYER_TURN:int = 1;
-		
 		public var currentDialog:Array = new Array;
 		public var currentLine:int;
 		public var currentTurn:int;
@@ -32,8 +30,8 @@ package utility
 		// Give back the appropriate response to the player's line
 		public function nextNPCLine(_playerResponse:int):String
 		{
-			var nextLine:String = currentDialog[NPC_TURN].lines[currentLine].versions[_playerResponse];
-			currentTurn = PLAYER_TURN;
+			var nextLine:String = currentDialog[GC.DIALOG_NPC_TURN].lines[currentLine].versions[_playerResponse];
+			currentTurn = GC.DIALOG_PLAYER_TURN;
 			
 			return nextLine;
 		}
@@ -41,8 +39,8 @@ package utility
 		// Give back the possible dialog options as an array of strings
 		public function get nextPlayerLineVersions():Array
 		{
-			var nextLineVersions:Array = currentDialog[PLAYER_TURN].lines[currentLine].versions;
-			currentTurn = NPC_TURN;
+			var nextLineVersions:Array = currentDialog[GC.DIALOG_PLAYER_TURN].lines[currentLine].versions;
+			currentTurn = GC.DIALOG_NPC_TURN;
 			currentLine++;
 			
 			return nextLineVersions;
@@ -62,12 +60,14 @@ package utility
 			{
 				return false;
 			}
+			
 			// if there is an entry, but it indicates that all possible dialogs are already 
 			// 'done', then return false as well
 			else if (_player.dialogCounters[_npc.name] >= _player.dialogsInTotal[_npc.name])
 			{
 				return false
 			}
+			
 			// If we get here, it means there IS a conversation there, so find it
 			else 
 			{
@@ -97,7 +97,7 @@ package utility
 				currentDialog.push(dialogsOfGivenNPC[_npc.dialogCounters["player"]]);
 				currentDialog.push(dialogsWithGivenNPC[_player.dialogCounters[_npc.name]]);
 				
-				currentTurn = NPC_TURN;
+				currentTurn = GC.DIALOG_NPC_TURN;
 				currentLine = 0;
 				
 				_player.dialogCounters[_npc.name]++;

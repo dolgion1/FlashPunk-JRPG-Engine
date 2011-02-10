@@ -49,6 +49,7 @@ package utility
 				for each (q in p.line)
 				{
 					var playerDialogLineVersions:Array = new Array();
+					
 					// gonna loop through all possible dialog options
 					for each (r in q.version)
 					{
@@ -81,8 +82,8 @@ package utility
 											   mapDataXML.map[i].west);
 				
 				var mapType:int;
-				if (mapDataXML.map[i].type == "outdoor") mapType = Map.OUTDOOR;
-				else mapType = Map.INDOOR;
+				if (mapDataXML.map[i].type == "outdoor") mapType = GC.MAP_OUTDOOR;
+				else mapType = GC.MAP_INDOOR;
 				
 				var mapChildMaps:Array = new Array();
 				for each (o in mapDataXML.map[i].child_maps[0].child)
@@ -140,6 +141,7 @@ package utility
 					for each (q in p.line)
 					{
 						var npcDialogLineVersions:Array = new Array();
+						
 						// loop through all possible dialog options
 						for each (r in q.version)
 						{
@@ -189,10 +191,10 @@ package utility
 				armor.name = i.@name;
 				armor.armorType = i.armortype;
 				armor.armorRating= i.armorrating;
-				armor.resistances[Weapon.SLASHING] = int(i.slashing);
-				armor.resistances[Weapon.PIERCING] = int(i.piercing);
-				armor.resistances[Weapon.IMPACT] = int(i.impact);
-				armor.resistances[Weapon.MAGIC] = int(i.magic);
+				armor.resistances[GC.DAMAGE_TYPE_SLASHING] = int(i.slashing);
+				armor.resistances[GC.DAMAGE_TYPE_PIERCING] = int(i.piercing);
+				armor.resistances[GC.DAMAGE_TYPE_IMPACT] = int(i.impact);
+				armor.resistances[GC.DAMAGE_TYPE_MAGIC] = int(i.magic);
 				armors.push(armor);
 			}
 			
@@ -243,40 +245,40 @@ package utility
 				{
 					var found:Boolean = false;
 					
-					for each (var w:Weapon in _items[Item.WEAPON])
+					for each (var w:Weapon in _items[GC.ITEM_TYPE_WEAPON])
 					{
 						if (chestInventoryItem.@name == w.name)
 						{
 							found = true;
 							inventoryItem = new InventoryItem();
 							inventoryItem.setWeapon(w, chestInventoryItem.@quantity);
-							chest.items[Item.WEAPON].push(inventoryItem);
+							chest.items[GC.ITEM_TYPE_WEAPON].push(inventoryItem);
 							break;
 						}
 					}
 					if (found) continue;
 					
-					for each (var a:Armor in _items[Item.ARMOR])
+					for each (var a:Armor in _items[GC.ITEM_TYPE_ARMOR])
 					{
 						if (chestInventoryItem.@name == a.name)
 						{
 							found = true;
 							inventoryItem = new InventoryItem();
 							inventoryItem.setArmor(a, chestInventoryItem.@quantity);
-							chest.items[Item.ARMOR].push(inventoryItem);
+							chest.items[GC.ITEM_TYPE_ARMOR].push(inventoryItem);
 							break;
 						}
 					}
 					if (found) continue;
 					
-					for each (var c:Consumable in _items[Item.CONSUMABLE])
+					for each (var c:Consumable in _items[GC.ITEM_TYPE_CONSUMABLE])
 					{
 						if (chestInventoryItem.@name == c.name)
 						{
 							found = true;
 							inventoryItem = new InventoryItem();
 							inventoryItem.setConsumable(c, chestInventoryItem.@quantity);
-							chest.items[Item.CONSUMABLE].push(inventoryItem);
+							chest.items[GC.ITEM_TYPE_CONSUMABLE].push(inventoryItem);
 							break;
 						}
 					}

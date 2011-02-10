@@ -2,28 +2,26 @@ package entities
 {
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.*;
+	import utility.*;
+	
 	/**
 	 * ...
-	 * @author ...
+	 * @author dolgion
 	 */
 	public class House extends Entity
 	{
-		[Embed (source = "../../assets/gfx/house.png")]
-		private var HOUSE:Class;
-
 		public var index:int;
 		public var insideMapIndex:int;
-		public var hitboxSize:int = 48;
 		
 		public function House(_index:int, _x:int, _y:int) 
 		{
-			type = "house";
+			type = GC.TYPE_HOUSE;
 			index = _index;
 			x = _x;
 			y = _y;
 			
-			graphic = new Image(HOUSE);
-			setHitbox(hitboxSize, hitboxSize);
+			graphic = new Image(GFX.HOUSE);
+			setHitbox(GC.HOUSE_HITBOX_SIZE, GC.HOUSE_HITBOX_SIZE);
 		}
 		
 	}

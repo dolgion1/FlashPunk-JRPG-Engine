@@ -11,12 +11,6 @@ package utility
 		
 		public function StatusAlteration() {}
 		
-		/*public function StatusAlteration(_status:int, _alteration:int) 
-		{
-			status = _status;
-			alteration = _alteration;
-		}*/
-		
 	}
 
 }

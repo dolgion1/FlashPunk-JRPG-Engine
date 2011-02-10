@@ -1,16 +1,13 @@
 package utility
 {
 	import entities.*;
+	
 	/**
 	 * ...
 	 * @author dolgion
 	 */
 	public class PlayerDialogBox
 	{
-		public const DEFAULT_FONT_SIZE:int = 12;
-		public const SCALE_X_MULTIPLIER:int = 46;
-		public const SCALE_Y_MULTIPLIER:int = 3;
-		
 		// entities
 		public var textBox:TextBox;
 		public var displayTexts:Array = new Array();
@@ -35,8 +32,8 @@ package utility
 			x = _x;
 			y = _y;
 			textBox = new TextBox(_x, _y,  _scaleX,  _scaleY);
-			charsPerRow = _scaleX * SCALE_X_MULTIPLIER;
-			maxRows = _scaleY * SCALE_Y_MULTIPLIER;
+			charsPerRow = _scaleX * GC.PLAYER_DIALOG_BOX_SCALE_X_MULTIPLIER;
+			maxRows = _scaleY * GC.PLAYER_DIALOG_BOX_SCALE_Y_MULTIPLIER;
 			initDisplayTexts(_scaleX, _scaleY);
 		}
 		
@@ -219,7 +216,7 @@ package utility
 		{
 			for (var i:int = 0; i < maxRows; i++)
 			{
-				displayTexts[i] = new DisplayText("", x + 10 + (_scaleX * 3), y + (i * 30) + (_scaleY * 3), "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+				displayTexts[i] = new DisplayText("", x + 10 + (_scaleX * 3), y + (i * 30) + (_scaleY * 3), "default", GC.PLAYER_DIALOG_BOX_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			}
 		}
 		
@@ -229,7 +226,7 @@ package utility
 			{
 				displayTexts[i].displayText.text = "";
 				displayTexts[i].displayText.color = 0xFFFFFF;
-				displayTexts[i].displayText.size = DEFAULT_FONT_SIZE;
+				displayTexts[i].displayText.size = GC.PLAYER_DIALOG_BOX_DEFAULT_FONT_SIZE;
 			}
 		}
 		

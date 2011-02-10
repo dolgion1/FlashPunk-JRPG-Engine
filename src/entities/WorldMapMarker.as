@@ -1,24 +1,21 @@
 package entities
 {
-	import utility.Map;
+	import utility.*;
 	import net.flashpunk.*;
 	import net.flashpunk.graphics.Image;
 	
 	/**
 	 * ...
-	 * @author ...
+	 * @author dolgion
 	 */
 	public class WorldMapMarker extends Entity
 	{
-		[Embed(source = "../../assets/gfx/world_map_marker.png")]
-		private var MAP_MARKER:Class;
 		private var divisor:Number;
 		private var image:Image;
 		
 		public function WorldMapMarker(player:Player, map:Map, indoors:Boolean, house:House)
 		{
-			
-			graphic = image = new Image(MAP_MARKER, null);
+			graphic = image = new Image(GFX.WORLDMAP_MARKER, null);
 			divisor = map.width / (FP.width / 2);
 			
 			if (!indoors)

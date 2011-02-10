@@ -6,23 +6,13 @@ package utility
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.xml.*;
+	
 	/**
 	 * ...
 	 * @author dolgion
 	 */
 	public class Map
 	{
-		public static const INDOOR:int = 0;
-		public static const OUTDOOR:int = 1;
-		
-		public static const NONE:int = -1;
-		public static const NORTH:int = 0;
-		public static const EAST:int = 1;
-		public static const SOUTH:int = 2;
-		public static const WEST:int = 3;
-
-		public const TILE_SIZE:int = 48;
-		
 		public var index:int;
 		public var name:String;
 		public var width:int;
@@ -33,7 +23,7 @@ package utility
 		public var worldMapYOffset:Number;
 		public var gridSquares:Array = new Array();
 		public var type:int;
-		public var exits:Array = new Array(NONE, NONE, NONE, NONE);
+		public var exits:Array = new Array(GC.MAP_NONE, GC.MAP_NONE, GC.MAP_NONE, GC.MAP_NONE);
 		public var childMaps:Array = new Array();
 		public var outsideMapIndex:int;
 		public var transitionPoints:Array = new Array();
@@ -64,7 +54,7 @@ package utility
 			childMaps = _childMaps;
 			transitionPoints = _transitionPoints;
 			
-			if (type == INDOOR)
+			if (type == GC.MAP_INDOOR)
 			{
 				outsideMapIndex = transitionPoints[0].mapIndex;
 			}
@@ -81,9 +71,9 @@ package utility
 			var j:int;
 			var square:GridSquare;
 			
-			for (i = 0; i <= height; i += TILE_SIZE)
+			for (i = 0; i <= height; i += GC.MAP_TILE_SIZE)
 			{
-				for (j = 0; j <= width; j += TILE_SIZE)
+				for (j = 0; j <= width; j += GC.MAP_TILE_SIZE)
 				{
 					counter++;
 					square = new GridSquare(j, i, counter, true);
@@ -102,7 +92,7 @@ package utility
 					{
 						var rect1:Rectangle = new Rectangle(gridSquares[i].x,
 															gridSquares[i].y,
-															TILE_SIZE, TILE_SIZE);
+															GC.MAP_TILE_SIZE, GC.MAP_TILE_SIZE);
 						var rect2:Rectangle = new Rectangle(solid.@x,
 															solid.@y,
 															solid.@w,

@@ -15,33 +15,6 @@ package utility
 	 */
 	public class InventoryScreen
 	{
-		public const DEFAULT_FONT_SIZE:int = 12;
-		
-		public const ARMOR_EQUIP_HEAD_DISPLAY_TEXT:int = 3;
-		public const ARMOR_EQUIP_TORSO_DISPLAY_TEXT:int = 4;
-		public const ARMOR_EQUIP_LEGS_DISPLAY_TEXT:int = 5;
-		public const ARMOR_EQUIP_HANDS_DISPLAY_TEXT:int = 6;
-		public const ARMOR_EQUIP_FEET_DISPLAY_TEXT:int = 7;
-		public const WEAPON_EQUIP_PRIMARY_DISPLAY_TEXT:int = 8;
-		public const WEAPON_EQUIP_SECONDARY_DISPLAY_TEXT:int = 9;
-		public const INFO_DISPLAY_TEXT_ONE:int = 10;
-		public const INFO_DISPLAY_TEXT_TWO:int = 11;
-		public const INFO_DISPLAY_TEXT_THREE:int = 12;
-		public const INFO_DISPLAY_TEXT_FOUR:int = 13;
-		public const INFO_DISPLAY_TEXT_FIVE:int = 14;
-		public const INFO_DISPLAY_TEXT_SIX:int = 15;
-		public const INFO_DISPLAY_TEXT_SEVEN:int = 16;
-		public const INFO_DISPLAY_TEXT_EIGHT:int = 17;
-		
-		public const WEAPON_ITEM_COLUMN:int = 0;
-		public const ARMOR_ITEM_COLUMN:int = 1;
-		public const CONSUMABLE_ITEM_COLUMN:int = 2;
-		public const ARMOR_EQUIP_COLUMN:int = 3;
-		public const WEAPON_EQUIP_COLUMN:int = 4;
-		
-		public const NORMAL_MODE:int = 0;
-		public const EQUIP_MODE:int = 1;
-		
 		public var cursor:Cursor;
 		public var cursorEquip:CursorEquip;
 		public var background:TextBox;
@@ -58,12 +31,12 @@ package utility
 		public var itemsStartIndex:Array = new Array();
 		public var itemsEndIndex:Array = new Array();
 		
-		public var currentMode:int = NORMAL_MODE;
+		public var currentMode:int = GC.INVENTORY_NORMAL_MODE;
 		private var visibility:Boolean = false;
 		private var maxRows:int = 6;
 		
 		public var currentCursorPositionKey:String = "ArmorEquipHead";
-		public var currentCursorColumn:int = ARMOR_EQUIP_COLUMN;
+		public var currentCursorColumn:int = GC.INVENTORY_ARMOR_EQUIP_COLUMN;
 		public var cursorPositions:Dictionary = new Dictionary();
 		public var cursorPositionsNodes:Dictionary = new Dictionary();
 		public var cursorPositionsValidity:Dictionary = new Dictionary();
@@ -96,9 +69,9 @@ package utility
 			items = _player.items;
 			equipment = _player.equipment;
 			
-			currentMode = NORMAL_MODE;
+			currentMode = GC.INVENTORY_NORMAL_MODE;
 			currentCursorPositionKey = "ArmorEquipHead";
-			currentCursorColumn = ARMOR_EQUIP_COLUMN;
+			currentCursorColumn = GC.INVENTORY_ARMOR_EQUIP_COLUMN;
 			currentEquipmentKey = "";
 			
 			populateEquipmentColumns();
@@ -107,34 +80,34 @@ package utility
 		
 		public function populateEquipmentColumns():void
 		{
-			if (equipment["ArmorEquipHead"] != null) displayTexts[ARMOR_EQUIP_HEAD_DISPLAY_TEXT].displayText.text = "Head: " + equipment["ArmorEquipHead"].name;
-			else displayTexts[ARMOR_EQUIP_HEAD_DISPLAY_TEXT].displayText.text = "Head: ";
+			if (equipment["ArmorEquipHead"] != null) displayTexts[GC.INVENTORY_ARMOR_EQUIP_HEAD_DISPLAY_TEXT].displayText.text = "Head: " + equipment["ArmorEquipHead"].name;
+			else displayTexts[GC.INVENTORY_ARMOR_EQUIP_HEAD_DISPLAY_TEXT].displayText.text = "Head: ";
 			
-			if (equipment["ArmorEquipTorso"] != null) displayTexts[ARMOR_EQUIP_TORSO_DISPLAY_TEXT].displayText.text = "Torso: " + equipment["ArmorEquipTorso"].name;
-			else displayTexts[ARMOR_EQUIP_TORSO_DISPLAY_TEXT].displayText.text = "Torso: ";
+			if (equipment["ArmorEquipTorso"] != null) displayTexts[GC.INVENTORY_ARMOR_EQUIP_TORSO_DISPLAY_TEXT].displayText.text = "Torso: " + equipment["ArmorEquipTorso"].name;
+			else displayTexts[GC.INVENTORY_ARMOR_EQUIP_TORSO_DISPLAY_TEXT].displayText.text = "Torso: ";
 			
-			if (equipment["ArmorEquipLegs"] != null) displayTexts[ARMOR_EQUIP_LEGS_DISPLAY_TEXT].displayText.text = "Legs: " + equipment["ArmorEquipLegs"].name;
-			else displayTexts[ARMOR_EQUIP_LEGS_DISPLAY_TEXT].displayText.text = "Legs: ";
+			if (equipment["ArmorEquipLegs"] != null) displayTexts[GC.INVENTORY_ARMOR_EQUIP_LEGS_DISPLAY_TEXT].displayText.text = "Legs: " + equipment["ArmorEquipLegs"].name;
+			else displayTexts[GC.INVENTORY_ARMOR_EQUIP_LEGS_DISPLAY_TEXT].displayText.text = "Legs: ";
 			
-			if (equipment["ArmorEquipHands"] != null) displayTexts[ARMOR_EQUIP_HANDS_DISPLAY_TEXT].displayText.text = "Hands: " + equipment["ArmorEquipHands"].name;
-			else displayTexts[ARMOR_EQUIP_HANDS_DISPLAY_TEXT].displayText.text = "Hands: ";
+			if (equipment["ArmorEquipHands"] != null) displayTexts[GC.INVENTORY_ARMOR_EQUIP_HANDS_DISPLAY_TEXT].displayText.text = "Hands: " + equipment["ArmorEquipHands"].name;
+			else displayTexts[GC.INVENTORY_ARMOR_EQUIP_HANDS_DISPLAY_TEXT].displayText.text = "Hands: ";
 			
-			if (equipment["ArmorEquipFeet"] != null) displayTexts[ARMOR_EQUIP_FEET_DISPLAY_TEXT].displayText.text = "Feet: " + equipment["ArmorEquipFeet"].name;
-			else displayTexts[ARMOR_EQUIP_FEET_DISPLAY_TEXT].displayText.text = "Feet: ";
+			if (equipment["ArmorEquipFeet"] != null) displayTexts[GC.INVENTORY_ARMOR_EQUIP_FEET_DISPLAY_TEXT].displayText.text = "Feet: " + equipment["ArmorEquipFeet"].name;
+			else displayTexts[GC.INVENTORY_ARMOR_EQUIP_FEET_DISPLAY_TEXT].displayText.text = "Feet: ";
 			
-			if (equipment["WeaponEquipPrimary"] != null) displayTexts[WEAPON_EQUIP_PRIMARY_DISPLAY_TEXT].displayText.text = "Primary Weapon: " + equipment["WeaponEquipPrimary"].name;
-			else displayTexts[WEAPON_EQUIP_PRIMARY_DISPLAY_TEXT].displayText.text = "Primary Weapon: ";
+			if (equipment["WeaponEquipPrimary"] != null) displayTexts[GC.INVENTORY_WEAPON_EQUIP_PRIMARY_DISPLAY_TEXT].displayText.text = "Primary Weapon: " + equipment["WeaponEquipPrimary"].name;
+			else displayTexts[GC.INVENTORY_WEAPON_EQUIP_PRIMARY_DISPLAY_TEXT].displayText.text = "Primary Weapon: ";
 			
-			if (equipment["WeaponEquipSecondary"] != null) displayTexts[WEAPON_EQUIP_SECONDARY_DISPLAY_TEXT].displayText.text = "Secondary Weapon: " + equipment["WeaponEquipSecondary"].name;
-			else displayTexts[WEAPON_EQUIP_SECONDARY_DISPLAY_TEXT].displayText.text = "Secondary Weapon: ";
+			if (equipment["WeaponEquipSecondary"] != null) displayTexts[GC.INVENTORY_WEAPON_EQUIP_SECONDARY_DISPLAY_TEXT].displayText.text = "Secondary Weapon: " + equipment["WeaponEquipSecondary"].name;
+			else displayTexts[GC.INVENTORY_WEAPON_EQUIP_SECONDARY_DISPLAY_TEXT].displayText.text = "Secondary Weapon: ";
 		}
 		
 		public function populateItemColumns():void
 		{
 			resetItemColumnDisplayTexts();
-			itemsStartIndex[WEAPON_ITEM_COLUMN] = 0;
-			itemsStartIndex[ARMOR_ITEM_COLUMN] = 0;
-			itemsStartIndex[CONSUMABLE_ITEM_COLUMN] = 0;
+			itemsStartIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN] = 0;
+			itemsStartIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN] = 0;
+			itemsStartIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN] = 0;
 			
 			// set the text for every display list of each column
 			var i:int;
@@ -157,15 +130,15 @@ package utility
 						break;
 					}
 					
-					if (i == Item.WEAPON)
+					if (i == GC.ITEM_TYPE_WEAPON)
 					{
 						itemColumns[i][j].displayText.text = items[i][j].weapon.name;
 					}
-					else if (i == Item.ARMOR)
+					else if (i == GC.ITEM_TYPE_ARMOR)
 					{
 						itemColumns[i][j].displayText.text = items[i][j].armor.name;
 					}
-					else if (i == Item.CONSUMABLE)
+					else if (i == GC.ITEM_TYPE_CONSUMABLE)
 					{
 						itemColumns[i][j].displayText.text = items[i][j].consumable.name;
 					}
@@ -196,21 +169,21 @@ package utility
 				{
 					d.displayText.text = "";
 					d.displayText.color = 0xFFFFFF;
-					d.displayText.size = DEFAULT_FONT_SIZE;
+					d.displayText.size = GC.INVENTORY_DEFAULT_FONT_SIZE;
 				}
 			}
 		}
 		
 		public function resetInfoDisplayTexts():void
 		{
-			displayTexts[INFO_DISPLAY_TEXT_ONE].displayText.text = "";
-			displayTexts[INFO_DISPLAY_TEXT_TWO].displayText.text = "";
-			displayTexts[INFO_DISPLAY_TEXT_THREE].displayText.text = "";
-			displayTexts[INFO_DISPLAY_TEXT_FOUR].displayText.text = "";
-			displayTexts[INFO_DISPLAY_TEXT_FIVE].displayText.text = "";
-			displayTexts[INFO_DISPLAY_TEXT_SIX].displayText.text = "";
-			displayTexts[INFO_DISPLAY_TEXT_SEVEN].displayText.text = "";
-			displayTexts[INFO_DISPLAY_TEXT_EIGHT].displayText.text = "";
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_ONE].displayText.text = "";
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_TWO].displayText.text = "";
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_THREE].displayText.text = "";
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FOUR].displayText.text = "";
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FIVE].displayText.text = "";
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SIX].displayText.text = "";
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SEVEN].displayText.text = "";
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_EIGHT].displayText.text = "";
 		}
 		
 		
@@ -222,15 +195,15 @@ package utility
 			
 			for (var i:int = 0; i < maxRows; i++)
 			{
-				itemColumns[0].push(new DisplayText("", 100, 200 + (i * 20), "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
+				itemColumns[0].push(new DisplayText("", 100, 200 + (i * 20), "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
 			}
 			for (i = 0; i < maxRows; i++)
 			{
-				itemColumns[1].push(new DisplayText("", 250, 200 + (i * 20), "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
+				itemColumns[1].push(new DisplayText("", 250, 200 + (i * 20), "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
 			}
 			for (i = 0; i < maxRows; i++)
 			{
-				itemColumns[2].push(new DisplayText("", 400, 200 + (i * 20), "default", DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
+				itemColumns[2].push(new DisplayText("", 400, 200 + (i * 20), "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
 			}
 		}
 		
@@ -238,23 +211,23 @@ package utility
 		{
 			if (currentCursorPositionKey.search("WeaponItem") != ( -1))
 			{
-				currentCursorColumn = WEAPON_ITEM_COLUMN;
+				currentCursorColumn = GC.INVENTORY_WEAPON_ITEM_COLUMN;
 			}
 			else if (currentCursorPositionKey.search("ArmorItem") != ( -1))
 			{
-				currentCursorColumn = ARMOR_ITEM_COLUMN;
+				currentCursorColumn = GC.INVENTORY_ARMOR_ITEM_COLUMN;
 			}
 			else if (currentCursorPositionKey.search("ConsumableItem") != ( -1))
 			{
-				currentCursorColumn = CONSUMABLE_ITEM_COLUMN;
+				currentCursorColumn = GC.INVENTORY_CONSUMABLE_ITEM_COLUMN;
 			}
 			else if (currentCursorPositionKey.search("ArmorEquip") != ( -1))
 			{
-				currentCursorColumn = ARMOR_EQUIP_COLUMN;
+				currentCursorColumn = GC.INVENTORY_ARMOR_EQUIP_COLUMN;
 			}
 			else if (currentCursorPositionKey.search("WeaponEquip") != ( -1))
 			{
-				currentCursorColumn = WEAPON_EQUIP_COLUMN;
+				currentCursorColumn = GC.INVENTORY_WEAPON_EQUIP_COLUMN;
 			}
 		}
 		
@@ -278,14 +251,14 @@ package utility
 			{
 				if (items[currentCursorColumn].length == i) break;
 				
-				if (currentCursorColumn == ARMOR_ITEM_COLUMN)
+				if (currentCursorColumn == GC.INVENTORY_ARMOR_ITEM_COLUMN)
 				{
 					var armor:Armor = items[currentCursorColumn][itemsStartIndex[currentCursorColumn] + i].armor;
 					switch (currentEquipmentKey)
 					{
 						case "ArmorEquipHead": 
 						{
-							if (armor.armorType != Armor.HEAD || armor.equipped)
+							if (armor.armorType != GC.ARMOR_TYPE_HEAD|| armor.equipped)
 							{
 								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
 							}
@@ -297,7 +270,7 @@ package utility
 						}
 						case "ArmorEquipTorso": 
 						{
-							if (armor.armorType != Armor.TORSO || armor.equipped)
+							if (armor.armorType != GC.ARMOR_TYPE_TORSO || armor.equipped)
 							{
 								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
 							}
@@ -309,7 +282,7 @@ package utility
 						}
 						case "ArmorEquipLegs": 
 						{
-							if (armor.armorType != Armor.LEGS || armor.equipped)
+							if (armor.armorType != GC.ARMOR_TYPE_LEGS || armor.equipped)
 							{
 								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
 							}
@@ -321,7 +294,7 @@ package utility
 						}
 						case "ArmorEquipHands": 
 						{
-							if (armor.armorType != Armor.HANDS || armor.equipped)
+							if (armor.armorType != GC.ARMOR_TYPE_HANDS || armor.equipped)
 							{
 								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
 							}
@@ -333,7 +306,7 @@ package utility
 						}
 						case "ArmorEquipFeet": 
 						{
-							if (armor.armorType != Armor.FEET || armor.equipped)
+							if (armor.armorType != GC.ARMOR_TYPE_FEET || armor.equipped)
 							{
 								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
 							}
@@ -345,7 +318,7 @@ package utility
 						}
 					}
 				}
-				else if (currentCursorColumn == WEAPON_ITEM_COLUMN)
+				else if (currentCursorColumn == GC.INVENTORY_WEAPON_ITEM_COLUMN)
 				{
 					var inventoryItem:InventoryItem = items[currentCursorColumn][itemsStartIndex[currentCursorColumn] + i];
 					switch (currentEquipmentKey)
@@ -390,10 +363,10 @@ package utility
 		
 		public function cancelPress():void
 		{
-			if (currentMode == NORMAL_MODE)
+			if (currentMode == GC.INVENTORY_NORMAL_MODE)
 			{
-				if (currentCursorColumn == ARMOR_EQUIP_COLUMN ||
-					currentCursorColumn == WEAPON_EQUIP_COLUMN)
+				if (currentCursorColumn == GC.INVENTORY_ARMOR_EQUIP_COLUMN ||
+					currentCursorColumn == GC.INVENTORY_WEAPON_EQUIP_COLUMN)
 				{
 					if (equipment[currentCursorPositionKey] != null)
 					{
@@ -404,9 +377,9 @@ package utility
 					}
 				}
 			}
-			else if (currentMode == EQUIP_MODE)
+			else if (currentMode == GC.INVENTORY_EQUIP_MODE)
 			{
-				currentMode = NORMAL_MODE;
+				currentMode = GC.INVENTORY_NORMAL_MODE;
 				cursorEquip.visible = false;
 				cursor.position = cursorPositions[currentEquipmentKey];
 				currentCursorPositionKey = currentEquipmentKey;
@@ -418,13 +391,13 @@ package utility
 		
 		public function actionPress():void
 		{
-			if (currentMode == NORMAL_MODE)
+			if (currentMode == GC.INVENTORY_NORMAL_MODE)
 			{
-				if (currentCursorColumn == ARMOR_EQUIP_COLUMN)
+				if (currentCursorColumn == GC.INVENTORY_ARMOR_EQUIP_COLUMN)
 				{
 					// if there are no armor items, don't move the cursor
 					// and change modes
-					if (items[ARMOR_ITEM_COLUMN].length == 0)
+					if (items[GC.INVENTORY_ARMOR_ITEM_COLUMN].length == 0)
 					{
 						return;
 					}
@@ -438,14 +411,14 @@ package utility
 					currentEquipmentKey = currentCursorPositionKey;
 					currentCursorPositionKey = "ArmorItem1";
 					updateCurrentCursorColumn();
-					currentMode = EQUIP_MODE;
+					currentMode = GC.INVENTORY_EQUIP_MODE;
 					highlightValidEquipment();
 				}
-				else if (currentCursorColumn == WEAPON_EQUIP_COLUMN)
+				else if (currentCursorColumn == GC.INVENTORY_WEAPON_EQUIP_COLUMN)
 				{
 					// if there are no weapon items, don't move the cursor
 					// and change modes
-					if (items[WEAPON_ITEM_COLUMN].length == 0)
+					if (items[GC.INVENTORY_WEAPON_ITEM_COLUMN].length == 0)
 					{
 						return;
 					}
@@ -459,49 +432,49 @@ package utility
 					currentEquipmentKey = currentCursorPositionKey;
 					currentCursorPositionKey = "WeaponItem1";
 					updateCurrentCursorColumn();
-					currentMode = EQUIP_MODE;
+					currentMode = GC.INVENTORY_EQUIP_MODE;
 					highlightValidEquipment();
 				}
-				else if (currentCursorColumn == CONSUMABLE_ITEM_COLUMN)
+				else if (currentCursorColumn == GC.INVENTORY_CONSUMABLE_ITEM_COLUMN)
 				{
 					// find the consumable in the items array
 					var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
 					consumableIndex += itemsStartIndex[currentCursorColumn];
 					
 					// alter the player stats
-					player.consume(items[Item.CONSUMABLE][consumableIndex].consumable);
+					player.consume(items[GC.ITEM_TYPE_CONSUMABLE][consumableIndex].consumable);
 					
 					// decrease quantity of the consumable. if it's now at 0, delete the inventoryItem
 					// from the items array and update the itemsColumn
-					items[Item.CONSUMABLE][consumableIndex].quantity--;
+					items[GC.ITEM_TYPE_CONSUMABLE][consumableIndex].quantity--;
 					
-					if (items[Item.CONSUMABLE][consumableIndex].quantity < 1)
+					if (items[GC.ITEM_TYPE_CONSUMABLE][consumableIndex].quantity < 1)
 					{
-						items[Item.CONSUMABLE].splice(consumableIndex, 1);
+						items[GC.ITEM_TYPE_CONSUMABLE].splice(consumableIndex, 1);
 						populateItemColumns();
 						
-						if (items[Item.CONSUMABLE].length < maxRows)
+						if (items[GC.ITEM_TYPE_CONSUMABLE].length < maxRows)
 						{
-							cursorPositionsValidity["ConsumableItem" + (items[Item.CONSUMABLE].length + 1)] = false;
-							itemsEndIndex[CONSUMABLE_ITEM_COLUMN]--;
+							cursorPositionsValidity["ConsumableItem" + (items[GC.ITEM_TYPE_CONSUMABLE].length + 1)] = false;
+							itemsEndIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN]--;
 							
-							if (items[Item.CONSUMABLE].length > 0)
+							if (items[GC.ITEM_TYPE_CONSUMABLE].length > 0)
 							{
-								cursor.position = cursorPositions["ConsumableItem" + items[Item.CONSUMABLE].length];
-								currentCursorPositionKey = "ConsumableItem" + items[Item.CONSUMABLE].length;
+								cursor.position = cursorPositions["ConsumableItem" + items[GC.ITEM_TYPE_CONSUMABLE].length];
+								currentCursorPositionKey = "ConsumableItem" + items[GC.ITEM_TYPE_CONSUMABLE].length;
 							}
 							else 
 							{
 								cursor.position = cursorPositions["ArmorEquipHead"];
 								currentCursorPositionKey = "ArmorEquipHead";
-								currentCursorColumn = ARMOR_EQUIP_COLUMN;
+								currentCursorColumn = GC.INVENTORY_ARMOR_EQUIP_COLUMN;
 							}
 						}
 					}
 					displayItemInformation();
 				}
 			}
-			else if (currentMode == EQUIP_MODE)
+			else if (currentMode == GC.INVENTORY_EQUIP_MODE)
 			{
 				// get the Weapon or Armor instance of the currently 
 				// selected (cursored) item entry
@@ -515,52 +488,52 @@ package utility
 				{
 					case "ArmorEquipHead": 
 					{
-						if ((items[currentCursorColumn][index].armor.armorType == Armor.HEAD) &&
+						if ((items[currentCursorColumn][index].armor.armorType == GC.ARMOR_TYPE_HEAD) &&
 							(!items[currentCursorColumn][index].armor.equipped))
 						{
 							validSelection = true;
 						}
-						itemType = Item.ARMOR;
+						itemType = GC.ITEM_TYPE_ARMOR;
 						break;
 					}
 					case "ArmorEquipTorso":
 					{
-						if ((items[currentCursorColumn][index].armor.armorType == Armor.TORSO) &&
+						if ((items[currentCursorColumn][index].armor.armorType == GC.ARMOR_TYPE_TORSO) &&
 							(!items[currentCursorColumn][index].armor.equipped))
 						{
 							validSelection = true;
 						}
-						itemType = Item.ARMOR;
+						itemType = GC.ITEM_TYPE_ARMOR;
 						break;
 					}
 					case "ArmorEquipLegs": 
 					{
-						if ((items[currentCursorColumn][index].armor.armorType == Armor.LEGS) &&
+						if ((items[currentCursorColumn][index].armor.armorType == GC.ARMOR_TYPE_LEGS) &&
 							(!items[currentCursorColumn][index].armor.equipped))
 						{
 							validSelection = true;
 						}
-						itemType = Item.ARMOR;
+						itemType = GC.ITEM_TYPE_ARMOR;
 						break;
 					}
 					case "ArmorEquipHands":
 					{
-						if ((items[currentCursorColumn][index].armor.armorType == Armor.HANDS) &&
+						if ((items[currentCursorColumn][index].armor.armorType == GC.ARMOR_TYPE_HANDS) &&
 							(!items[currentCursorColumn][index].armor.equipped))
 						{
 							validSelection = true;
 						}
-						itemType = Item.ARMOR;
+						itemType = GC.ITEM_TYPE_ARMOR;
 						break;
 					}
 					case "ArmorEquipFeet":
 					{
-						if ((items[currentCursorColumn][index].armor.armorType == Armor.FEET) &&
+						if ((items[currentCursorColumn][index].armor.armorType == GC.ARMOR_TYPE_FEET) &&
 							(!items[currentCursorColumn][index].armor.equipped))
 						{
 							validSelection = true;
 						}
-						itemType = Item.ARMOR;
+						itemType = GC.ITEM_TYPE_ARMOR;
 						break;
 					}
 					case "WeaponEquipPrimary":
@@ -580,7 +553,7 @@ package utility
 							}
 						}
 						
-						itemType = Item.WEAPON;
+						itemType = GC.ITEM_TYPE_WEAPON;
 						break;
 					}
 					case "WeaponEquipSecondary":
@@ -605,7 +578,7 @@ package utility
 								}
 							}
 						}
-						itemType = Item.WEAPON;
+						itemType = GC.ITEM_TYPE_WEAPON;
 						break;
 					}
 				}
@@ -617,12 +590,12 @@ package utility
 						equipment[currentEquipmentKey].equipped = false;
 					}
 					
-					if (itemType == Item.WEAPON)
+					if (itemType == GC.ITEM_TYPE_WEAPON)
 					{
 						equipment[currentEquipmentKey] = items[currentCursorColumn][index].weapon;
 						items[currentCursorColumn][index].weapon.equipped = true;
 					}
-					else if (itemType == Item.ARMOR)
+					else if (itemType == GC.ITEM_TYPE_ARMOR)
 					{
 						equipment[currentEquipmentKey] = items[currentCursorColumn][index].armor;
 						items[currentCursorColumn][index].armor.equipped = true;
@@ -630,7 +603,7 @@ package utility
 					
 					populateEquipmentColumns();
 					
-					currentMode = NORMAL_MODE;
+					currentMode = GC.INVENTORY_NORMAL_MODE;
 					cursorEquip.visible = false;
 					cursor.position = cursorPositions[currentEquipmentKey];
 					currentCursorPositionKey = currentEquipmentKey;
@@ -643,7 +616,7 @@ package utility
 		
 		public function cursorMovement(_direction:String):void
 		{
-			if (currentMode == NORMAL_MODE)
+			if (currentMode == GC.INVENTORY_NORMAL_MODE)
 			{
 				var newPosition:Point;
 				switch(_direction)
@@ -659,33 +632,33 @@ package utility
 					if (currentCursorPositionKey == "WeaponItem1" && _direction == "up")
 					{
 						// find out if there are more items beyond the current itemsEndIndex[WEAPON_COLUMN]
-						if (itemsStartIndex[WEAPON_ITEM_COLUMN] > 0)
+						if (itemsStartIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN] > 0)
 						{
-							itemsStartIndex[WEAPON_ITEM_COLUMN]--;
-							itemsEndIndex[WEAPON_ITEM_COLUMN]--;
-							updateItemColumn(WEAPON_ITEM_COLUMN);
+							itemsStartIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN]--;
+							itemsEndIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN]--;
+							updateItemColumn(GC.INVENTORY_WEAPON_ITEM_COLUMN);
 							moveCursor = false;
 						}
 					}
 					else if (currentCursorPositionKey == "ArmorItem1" && _direction == "up")
 					{
 						// find out if there are more items beyond the current itemsEndIndex[WEAPON_COLUMN]
-						if (itemsStartIndex[ARMOR_ITEM_COLUMN] > 0)
+						if (itemsStartIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN] > 0)
 						{
-							itemsStartIndex[ARMOR_ITEM_COLUMN]--;
-							itemsEndIndex[ARMOR_ITEM_COLUMN]--;
-							updateItemColumn(ARMOR_ITEM_COLUMN);
+							itemsStartIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN]--;
+							itemsEndIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN]--;
+							updateItemColumn(GC.INVENTORY_ARMOR_ITEM_COLUMN);
 							moveCursor = false;
 						}
 					}
 					else if (currentCursorPositionKey == "ConsumableItem1" && _direction == "up")
 					{
 						// find out if there are more items beyond the current itemsEndIndex[WEAPON_COLUMN]
-						if (itemsEndIndex[CONSUMABLE_ITEM_COLUMN] > 0)
+						if (itemsEndIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN] > 0)
 						{
-							itemsStartIndex[CONSUMABLE_ITEM_COLUMN]--;
-							itemsEndIndex[CONSUMABLE_ITEM_COLUMN]--;
-							updateItemColumn(CONSUMABLE_ITEM_COLUMN);
+							itemsStartIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN]--;
+							itemsEndIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN]--;
+							updateItemColumn(GC.INVENTORY_CONSUMABLE_ITEM_COLUMN);
 							moveCursor = false;
 						}
 					}
@@ -715,36 +688,36 @@ package utility
 					if (currentCursorPositionKey == "WeaponItem6" && _direction == "down")
 					{
 						// find out if there are more items beyond the current itemsEndIndex[WEAPON_COLUMN]
-						if (items[WEAPON_ITEM_COLUMN].length > itemsEndIndex[WEAPON_ITEM_COLUMN])
+						if (items[GC.INVENTORY_WEAPON_ITEM_COLUMN].length > itemsEndIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN])
 						{
-							itemsStartIndex[WEAPON_ITEM_COLUMN]++;
-							itemsEndIndex[WEAPON_ITEM_COLUMN]++;
-							updateItemColumn(WEAPON_ITEM_COLUMN);
+							itemsStartIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN]++;
+							itemsEndIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN]++;
+							updateItemColumn(GC.INVENTORY_WEAPON_ITEM_COLUMN);
 						}
 					}
 					else if (currentCursorPositionKey == "ArmorItem6" && _direction == "down")
 					{
 						// find out if there are more items beyond the current itemsEndIndex[WEAPON_COLUMN]
-						if (items[ARMOR_ITEM_COLUMN].length > itemsEndIndex[ARMOR_ITEM_COLUMN])
+						if (items[GC.INVENTORY_ARMOR_ITEM_COLUMN].length > itemsEndIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN])
 						{
-							itemsStartIndex[ARMOR_ITEM_COLUMN]++;
-							itemsEndIndex[ARMOR_ITEM_COLUMN]++;
-							updateItemColumn(ARMOR_ITEM_COLUMN);
+							itemsStartIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN]++;
+							itemsEndIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN]++;
+							updateItemColumn(GC.INVENTORY_ARMOR_ITEM_COLUMN);
 						}
 					}
 					else if (currentCursorPositionKey == "ConsumableItem6" && _direction == "down")
 					{
 						// find out if there are more items beyond the current itemsEndIndex[WEAPON_COLUMN]
-						if (items[CONSUMABLE_ITEM_COLUMN].length > itemsEndIndex[CONSUMABLE_ITEM_COLUMN])
+						if (items[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN].length > itemsEndIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN])
 						{
-							itemsStartIndex[CONSUMABLE_ITEM_COLUMN]++;
-							itemsEndIndex[CONSUMABLE_ITEM_COLUMN]++;
-							updateItemColumn(CONSUMABLE_ITEM_COLUMN);
+							itemsStartIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN]++;
+							itemsEndIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN]++;
+							updateItemColumn(GC.INVENTORY_CONSUMABLE_ITEM_COLUMN);
 						}
 					}
 				}
 			}
-			else if (currentMode == EQUIP_MODE)
+			else if (currentMode == GC.INVENTORY_EQUIP_MODE)
 			{
 				switch(_direction)
 				{
@@ -757,15 +730,15 @@ package utility
 					if (currentCursorPositionKey == "WeaponItem1" && _direction == "up")
 					{
 						// find out if there are more items beyond the current itemsEndIndex[WEAPON_ITEM_COLUMN]
-						if (itemsStartIndex[WEAPON_ITEM_COLUMN] > 0)
+						if (itemsStartIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN] > 0)
 						{
-							itemsStartIndex[WEAPON_ITEM_COLUMN]--;
-							itemsEndIndex[WEAPON_ITEM_COLUMN]--;
-							updateItemColumn(WEAPON_ITEM_COLUMN);
+							itemsStartIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN]--;
+							itemsEndIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN]--;
+							updateItemColumn(GC.INVENTORY_WEAPON_ITEM_COLUMN);
 							highlightValidEquipment();
 							moveCursor = false;
 						}
-						else if (itemsStartIndex[WEAPON_ITEM_COLUMN] == 0)
+						else if (itemsStartIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN] == 0)
 						{
 							moveCursor = false;
 						}
@@ -773,15 +746,15 @@ package utility
 					else if (currentCursorPositionKey == "ArmorItem1" && _direction == "up")
 					{
 						// find out if there are more items beyond the current itemsEndIndex[ARMOR_ITEM_COLUMN]
-						if (itemsStartIndex[ARMOR_ITEM_COLUMN] > 0)
+						if (itemsStartIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN] > 0)
 						{
-							itemsStartIndex[ARMOR_ITEM_COLUMN]--;
-							itemsEndIndex[ARMOR_ITEM_COLUMN]--;
-							updateItemColumn(ARMOR_ITEM_COLUMN);
+							itemsStartIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN]--;
+							itemsEndIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN]--;
+							updateItemColumn(GC.INVENTORY_ARMOR_ITEM_COLUMN);
 							highlightValidEquipment();
 							moveCursor = false;
 						}
-						else if (itemsStartIndex[WEAPON_ITEM_COLUMN] == 0)
+						else if (itemsStartIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN] == 0)
 						{
 							moveCursor = false;
 						}
@@ -789,15 +762,15 @@ package utility
 					else if (currentCursorPositionKey == "ConsumableItem1" && _direction == "up")
 					{
 						// find out if there are more items beyond the current itemsEndIndex[CONSUMABLE_ITEM_COLUMN]
-						if (itemsEndIndex[CONSUMABLE_ITEM_COLUMN] > 0)
+						if (itemsEndIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN] > 0)
 						{
-							itemsStartIndex[CONSUMABLE_ITEM_COLUMN]--;
-							itemsEndIndex[CONSUMABLE_ITEM_COLUMN]--;
-							updateItemColumn(CONSUMABLE_ITEM_COLUMN);
+							itemsStartIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN]--;
+							itemsEndIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN]--;
+							updateItemColumn(GC.INVENTORY_CONSUMABLE_ITEM_COLUMN);
 							highlightValidEquipment();
 							moveCursor = false;
 						}
-						else if (itemsStartIndex[WEAPON_ITEM_COLUMN] == 0)
+						else if (itemsStartIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN] == 0)
 						{
 							moveCursor = false;
 						}
@@ -825,33 +798,33 @@ package utility
 					if (currentCursorPositionKey == "WeaponItem6" && _direction == "down")
 					{
 						// find out if there are more items beyond the current itemsEndIndex[WEAPON_COLUMN]
-						if (items[WEAPON_ITEM_COLUMN].length > itemsEndIndex[WEAPON_ITEM_COLUMN])
+						if (items[GC.INVENTORY_WEAPON_ITEM_COLUMN].length > itemsEndIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN])
 						{
-							itemsStartIndex[WEAPON_ITEM_COLUMN]++;
-							itemsEndIndex[WEAPON_ITEM_COLUMN]++;
-							updateItemColumn(WEAPON_ITEM_COLUMN);
+							itemsStartIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN]++;
+							itemsEndIndex[GC.INVENTORY_WEAPON_ITEM_COLUMN]++;
+							updateItemColumn(GC.INVENTORY_WEAPON_ITEM_COLUMN);
 							highlightValidEquipment();
 						}
 					}
 					else if (currentCursorPositionKey == "ArmorItem6" && _direction == "down")
 					{
 						// find out if there are more items beyond the current itemsEndIndex[WEAPON_COLUMN]
-						if (items[ARMOR_ITEM_COLUMN].length > itemsEndIndex[ARMOR_ITEM_COLUMN])
+						if (items[GC.INVENTORY_ARMOR_ITEM_COLUMN].length > itemsEndIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN])
 						{
-							itemsStartIndex[ARMOR_ITEM_COLUMN]++;
-							itemsEndIndex[ARMOR_ITEM_COLUMN]++;
-							updateItemColumn(ARMOR_ITEM_COLUMN);
+							itemsStartIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN]++;
+							itemsEndIndex[GC.INVENTORY_ARMOR_ITEM_COLUMN]++;
+							updateItemColumn(GC.INVENTORY_ARMOR_ITEM_COLUMN);
 							highlightValidEquipment();
 						}
 					}
 					else if (currentCursorPositionKey == "ConsumableItem6" && _direction == "down")
 					{
 						// find out if there are more items beyond the current itemsEndIndex[WEAPON_COLUMN]
-						if (items[CONSUMABLE_ITEM_COLUMN].length > itemsEndIndex[CONSUMABLE_ITEM_COLUMN])
+						if (items[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN].length > itemsEndIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN])
 						{
-							itemsStartIndex[CONSUMABLE_ITEM_COLUMN]++;
-							itemsEndIndex[CONSUMABLE_ITEM_COLUMN]++;
-							updateItemColumn(CONSUMABLE_ITEM_COLUMN);
+							itemsStartIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN]++;
+							itemsEndIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN]++;
+							updateItemColumn(GC.INVENTORY_CONSUMABLE_ITEM_COLUMN);
 							highlightValidEquipment();
 						}
 					}
@@ -871,45 +844,45 @@ package utility
 			var itemName:String;
 			var itemType:int;
 			
-			if (currentCursorColumn == ARMOR_EQUIP_COLUMN)
+			if (currentCursorColumn == GC.INVENTORY_ARMOR_EQUIP_COLUMN)
 			{
 				if (equipment[currentCursorPositionKey] != null)
 				{
 					itemName = equipment[currentCursorPositionKey].name;
-					itemType = Item.ARMOR;
+					itemType = GC.ITEM_TYPE_ARMOR;
 				}
 			}
-			else if (currentCursorColumn == WEAPON_EQUIP_COLUMN)
+			else if (currentCursorColumn == GC.INVENTORY_WEAPON_EQUIP_COLUMN)
 			{
 				if (equipment[currentCursorPositionKey] != null)
 				{
 					itemName = equipment[currentCursorPositionKey].name;
-					itemType = Item.WEAPON;
+					itemType = GC.ITEM_TYPE_WEAPON;
 				}
 			}
-			else if (currentCursorColumn == WEAPON_ITEM_COLUMN)
+			else if (currentCursorColumn == GC.INVENTORY_WEAPON_ITEM_COLUMN)
 			{
 				i = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1));
-				itemName = itemColumns[WEAPON_ITEM_COLUMN][i - 1].displayText.text;
-				itemType = Item.WEAPON;
+				itemName = itemColumns[GC.INVENTORY_WEAPON_ITEM_COLUMN][i - 1].displayText.text;
+				itemType = GC.ITEM_TYPE_WEAPON;
 			}
-			else if (currentCursorColumn == ARMOR_ITEM_COLUMN)
+			else if (currentCursorColumn == GC.INVENTORY_ARMOR_ITEM_COLUMN)
 			{
 				i = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1));
-				itemName = itemColumns[ARMOR_ITEM_COLUMN][i - 1].displayText.text;
-				itemType = Item.ARMOR;
+				itemName = itemColumns[GC.INVENTORY_ARMOR_ITEM_COLUMN][i - 1].displayText.text;
+				itemType = GC.ITEM_TYPE_ARMOR;
 			}
-			else if (currentCursorColumn == CONSUMABLE_ITEM_COLUMN)
+			else if (currentCursorColumn == GC.INVENTORY_CONSUMABLE_ITEM_COLUMN)
 			{
 				i = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1));
-				itemName = itemColumns[CONSUMABLE_ITEM_COLUMN][i - 1].displayText.text;
-				itemType = Item.CONSUMABLE;
+				itemName = itemColumns[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN][i - 1].displayText.text;
+				itemType = GC.ITEM_TYPE_CONSUMABLE;
 			}
 			
 			// find the item object using its name
-			if (itemType == Item.WEAPON)
+			if (itemType == GC.ITEM_TYPE_WEAPON)
 			{
-				for each (var w:InventoryItem in items[Item.WEAPON])
+				for each (var w:InventoryItem in items[GC.ITEM_TYPE_WEAPON])
 				{
 					if (w.weapon.name == itemName)
 					{
@@ -918,9 +891,9 @@ package utility
 					}
 				}
 			}
-			else if (itemType == Item.ARMOR)
+			else if (itemType == GC.ITEM_TYPE_ARMOR)
 			{
-				for each (var a:InventoryItem in items[Item.ARMOR])
+				for each (var a:InventoryItem in items[GC.ITEM_TYPE_ARMOR])
 				{
 					if (a.armor.name == itemName)
 					{
@@ -929,9 +902,9 @@ package utility
 					}
 				}
 			}
-			else if (itemType == Item.CONSUMABLE)
+			else if (itemType == GC.ITEM_TYPE_CONSUMABLE)
 			{
-				for each (var c:InventoryItem in items[Item.CONSUMABLE])
+				for each (var c:InventoryItem in items[GC.ITEM_TYPE_CONSUMABLE])
 				{
 					if (c.consumable.name == itemName)
 					{
@@ -944,35 +917,35 @@ package utility
 		
 		public function setWeaponInfoDisplayTexts(_weapon:InventoryItem):void
 		{
-			displayTexts[INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _weapon.weapon.name;
-			displayTexts[INFO_DISPLAY_TEXT_TWO].displayText.text = "Damage Type: " + Weapon.getDamageType(_weapon.weapon.damageType);
-			displayTexts[INFO_DISPLAY_TEXT_THREE].displayText.text = "Damage: " + _weapon.weapon.damageRating;
-			displayTexts[INFO_DISPLAY_TEXT_FOUR].displayText.text = "Quantity: " + _weapon.quantity;
-			displayTexts[INFO_DISPLAY_TEXT_FIVE].displayText.text = "Attack Type: " + Weapon.getAttackType(_weapon.weapon.attackType);
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _weapon.weapon.name;
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_TWO].displayText.text = "Damage Type: " + Weapon.getDamageType(_weapon.weapon.damageType);
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_THREE].displayText.text = "Damage: " + _weapon.weapon.damageRating;
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FOUR].displayText.text = "Quantity: " + _weapon.quantity;
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FIVE].displayText.text = "Attack Type: " + Weapon.getAttackType(_weapon.weapon.attackType);
 			
 			if (_weapon.weapon.twoHanded)
-				displayTexts[INFO_DISPLAY_TEXT_SIX].displayText.text = "Two Handed";
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SIX].displayText.text = "Two Handed";
 			else
-				displayTexts[INFO_DISPLAY_TEXT_SIX].displayText.text = "One Handed";
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SIX].displayText.text = "One Handed";
 		}
 		
 		public function setArmorInfoDisplayTexts(_armor:InventoryItem):void
 		{
-			displayTexts[INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _armor.armor.name;
-			displayTexts[INFO_DISPLAY_TEXT_TWO].displayText.text = "Body Part: " + Armor.getArmorType(_armor.armor.armorType);
-			displayTexts[INFO_DISPLAY_TEXT_THREE].displayText.text = "Armor: " + _armor.armor.armorRating;
-			displayTexts[INFO_DISPLAY_TEXT_FOUR].displayText.text = "Quantity: " + _armor.quantity;
-			displayTexts[INFO_DISPLAY_TEXT_FIVE].displayText.text = "Slash Resistance: " + _armor.armor.resistances[Weapon.SLASHING];
-			displayTexts[INFO_DISPLAY_TEXT_SIX].displayText.text = "Piercing Resistance: " + _armor.armor.resistances[Weapon.PIERCING];
-			displayTexts[INFO_DISPLAY_TEXT_SEVEN].displayText.text = "Impact Resistance: " + _armor.armor.resistances[Weapon.IMPACT];
-			displayTexts[INFO_DISPLAY_TEXT_EIGHT].displayText.text = "Magic Resistance: " + _armor.armor.resistances[Weapon.MAGIC];
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _armor.armor.name;
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_TWO].displayText.text = "Body Part: " + Armor.getArmorType(_armor.armor.armorType);
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_THREE].displayText.text = "Armor: " + _armor.armor.armorRating;
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FOUR].displayText.text = "Quantity: " + _armor.quantity;
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FIVE].displayText.text = "Slash Resistance: " + _armor.armor.resistances[GC.DAMAGE_TYPE_SLASHING];
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SIX].displayText.text = "Piercing Resistance: " + _armor.armor.resistances[GC.DAMAGE_TYPE_PIERCING];
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SEVEN].displayText.text = "Impact Resistance: " + _armor.armor.resistances[GC.DAMAGE_TYPE_IMPACT];
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_EIGHT].displayText.text = "Magic Resistance: " + _armor.armor.resistances[GC.DAMAGE_TYPE_MAGIC];
 		}
 		
 		public function setConsumableInfoDisplayTexts(_consumable:InventoryItem):void
 		{
-			displayTexts[INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _consumable.consumable.name;
-			displayTexts[INFO_DISPLAY_TEXT_TWO].displayText.text = "Effect: " + _consumable.consumable.description;
-			displayTexts[INFO_DISPLAY_TEXT_THREE].displayText.text = "Quantity: " + _consumable.quantity;
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_ONE].displayText.text = "Name: " + _consumable.consumable.name;
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_TWO].displayText.text = "Effect: " + _consumable.consumable.description;
+			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_THREE].displayText.text = "Quantity: " + _consumable.quantity;
 		}
 		
 		public function initUIDatastructures(_uiDatastructures:Array):void

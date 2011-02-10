@@ -12,14 +12,6 @@ package utility
 		public var description:String;
 		
 		public function Consumable() {}
-		
-		/*public function Consumable(_statusAlterations:Array, _temporary:Boolean, _duration:int) 
-		{
-			statusAlterations = _statusAlterations;
-			temporary = _temporary;
-			duration = _duration;
-		}*/
-		
 	}
 
 }

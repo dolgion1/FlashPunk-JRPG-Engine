@@ -2,6 +2,7 @@ package utility
 {
 	import net.flashpunk.FP;
 	import entities.Player;
+	
 	/**
 	 * ...
 	 * @author dolgion
