@@ -141,7 +141,7 @@
 			<consumable name="Health Potion lvl 3" temporary="false" duration="-1" description="HP +500">
 				<statusalteration statusVariable="0" alteration="500" /> 
 			</consumable>
-			<consumable name="Agility Booster" temporary="true" duration="5" description="Agility +5">
+			<consumable name="Agility Booster" temporary="true" duration="100" description="Agility +5">
 				<statusalteration statusVariable="3" alteration="5" />
 			</consumable>
 		</consumables>

@@ -55,6 +55,7 @@ package entities
 		
 		public var items:Array = new Array();
 		public var equipment:Dictionary = new Dictionary();
+		public var activeConsumables:Array = new Array();
 		
 		public function Player(_position:GlobalPosition, _dialogs:Array)
 		{
@@ -78,14 +79,26 @@ package entities
 		
 		override public function update():void
 		{
+			playerSpritemap.play(curAnimation);
+			
+			// Check for movement input
+			handleMovement();
+			
+			// Check for interaction with NPCs 
+			dialogCheck();
+			
+			// Check if the player wants to open a chest
+			openChestCheck();
+		}
+		
+		public function handleMovement():void
+		{
 			var horizontalMovement:Boolean = true;
 			var verticalMovement:Boolean = true;
 			var xSpeed:Number = 0;
 			var ySpeed:Number = 0;
 			var newX:Number;
 			var newY:Number;
-			
-			playerSpritemap.play(curAnimation);
 			
 			// Movement input checks
 			if (Game.gameMode == Game.NORMAL_MODE)
@@ -163,8 +176,10 @@ package entities
 					y += ySpeed;
 				}
 			}
-			
-			// Interaction input checks
+		}
+		
+		public function dialogCheck():void
+		{
 			if (Input.pressed("action") && (Game.gameMode != Game.DIALOG_MODE) && (!Game.dialogEndedThisFrame))
 			{
 				var npc:NPC;
@@ -209,8 +224,10 @@ package entities
 					}
 				}
 			}
-			
-			// Check if the player wants to open a chest
+		}
+		
+		public function openChestCheck():void
+		{
 			if (Input.pressed("action") && Game.gameMode == Game.NORMAL_MODE)
 			{
 				var chest:Chest;
@@ -423,7 +440,6 @@ package entities
 		
 		public function get stats():Array
 		{
-			FP.log("Combat Stats: " + damageType + ", " + damageRating + ", " + attackType + ", " + armorRating);
 			return new Array(health, mana, strength, agility, spirituality, experience, 
 							 damageRating, damageType, attackType, armorRating);
 		}
@@ -495,6 +511,7 @@ package entities
 					}
 					case (Constants.STATUS_AGILITY): 
 					{
+						FP.log("boosted agility");
 						agility += statusAlteration.alteration;
 						break;
 					}
@@ -503,6 +520,45 @@ package entities
 						spirituality += statusAlteration.alteration;
 						break;
 					}
+				}
+			}
+			
+			if (_consumable.temporary)
+			{
+				activeConsumables.push(_consumable);
+			}
+		}
+		
+		public function updateAlterations():void
+		{
+			for (var i:int = 0; i < activeConsumables.length; i++)
+			{
+				activeConsumables[i].duration--;
+				if (activeConsumables[i].duration < 1)
+				{
+					for each (var sa:StatusAlteration in activeConsumables[i].statusAlterations)
+					{
+						switch (sa.statusVariable)
+						{
+							case (Constants.STATUS_STRENGTH): 
+							{
+								strength -= sa.alteration;
+								break;
+							}
+							case (Constants.STATUS_AGILITY):
+							{
+								agility -= sa.alteration;
+								break;
+							}
+							case (Constants.STATUS_STRENGTH): 
+							{
+								spirituality -= sa.alteration;
+								break;
+							}
+						}
+					}
+					
+					activeConsumables.splice(i, 1);
 				}
 			}
 		}

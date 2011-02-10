@@ -67,9 +67,6 @@ package worlds
 			items = dataloader.setupItems();
 			chests = dataloader.setupChests(items);
 			
-			// give all items to the player
-			// player.items = items;
-			
 			// prepare the stage
 			loadMap();
 			
@@ -108,6 +105,8 @@ package worlds
 					
 					daytimeDisplay.displayText.text = time.daytimeString;
 					timeDisplay.displayText.text = time.timeString;
+					
+					player.updateAlterations();
 				}
 				
 				// Camera moves if player reaches cam offset

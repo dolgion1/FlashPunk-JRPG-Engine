@@ -469,7 +469,7 @@ package utility
 					consumableIndex += itemsStartIndex[currentCursorColumn];
 					
 					// alter the player stats
-					player.consume(items[Item.CONSUMABLE][index].consumable);
+					player.consume(items[Item.CONSUMABLE][consumableIndex].consumable);
 					
 					// decrease quantity of the consumable. if it's now at 0, delete the inventoryItem
 					// from the items array and update the itemsColumn
