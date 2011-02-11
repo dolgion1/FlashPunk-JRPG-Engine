@@ -201,7 +201,7 @@ package worlds
 			add(mapDisplay);
 			
 			// show the daytime of day
-			daytimeDisplay = new DisplayText("Morning", 450, 0, "default", 10, 0xFFFFFF, 50);
+			daytimeDisplay = new DisplayText(GC.MORNING_STRING, 450, 0, "default", 10, 0xFFFFFF, 50);
 			add(daytimeDisplay);
 			
 			// show the exact time of the day
@@ -252,7 +252,7 @@ package worlds
 		{
 			if (gameMode == DIALOG_MODE)
 			{
-				if (Input.pressed("action"))
+				if (Input.pressed(GC.BUTTON_ACTION))
 				{
 					if (!dialogManager.dialogHasEnded)
 					{
@@ -281,7 +281,7 @@ package worlds
 					}
 				}
 				
-				if (Input.pressed("up"))
+				if (Input.pressed(GC.BUTTON_UP))
 				{
 					if (dialogManager.currentTurn == GC.DIALOG_NPC_TURN)
 					{
@@ -289,7 +289,7 @@ package worlds
 					}
 				}
 				
-				if (Input.pressed("down"))
+				if (Input.pressed(GC.BUTTON_UP))
 				{
 					if (dialogManager.currentTurn == GC.DIALOG_NPC_TURN)
 					{
@@ -300,15 +300,15 @@ package worlds
 			else if (gameMode == NORMAL_MODE)
 			{
 				// Check for input that opens or closes the world map
-				if (Input.pressed("map"))
+				if (Input.pressed(GC.BUTTON_MAP))
 				{
 					openWorldMap();
 				}
-				else if (Input.pressed("status_screen"))
+				else if (Input.pressed(GC.BUTTON_STATUS_SCREEN))
 				{
 					openStatusScreen();
 				}
-				else if (Input.pressed("inventory_screen"))
+				else if (Input.pressed(GC.BUTTON_INVENTORY_SCREEN))
 				{
 					openInventoryScreen();
 				}
@@ -317,11 +317,11 @@ package worlds
 			}
 			else if (gameMode == WORLD_MAP_MODE)
 			{
-				if (Input.pressed("map"))
+				if (Input.pressed(GC.BUTTON_MAP))
 				{
 					closeWorldMap();
 				}
-				else if (Input.pressed("exit"))
+				else if (Input.pressed(GC.BUTTON_EXIT))
 				{
 					closeWorldMap();
 				}
@@ -329,7 +329,7 @@ package worlds
 			else if (gameMode == STATUS_SCREEN_MODE)
 			{
 				// Check for input that opens the menu
-				if (Input.pressed("status_screen"))
+				if (Input.pressed(GC.BUTTON_STATUS_SCREEN))
 				{
 					closeStatusScreen();
 				}
@@ -338,35 +338,35 @@ package worlds
 			{
 				
 				// Check for input that opens the menu
-				if (Input.pressed("inventory_screen"))
+				if (Input.pressed(GC.BUTTON_INVENTORY_SCREEN))
 				{
 					closeInventoryScreen();
 				}
-				else if (Input.pressed("up"))
+				else if (Input.pressed(GC.BUTTON_UP))
 				{
-					inventoryScreen.cursorMovement("up");
+					inventoryScreen.cursorMovement(GC.BUTTON_UP);
 				}
-				else if (Input.pressed("down"))
+				else if (Input.pressed(GC.BUTTON_DOWN))
 				{
-					inventoryScreen.cursorMovement("down");
+					inventoryScreen.cursorMovement(GC.BUTTON_DOWN);
 				}
-				else if (Input.pressed("left"))
+				else if (Input.pressed(GC.BUTTON_LEFT))
 				{
-					inventoryScreen.cursorMovement("left");
+					inventoryScreen.cursorMovement(GC.BUTTON_LEFT);
 				}
-				else if (Input.pressed("right"))
+				else if (Input.pressed(GC.BUTTON_RIGHT))
 				{
-					inventoryScreen.cursorMovement("right");
+					inventoryScreen.cursorMovement(GC.BUTTON_RIGHT);
 				}
-				else if (Input.pressed("action"))
+				else if (Input.pressed(GC.BUTTON_ACTION))
 				{
 					inventoryScreen.actionPress();
 				}
-				else if (Input.pressed("exit"))
+				else if (Input.pressed(GC.BUTTON_EXIT))
 				{
 					closeInventoryScreen();
 				}
-				else if (Input.pressed("cancel"))
+				else if (Input.pressed(GC.BUTTON_CANCEL))
 				{
 					inventoryScreen.cancelPress();
 				}
@@ -500,16 +500,16 @@ package worlds
 		
 		public function defineInputKeys():void
 		{
-			Input.define("up", Key.W, Key.UP);
-			Input.define("down", Key.S, Key.DOWN);
-			Input.define("left", Key.A, Key.LEFT);
-			Input.define("right", Key.D, Key.RIGHT);
-			Input.define("map", Key.M);
-			Input.define("cancel", Key.X);
-			Input.define("exit", Key.ESCAPE);
-			Input.define("action", Key.SPACE);
-			Input.define("status_screen", Key.C);
-			Input.define("inventory_screen", Key.I);
+			Input.define(GC.BUTTON_UP, Key.W, Key.UP);
+			Input.define(GC.BUTTON_DOWN, Key.S, Key.DOWN);
+			Input.define(GC.BUTTON_LEFT, Key.A, Key.LEFT);
+			Input.define(GC.BUTTON_RIGHT, Key.D, Key.RIGHT);
+			Input.define(GC.BUTTON_MAP, Key.M);
+			Input.define(GC.BUTTON_CANCEL, Key.X);
+			Input.define(GC.BUTTON_EXIT, Key.ESCAPE);
+			Input.define(GC.BUTTON_ACTION, Key.SPACE);
+			Input.define(GC.BUTTON_STATUS_SCREEN, Key.C);
+			Input.define(GC.BUTTON_INVENTORY_SCREEN, Key.I);
 		}
 		
 		public function getNPCByName(_name:String):NPC

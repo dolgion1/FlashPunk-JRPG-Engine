@@ -245,40 +245,40 @@ package utility
 				{
 					var found:Boolean = false;
 					
-					for each (var w:Weapon in _items[GC.ITEM_TYPE_WEAPON])
+					for each (var w:Weapon in _items[GC.ITEM_WEAPON])
 					{
 						if (chestInventoryItem.@name == w.name)
 						{
 							found = true;
 							inventoryItem = new InventoryItem();
 							inventoryItem.setWeapon(w, chestInventoryItem.@quantity);
-							chest.items[GC.ITEM_TYPE_WEAPON].push(inventoryItem);
+							chest.items[GC.ITEM_WEAPON].push(inventoryItem);
 							break;
 						}
 					}
 					if (found) continue;
 					
-					for each (var a:Armor in _items[GC.ITEM_TYPE_ARMOR])
+					for each (var a:Armor in _items[GC.ITEM_ARMOR])
 					{
 						if (chestInventoryItem.@name == a.name)
 						{
 							found = true;
 							inventoryItem = new InventoryItem();
 							inventoryItem.setArmor(a, chestInventoryItem.@quantity);
-							chest.items[GC.ITEM_TYPE_ARMOR].push(inventoryItem);
+							chest.items[GC.ITEM_ARMOR].push(inventoryItem);
 							break;
 						}
 					}
 					if (found) continue;
 					
-					for each (var c:Consumable in _items[GC.ITEM_TYPE_CONSUMABLE])
+					for each (var c:Consumable in _items[GC.ITEM_CONSUMABLE])
 					{
 						if (chestInventoryItem.@name == c.name)
 						{
 							found = true;
 							inventoryItem = new InventoryItem();
 							inventoryItem.setConsumable(c, chestInventoryItem.@quantity);
-							chest.items[GC.ITEM_TYPE_CONSUMABLE].push(inventoryItem);
+							chest.items[GC.ITEM_CONSUMABLE].push(inventoryItem);
 							break;
 						}
 					}

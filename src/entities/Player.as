@@ -92,7 +92,7 @@ package entities
 			// Movement input checks
 			if (Game.gameMode == Game.NORMAL_MODE)
 			{
-				if (Input.check("walk_left"))
+				if (Input.check(GC.BUTTON_LEFT))
 				{
 					newX = x - GC.PLAYER_MOVEMENT_SPEED;
 					if (!colliding(new Point(newX, y)))
@@ -104,7 +104,7 @@ package entities
 						curAnimation = "stand_left";
 					}
 				}
-				else if (Input.check("walk_right"))
+				else if (Input.check(GC.BUTTON_RIGHT))
 				{
 					newX = x + GC.PLAYER_MOVEMENT_SPEED;
 					if (!colliding(new Point(newX, y)))
@@ -118,7 +118,7 @@ package entities
 				}
 				else horizontalMovement = false;
 				
-				if (Input.check("walk_up"))
+				if (Input.check(GC.BUTTON_UP))
 				{
 					newY = y - GC.PLAYER_MOVEMENT_SPEED;
 					if (!colliding(new Point(x, newY)))
@@ -130,7 +130,7 @@ package entities
 						curAnimation = "stand_up";
 					}
 				}
-				else if (Input.check("walk_down"))
+				else if (Input.check(GC.BUTTON_DOWN))
 				{
 					newY = y + GC.PLAYER_MOVEMENT_SPEED;
 					if (!colliding(new Point(x, newY)))
@@ -169,7 +169,9 @@ package entities
 		
 		public function dialogCheck():void
 		{
-			if (Input.pressed("action") && (Game.gameMode != Game.DIALOG_MODE) && (!Game.dialogEndedThisFrame))
+			if (Input.pressed(GC.BUTTON_ACTION) && 
+				(Game.gameMode != Game.DIALOG_MODE) && 
+				(!Game.dialogEndedThisFrame))
 			{
 				var npc:NPC;
 				if (curAnimation == "walk_left" || 
@@ -217,7 +219,7 @@ package entities
 		
 		public function openChestCheck():void
 		{
-			if (Input.pressed("action") && Game.gameMode == Game.NORMAL_MODE)
+			if (Input.pressed(GC.BUTTON_ACTION) && Game.gameMode == Game.NORMAL_MODE)
 			{
 				var chest:Chest;
 				var w:InventoryItem;
@@ -233,17 +235,17 @@ package entities
 						if (chest.faceDirection == "down")
 						{
 							chest.chestSpritemap.play("open_face_down");
-							for each (w in chest.items[GC.ITEM_TYPE_WEAPON])
+							for each (w in chest.items[GC.ITEM_WEAPON])
 							{
 								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
 								addWeapon(w);
 							}
-							for each (a in chest.items[GC.ITEM_TYPE_ARMOR])
+							for each (a in chest.items[GC.ITEM_ARMOR])
 							{
 								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
 								addArmor(a);
 							}
-							for each (c in chest.items[GC.ITEM_TYPE_CONSUMABLE])
+							for each (c in chest.items[GC.ITEM_CONSUMABLE])
 							{
 								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
 								addConsumable(c);
@@ -261,17 +263,17 @@ package entities
 						if (chest.faceDirection == "right")
 						{
 							chest.chestSpritemap.play("open_face_right");
-							for each (w in chest.items[GC.ITEM_TYPE_WEAPON])
+							for each (w in chest.items[GC.ITEM_WEAPON])
 							{
 								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
 								addWeapon(w);
 							}
-							for each (a in chest.items[GC.ITEM_TYPE_ARMOR])
+							for each (a in chest.items[GC.ITEM_ARMOR])
 							{
 								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
 								addArmor(a);
 							}
-							for each (c in chest.items[GC.ITEM_TYPE_CONSUMABLE])
+							for each (c in chest.items[GC.ITEM_CONSUMABLE])
 							{
 								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
 								addConsumable(c);
@@ -289,17 +291,17 @@ package entities
 						if (chest.faceDirection == "left")
 						{
 							chest.chestSpritemap.play("open_face_left");
-							for each (w in chest.items[GC.ITEM_TYPE_WEAPON])
+							for each (w in chest.items[GC.ITEM_WEAPON])
 							{
 								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
 								addWeapon(w);
 							}
-							for each (a in chest.items[GC.ITEM_TYPE_ARMOR])
+							for each (a in chest.items[GC.ITEM_ARMOR])
 							{
 								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
 								addArmor(a);
 							}
-							for each (c in chest.items[GC.ITEM_TYPE_CONSUMABLE])
+							for each (c in chest.items[GC.ITEM_CONSUMABLE])
 							{
 								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
 								addConsumable(c);
@@ -317,17 +319,17 @@ package entities
 						if (chest.faceDirection == "up")
 						{
 							chest.chestSpritemap.play("open_face_up");
-							for each (w in chest.items[GC.ITEM_TYPE_WEAPON])
+							for each (w in chest.items[GC.ITEM_WEAPON])
 							{
 								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
 								addWeapon(w);
 							}
-							for each (a in chest.items[GC.ITEM_TYPE_ARMOR])
+							for each (a in chest.items[GC.ITEM_ARMOR])
 							{
 								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
 								addArmor(a);
 							}
-							for each (c in chest.items[GC.ITEM_TYPE_CONSUMABLE])
+							for each (c in chest.items[GC.ITEM_CONSUMABLE])
 							{
 								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
 								addConsumable(c);
@@ -354,11 +356,11 @@ package entities
 		
 		public function defineInputKeys():void
 		{
-			Input.define("walk_left", Key.A, Key.LEFT);
-			Input.define("walk_right", Key.D, Key.RIGHT);
-			Input.define("walk_up", Key.W, Key.UP);
-			Input.define("walk_down", Key.S, Key.DOWN);
-			Input.define("action", Key.SPACE);
+			Input.define(GC.BUTTON_UP, Key.W, Key.UP);
+			Input.define(GC.BUTTON_DOWN, Key.S, Key.DOWN);
+			Input.define(GC.BUTTON_LEFT, Key.A, Key.LEFT);
+			Input.define(GC.BUTTON_RIGHT, Key.D, Key.RIGHT);
+			Input.define(GC.BUTTON_ACTION, Key.SPACE);
 		}
 		
 		public function setupSpritesheet():void
@@ -392,13 +394,13 @@ package entities
 		
 		public function initEquipment():void
 		{
-			equipment["WeaponEquipPrimary"] = null;
-			equipment["WeaponEquipSecondary"] = null;
-			equipment["ArmorEquipHead"] = null;
-			equipment["ArmorEquipTorso"] = null;
-			equipment["ArmorEquipLegs"] = null;
-			equipment["ArmorEquipHands"] = null;
-			equipment["ArmorEquipFeet"] = null;
+			equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY] = null;
+			equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_SECONDARY] = null;
+			equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD] = null;
+			equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_TORSO] = null;
+			equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_LEGS] = null;
+			equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_HANDS] = null;
+			equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_FEET] = null;
 		}
 		
 		public function initItems():void
@@ -411,20 +413,20 @@ package entities
 		public function updateStats():void {
 			
 			// loop through the equipment and recalculate the combat related stats
-			if (equipment["WeaponEquipPrimary"] != null)
+			if (equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY] != null)
 			{
-				damageType = equipment["WeaponEquipPrimary"].damageType;
-				damageRating = equipment["WeaponEquipPrimary"].damageRating;
-				attackType = equipment["WeaponEquipPrimary"].attackType;
+				damageType = equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY].damageType;
+				damageRating = equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY].damageRating;
+				attackType = equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY].attackType;
 			}
 			
 			armorRating = 0;
 			
-			if (equipment["ArmorEquipHead"] != null) armorRating += equipment["ArmorEquipHead"].armorRating;
-			if (equipment["ArmorEquipTorso"] != null) armorRating += equipment["ArmorEquipTorso"].armorRating;
-			if (equipment["ArmorEquipLegs"] != null) armorRating += equipment["ArmorEquipLegs"].armorRating;
-			if (equipment["ArmorEquipHands"] != null) armorRating += equipment["ArmorEquipHands"].armorRating;
-			if (equipment["ArmorEquipFeet"] != null) armorRating += equipment["ArmorEquipFeet"].armorRating;
+			if (equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD] != null) armorRating += equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD].armorRating;
+			if (equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_TORSO] != null) armorRating += equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_TORSO].armorRating;
+			if (equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_LEGS] != null) armorRating += equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_LEGS].armorRating;
+			if (equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_HANDS] != null) armorRating += equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_HANDS].armorRating;
+			if (equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_FEET] != null) armorRating += equipment[GC.INVENTORY_KEY_ARMOR_EQUIP_FEET].armorRating;
 		}
 		
 		public function get stats():Array
@@ -435,7 +437,7 @@ package entities
 		
 		public function addWeapon(_weapon:InventoryItem):void
 		{
-			for each (var i:InventoryItem in items[GC.ITEM_TYPE_WEAPON])
+			for each (var i:InventoryItem in items[GC.ITEM_WEAPON])
 			{
 				if (i.weapon.name == _weapon.weapon.name)
 				{
@@ -444,12 +446,12 @@ package entities
 				}
 			}
 			
-			items[GC.ITEM_TYPE_WEAPON].push(_weapon);
+			items[GC.ITEM_WEAPON].push(_weapon);
 		}
 		
 		public function addArmor(_armor:InventoryItem):void
 		{
-			for each (var i:InventoryItem in items[GC.ITEM_TYPE_ARMOR])
+			for each (var i:InventoryItem in items[GC.ITEM_ARMOR])
 			{
 				if (i.armor.name == _armor.armor.name)
 				{
@@ -458,12 +460,12 @@ package entities
 				}
 			}
 			
-			items[GC.ITEM_TYPE_ARMOR].push(_armor);
+			items[GC.ITEM_ARMOR].push(_armor);
 		}
 		
 		public function addConsumable(_consumable:InventoryItem):void
 		{
-			for each (var i:InventoryItem in items[GC.ITEM_TYPE_CONSUMABLE])
+			for each (var i:InventoryItem in items[GC.ITEM_CONSUMABLE])
 			{
 				if (i.consumable.name == _consumable.consumable.name)
 				{
@@ -472,7 +474,7 @@ package entities
 				}
 			}
 			
-			items[GC.ITEM_TYPE_CONSUMABLE].push(_consumable);
+			items[GC.ITEM_CONSUMABLE].push(_consumable);
 		}
 		
 		public function consume(_consumable:Consumable):void
@@ -500,7 +502,6 @@ package entities
 					}
 					case (GC.STATUS_AGILITY): 
 					{
-						FP.log("boosted agility");
 						agility += statusAlteration.alteration;
 						break;
 					}

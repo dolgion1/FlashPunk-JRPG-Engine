@@ -198,7 +198,6 @@ package utility
 					}
 				}
 				visitedMaps.push(curMapIndex);
-
 			}
 			return false;
 		}

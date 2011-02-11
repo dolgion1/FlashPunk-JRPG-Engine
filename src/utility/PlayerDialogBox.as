@@ -142,7 +142,7 @@ package utility
 			if (chosenVersion > 1)
 			{
 				chosenVersion--;
-				changeSelection("up");
+				changeSelection(GC.BUTTON_UP);
 			}
 		}
 		
@@ -151,7 +151,7 @@ package utility
 			if (chosenVersion < dialogOptions.length)
 			{
 				chosenVersion++;
-				changeSelection("down");
+				changeSelection(GC.BUTTON_DOWN);
 			}
 		}
 		
@@ -190,7 +190,7 @@ package utility
 				populateDisplayTexts();
 				highlightChosenVersion();
 			}
-			else if ((_direction == "up") && (startDisplayTextFeedIndex > startIndex)) 
+			else if ((_direction == GC.BUTTON_UP) && (startDisplayTextFeedIndex > startIndex)) 
 			{
 				// if the dialog portion starts above what is seen now, scroll there
 				startDisplayTextFeedIndex = startIndex;
@@ -198,7 +198,7 @@ package utility
 				populateDisplayTexts();
 				highlightChosenVersion();
 			}
-			else if ((_direction == "down") && (endDisplayTextFeedIndex < endIndex)) 
+			else if ((_direction == GC.BUTTON_DOWN) && (endDisplayTextFeedIndex < endIndex)) 
 			{
 				// if the dialog portion ends below what is seen now, scroll there
 				endDisplayTextFeedIndex = endIndex;
