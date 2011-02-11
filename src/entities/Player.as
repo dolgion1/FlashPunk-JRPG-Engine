@@ -25,28 +25,28 @@ package entities
 		public var dialogCounters:Dictionary = new Dictionary();
 		
 		// character status variables
-		public var health:int = 10;
-		public var maxHealth:int = 100;
-		public var mana:int = 5;
-		public var maxMana:int = 50;
+		public var health:int;
+		public var maxHealth:int;
+		public var mana:int;
+		public var maxMana:int;
 		
 		// character stats
-		public var experience:int = 0;
-		public var strength:int = 10; // determines what weapon and armor can be used and inventory capacity
-		public var agility:int = 10; // determines chance to hit and evade attacks
-		public var spirituality:int = 10; // determines effectiveness of magical weapons and what spells can be used
+		public var experience:int;
+		public var strength:int; // determines what non-magical weapon and armor can be used
+		public var agility:int; // determines chance to hit and evade attacks
+		public var spirituality:int; // determines effectiveness of magical weapons and what spells can be used
 		
-		// directly combat related stats
-		public var damageType:int = -1;
+		// directly combat related stats, determined by equipment
+		public var damageType:int = GC.DAMAGE_TYPE_NO_DAMAGE;
 		public var damageRating:int = 0;
-		public var attackType:int = -1;
+		public var attackType:int = GC.ATTACK_TYPE_NO_ATTACK;
 		public var armorRating:int = 0;
 		
 		public var items:Array = new Array();
 		public var equipment:Dictionary = new Dictionary();
 		public var activeConsumables:Array = new Array();
 		
-		public function Player(_position:GlobalPosition, _dialogs:Array)
+		public function Player(_position:GlobalPosition, _dialogs:Array, _stats:Array)
 		{
 			setupSpritesheet();
 			graphic = playerSpritemap;
@@ -58,12 +58,22 @@ package entities
 			dialogs = _dialogs;
 			setupUpDialogsInTotal();
 			
+			health = _stats[GC.STATUS_HEALTH];
+			maxHealth = _stats[GC.STATUS_MAX_HEALTH];
+			mana = _stats[GC.STATUS_MANA];
+			maxMana = _stats[GC.STATUS_MAX_MANA];
+			strength = _stats[GC.STATUS_STRENGTH];
+			agility = _stats[GC.STATUS_AGILITY];
+			spirituality = _stats[GC.STATUS_SPIRITUALITY];
+			experience = _stats[GC.STATUS_EXPERIENCE];
+			
 			setHitbox(GC.PLAYER_HITBOX_WIDTH, GC.PLAYER_HITBOX_HEIGHT, GC.PLAYER_HITBOX_X_OFFSET, GC.PLAYER_HITBOX_Y_OFFSET);
 			type = GC.TYPE_PLAYER;
 			
 			defineInputKeys();
 			initEquipment();
 			initItems();
+			updateStats();
 		}
 		
 		override public function update():void
@@ -431,7 +441,7 @@ package entities
 		
 		public function get stats():Array
 		{
-			return new Array(health, mana, strength, agility, spirituality, experience, 
+			return new Array(health, maxHealth, mana, maxMana, strength, agility, spirituality, experience, 
 							 damageRating, damageType, attackType, armorRating);
 		}
 		
@@ -502,6 +512,7 @@ package entities
 					}
 					case (GC.STATUS_AGILITY): 
 					{
+						FP.log("asdf");
 						agility += statusAlteration.alteration;
 						break;
 					}
@@ -516,6 +527,7 @@ package entities
 			if (_consumable.temporary)
 			{
 				activeConsumables.push(_consumable);
+				FP.log(activeConsumables.length);
 			}
 		}
 		

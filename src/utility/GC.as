@@ -28,15 +28,17 @@ package utility
 		
 		// Status Variables
 		public static const STATUS_HEALTH:int = 0;
-		public static const STATUS_MANA:int = 1;
-		public static const STATUS_STRENGTH:int = 2;
-		public static const STATUS_AGILITY:int = 3;
-		public static const STATUS_SPIRITUALITY:int = 4;
-		public static const STATUS_EXPERIENCE:int = 5;
-		public static const STATUS_DAMAGE:int = 6;
-		public static const STATUS_DAMAGE_TYPE:int = 7;
-		public static const STATUS_ATTACK_TYPE:int = 8;
-		public static const STATUS_ARMOR:int = 9;
+		public static const STATUS_MAX_HEALTH:int = 1;
+		public static const STATUS_MANA:int = 2;
+		public static const STATUS_MAX_MANA:int = 3;
+		public static const STATUS_STRENGTH:int = 4;
+		public static const STATUS_AGILITY:int = 5;
+		public static const STATUS_SPIRITUALITY:int = 6;
+		public static const STATUS_EXPERIENCE:int = 7;
+		public static const STATUS_DAMAGE:int = 8;
+		public static const STATUS_DAMAGE_TYPE:int = 9;
+		public static const STATUS_ATTACK_TYPE:int = 10;
+		public static const STATUS_ARMOR:int = 11;
 		
 		// Item Types
 		public static const ITEM_WEAPON:int = 0;

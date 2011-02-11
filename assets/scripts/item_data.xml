@@ -126,10 +126,10 @@
 		<!-->
 			STATUS VARIABLES:
 				Health - 0
-				Mana - 1
-				Strength - 2
-				Agility - 3
-				Spirituality - 4
+				Mana - 2
+				Strength - 4
+				Agility - 5
+				Spirituality - 6
 		</!-->
 		<consumables>
 			<consumable name="Health Potion lvl 1" temporary="false" duration="-1" description="HP +50">
@@ -142,7 +142,7 @@
 				<statusalteration statusVariable="0" alteration="500" /> 
 			</consumable>
 			<consumable name="Agility Booster" temporary="true" duration="100" description="Agility +5">
-				<statusalteration statusVariable="3" alteration="5" />
+				<statusalteration statusVariable="5" alteration="5" />
 			</consumable>
 		</consumables>
 	</items>

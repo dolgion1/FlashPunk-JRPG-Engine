@@ -4,6 +4,14 @@
 		<x>200</x>
 		<y>200</y>
 		<mapIndex>0</mapIndex>
+		<health>20</health>
+		<maxHealth>100</maxHealth>
+		<mana>50</mana>
+		<maxMana>100</maxMana>
+		<strength>10</strength>
+		<agility>11</agility>
+		<spirituality>12</spirituality>
+		<experience>0</experience>
 		
 		<dialogs>
 			<dialog partner="Zelda" index="0">

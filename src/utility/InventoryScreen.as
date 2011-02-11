@@ -442,7 +442,10 @@ package utility
 					consumableIndex += itemsStartIndex[currentCursorColumn];
 					
 					// alter the player stats
-					player.consume(items[GC.ITEM_CONSUMABLE][consumableIndex].consumable);
+					// need to copy the instance or else the consume function is only given a reference
+					var consumable:Consumable = new Consumable();
+					consumable.copy(items[GC.ITEM_CONSUMABLE][consumableIndex].consumable);
+					player.consume(consumable);
 					
 					// decrease quantity of the consumable. if it's now at 0, delete the inventoryItem
 					// from the items array and update the itemsColumn

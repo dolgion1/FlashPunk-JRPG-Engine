@@ -38,6 +38,7 @@ package utility
 			var p:XML;
 			var q:XML;
 			var r:XML;
+			var stats:Array = new Array();
 			
 			// load in the dialog
 			var playerDialogs:Array = new Array();
@@ -62,7 +63,16 @@ package utility
 				playerDialogs.push(playerDialog);
 			}
 			
-			return new Player(new GlobalPosition(playerDataXML.player.mapIndex, playerDataXML.player.x, playerDataXML.player.y), playerDialogs);
+			stats[GC.STATUS_HEALTH] = playerDataXML.player.health;
+			stats[GC.STATUS_MAX_HEALTH] = playerDataXML.player.maxHealth;
+			stats[GC.STATUS_MANA] = playerDataXML.player.mana;
+			stats[GC.STATUS_MAX_MANA] = playerDataXML.player.maxMana;
+			stats[GC.STATUS_STRENGTH] = playerDataXML.player.strength;
+			stats[GC.STATUS_AGILITY] = playerDataXML.player.agility;
+			stats[GC.STATUS_SPIRITUALITY] = playerDataXML.player.spirituality;
+			stats[GC.STATUS_EXPERIENCE] = playerDataXML.player.experience;
+			
+			return new Player(new GlobalPosition(playerDataXML.player.mapIndex, playerDataXML.player.x, playerDataXML.player.y), playerDialogs, stats);
 		}
 		
 		public function setupMaps():Array

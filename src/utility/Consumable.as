@@ -11,7 +11,15 @@ package utility
 		public var duration:int;
 		public var description:String;
 		
-		public function Consumable() {}
+		public function Consumable() { }
+		
+		public function copy(_consumable:Consumable):void
+		{
+			statusAlterations = _consumable.statusAlterations;
+			duration = _consumable.duration;
+			description = _consumable.description;
+			temporary = _consumable.temporary;
+		}
 	}
 
 }

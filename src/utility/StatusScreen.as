@@ -32,16 +32,16 @@ package utility
 			background = new TextBox(10, 10, 3, 4.5);
 			portrait = new PlayerPortrait(50, 50);
 			
-			experienceDisplay = new DisplayText(GC.EXPERIENCE_STRING + ": ", 250, 50, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			strengthDisplay = new DisplayText(GC.STRENGTH_STRING + ": ", 250, 90, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			agilityDisplay = new DisplayText(GC.AGILITY_STRING + ": ", 250, 130, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			spiritualityDisplay = new DisplayText(GC.SPIRITUALITY_STRING + ": ", 250, 170, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			damageRatingDisplay = new DisplayText(GC.DAMAGE_STRING + ": ", 250, 210, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			damageTypeDisplay = new DisplayText(GC.DAMAGE_TYPE_STRING + ": ", 250, 250, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			attackTypeDisplay = new DisplayText(GC.ATTACK_TYPE_STRING + ": ", 250, 290, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			armorRatingDisplay = new DisplayText(GC.ARMOR_STRING + ": ", 250, 330, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			healthDisplay = new DisplayText(GC.HEALTH_STRING + ": ", 70, 170, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			manaDisplay = new DisplayText(GC.MANA_STRING + ": ", 70, 210, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			experienceDisplay = new DisplayText(GC.EXPERIENCE_STRING + ": ", 245, 40, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			strengthDisplay = new DisplayText(GC.STRENGTH_STRING + ": ", 245, 55, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			agilityDisplay = new DisplayText(GC.AGILITY_STRING + ": ", 245, 70, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			spiritualityDisplay = new DisplayText(GC.SPIRITUALITY_STRING + ": ", 245, 85, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			damageRatingDisplay = new DisplayText(GC.DAMAGE_STRING + ": ", 245, 110, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			damageTypeDisplay = new DisplayText(GC.DAMAGE_TYPE_STRING + ": ", 245, 125, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			attackTypeDisplay = new DisplayText(GC.ATTACK_TYPE_STRING + ": ", 245, 140, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			armorRatingDisplay = new DisplayText(GC.ARMOR_STRING + ": ", 245, 155, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			healthDisplay = new DisplayText(GC.HEALTH_STRING + ": ", 55, 170, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			manaDisplay = new DisplayText(GC.MANA_STRING + ": ", 55, 185, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			
 			displayTexts.push(experienceDisplay);
 			displayTexts.push(strengthDisplay);
@@ -57,8 +57,8 @@ package utility
 		
 		public function set stats(_stats:Array):void
 		{
-			healthDisplay.displayText.text =GC.HEALTH_STRING + ": " + _stats[GC.STATUS_HEALTH];
-			manaDisplay.displayText.text = GC.MANA_STRING + ": " + _stats[GC.STATUS_MANA];
+			healthDisplay.displayText.text = GC.HEALTH_STRING + ": " + _stats[GC.STATUS_HEALTH] + "/" + _stats[GC.STATUS_MAX_HEALTH];
+			manaDisplay.displayText.text = GC.MANA_STRING + ": " + _stats[GC.STATUS_MANA] + "/" + _stats[GC.STATUS_MAX_MANA];
 			strengthDisplay.displayText.text = GC.STRENGTH_STRING + ": " + _stats[GC.STATUS_STRENGTH];
 			agilityDisplay.displayText.text = GC.AGILITY_STRING + ": " + _stats[GC.STATUS_AGILITY];
 			spiritualityDisplay.displayText.text = GC.SPIRITUALITY_STRING + ": " + _stats[GC.STATUS_SPIRITUALITY];
@@ -82,7 +82,7 @@ package utility
 			portrait.visible = _visible;
 			for each (var d:DisplayText in displayTexts)
 			{
-				d.visible = _visible;
+				d.visible = _visible;	
 			}
 		}
 	}
