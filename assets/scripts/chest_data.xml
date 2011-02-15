@@ -20,7 +20,12 @@
 			<item quantity="1" name="Cotton Coat" />
 			<item quantity="1" name="Woolen Gloves" />
 			<item quantity="1" name="Steel Sword" />
-			<item quantity="3" name="Agility Booster" />
-		</items>	
+			<item quantity="3" name="Satin Leather Hat" />
+			<item quantity="3" name="Satin Pink Shirt" />
+			<item quantity="3" name="Leather Boots" />
+			<item quantity="3" name="Satin Sandals" />
+			<item quantity="3" name="Satin Leopard Gloves" />
+			<item quantity="3" name="Cotton Hood" />
+		</items>
 	</chest>
 </data>

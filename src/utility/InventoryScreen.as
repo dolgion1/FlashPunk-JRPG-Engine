@@ -57,7 +57,7 @@ package utility
 				}
 			}
 			
-			background = new TextBox(10, 10, 3, 4.5);
+			background = new TextBox(GC.INVENTORY_OFFSET_X, GC.INVENTORY_OFFSET_Y, GC.INVENTORY_SCALE_X, GC.INVENTORY_SCALE_Y);
 			cursor = new Cursor(0, 0);
 			cursorEquip = new CursorEquip(0, 0);
 			cursorEquip.visible = false;
@@ -112,7 +112,7 @@ package utility
 			// set the text for every display list of each column
 			var i:int;
 			var j:int;
-			for (i = 0; i < 3; i++)
+			for (i = 0; i < GC.INVENTORY_MAX_ITEM_COLUMNS; i++)
 			{
 				if (items.length == i) break;
 				
@@ -130,19 +130,7 @@ package utility
 						break;
 					}
 					
-					if (i == GC.ITEM_WEAPON)
-					{
-						itemColumns[i][j].displayText.text = items[i][j].weapon.name;
-					}
-					else if (i == GC.ITEM_ARMOR)
-					{
-						itemColumns[i][j].displayText.text = items[i][j].armor.name;
-					}
-					else if (i == GC.ITEM_CONSUMABLE)
-					{
-						itemColumns[i][j].displayText.text = items[i][j].consumable.name;
-					}
-					
+					itemColumns[i][j].displayText.text = items[i][j].item[i].name;
 					cursorPositionsValidity[columnKeys[i][j]] = true;
 				}
 			}
@@ -151,11 +139,18 @@ package utility
 		
 		public function updateItemColumn(_column:int):void
 		{
+			var currentItemIndex:int;
+			var currentInventoryItem:InventoryItem;
+			var currentItemName:String;
+			
 			for (var i:int = 0; i < maxRows; i++)
 			{
-				if (itemsStartIndex[_column] + i < itemsEndIndex[_column])
+				currentItemIndex = itemsStartIndex[_column] + i;
+				if (currentItemIndex < itemsEndIndex[_column])
 				{
-					itemColumns[_column][i].displayText.text = items[_column][itemsStartIndex[_column] + i].name;
+					currentInventoryItem = items[_column][currentItemIndex];
+					currentItemName = currentInventoryItem.item[currentInventoryItem.type].name;
+					itemColumns[_column][i].displayText.text = currentItemName;
 				}
 				else break;
 			}
@@ -233,7 +228,7 @@ package utility
 		
 		public function resetItemHighlights():void
 		{
-			for (var i:int = 0; i < 3; i++)
+			for (var i:int = 0; i < GC.INVENTORY_MAX_ITEM_COLUMNS; i++)
 			{
 				if (items.length == i) break;
 				
@@ -253,7 +248,7 @@ package utility
 				
 				if (currentCursorColumn == GC.INVENTORY_ARMOR_ITEM_COLUMN)
 				{
-					var armor:Armor = items[currentCursorColumn][itemsStartIndex[currentCursorColumn] + i].armor;
+					var armor:Armor = items[currentCursorColumn][itemsStartIndex[currentCursorColumn] + i].item[GC.ITEM_ARMOR];
 					switch (currentEquipmentKey)
 					{
 						case GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD: 
@@ -325,7 +320,7 @@ package utility
 					{
 						case GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY:
 						{
-							if (inventoryItem.weapon.equipped && 
+							if (inventoryItem.item[GC.ITEM_WEAPON].equipped && 
 								inventoryItem.quantity < 2)
 							{
 								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
@@ -344,8 +339,8 @@ package utility
 							{
 								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
 							}
-							else if (inventoryItem.weapon.twoHanded || 
-									 (inventoryItem.weapon.equipped && inventoryItem.quantity < 2)) 
+							else if (inventoryItem.item[GC.ITEM_WEAPON].twoHanded || 
+									 (inventoryItem.item[GC.ITEM_WEAPON].equipped && inventoryItem.quantity < 2)) 
 							{
 								// grey out if two handed weapon or if its equipped and no other left
 								itemColumns[currentCursorColumn][i].displayText.color = 0x888888;
@@ -444,7 +439,7 @@ package utility
 					// alter the player stats
 					// need to copy the instance or else the consume function is only given a reference
 					var consumable:Consumable = new Consumable();
-					consumable.copy(items[GC.ITEM_CONSUMABLE][consumableIndex].consumable);
+					consumable.copy(items[GC.ITEM_CONSUMABLE][consumableIndex].item[GC.ITEM_CONSUMABLE]);
 					player.consume(consumable);
 					
 					// decrease quantity of the consumable. if it's now at 0, delete the inventoryItem
@@ -491,8 +486,8 @@ package utility
 				{
 					case GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD: 
 					{
-						if ((items[currentCursorColumn][index].armor.armorType == GC.ARMOR_TYPE_HEAD) &&
-							(!items[currentCursorColumn][index].armor.equipped))
+						if ((items[currentCursorColumn][index].item[GC.ITEM_ARMOR].armorType == GC.ARMOR_TYPE_HEAD) &&
+							(!items[currentCursorColumn][index].item[GC.ITEM_ARMOR].equipped))
 						{
 							validSelection = true;
 						}
@@ -501,8 +496,8 @@ package utility
 					}
 					case GC.INVENTORY_KEY_ARMOR_EQUIP_TORSO:
 					{
-						if ((items[currentCursorColumn][index].armor.armorType == GC.ARMOR_TYPE_TORSO) &&
-							(!items[currentCursorColumn][index].armor.equipped))
+						if ((items[currentCursorColumn][index].item[GC.ITEM_ARMOR].armorType == GC.ARMOR_TYPE_TORSO) &&
+							(!items[currentCursorColumn][index].item[GC.ITEM_ARMOR].equipped))
 						{
 							validSelection = true;
 						}
@@ -511,8 +506,8 @@ package utility
 					}
 					case GC.INVENTORY_KEY_ARMOR_EQUIP_LEGS: 
 					{
-						if ((items[currentCursorColumn][index].armor.armorType == GC.ARMOR_TYPE_LEGS) &&
-							(!items[currentCursorColumn][index].armor.equipped))
+						if ((items[currentCursorColumn][index].item[GC.ITEM_ARMOR].armorType == GC.ARMOR_TYPE_LEGS) &&
+							(!items[currentCursorColumn][index].item[GC.ITEM_ARMOR].equipped))
 						{
 							validSelection = true;
 						}
@@ -521,8 +516,8 @@ package utility
 					}
 					case GC.INVENTORY_KEY_ARMOR_EQUIP_HANDS:
 					{
-						if ((items[currentCursorColumn][index].armor.armorType == GC.ARMOR_TYPE_HANDS) &&
-							(!items[currentCursorColumn][index].armor.equipped))
+						if ((items[currentCursorColumn][index].item[GC.ITEM_ARMOR].armorType == GC.ARMOR_TYPE_HANDS) &&
+							(!items[currentCursorColumn][index].item[GC.ITEM_ARMOR].equipped))
 						{
 							validSelection = true;
 						}
@@ -531,8 +526,8 @@ package utility
 					}
 					case GC.INVENTORY_KEY_ARMOR_EQUIP_FEET:
 					{
-						if ((items[currentCursorColumn][index].armor.armorType == GC.ARMOR_TYPE_FEET) &&
-							(!items[currentCursorColumn][index].armor.equipped))
+						if ((items[currentCursorColumn][index].item[GC.ITEM_ARMOR].armorType == GC.ARMOR_TYPE_FEET) &&
+							(!items[currentCursorColumn][index].item[GC.ITEM_ARMOR].equipped))
 						{
 							validSelection = true;
 						}
@@ -542,11 +537,11 @@ package utility
 					case GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY:
 					{
 						if ((items[currentCursorColumn][index].quantity > 1 && 
-							items[currentCursorColumn][index].weapon.equipped) ||
-							(!items[currentCursorColumn][index].weapon.equipped))
+							items[currentCursorColumn][index].item[GC.ITEM_WEAPON].equipped) ||
+							(!items[currentCursorColumn][index].item[GC.ITEM_WEAPON].equipped))
 						{
 							validSelection = true;
-							if (items[currentCursorColumn][index].weapon.twoHanded)
+							if (items[currentCursorColumn][index].item[GC.ITEM_WEAPON].twoHanded)
 							{
 								if (equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_SECONDARY]!= null)
 								{
@@ -562,20 +557,20 @@ package utility
 					case GC.INVENTORY_KEY_WEAPON_EQUIP_SECONDARY:
 					{
 						if ((items[currentCursorColumn][index].quantity > 1 && 
-							items[currentCursorColumn][index].weapon.equipped) ||
-							(!items[currentCursorColumn][index].weapon.equipped))
+							items[currentCursorColumn][index].item[GC.ITEM_WEAPON].equipped) ||
+							(!items[currentCursorColumn][index].item[GC.ITEM_WEAPON].equipped))
 						{
 							if (equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY] != null)
 							{
 								if ((!equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY].twoHanded) &&
-									(!items[currentCursorColumn][index].weapon.twoHanded))
+									(!items[currentCursorColumn][index].item[GC.ITEM_WEAPON].twoHanded))
 								{
 									validSelection = true;
 								}
 							}
 							else
 							{
-								if (!items[currentCursorColumn][index].weapon.twoHanded)
+								if (!items[currentCursorColumn][index].item[GC.ITEM_WEAPON].twoHanded)
 								{
 									validSelection = true;
 								}
@@ -595,13 +590,13 @@ package utility
 					
 					if (itemType == GC.ITEM_WEAPON)
 					{
-						equipment[currentEquipmentKey] = items[currentCursorColumn][index].weapon;
-						items[currentCursorColumn][index].weapon.equipped = true;
+						equipment[currentEquipmentKey] = items[currentCursorColumn][index].item[GC.ITEM_WEAPON];
+						items[currentCursorColumn][index].item[GC.ITEM_WEAPON].equipped = true;
 					}
 					else if (itemType == GC.ITEM_ARMOR)
 					{
-						equipment[currentEquipmentKey] = items[currentCursorColumn][index].armor;
-						items[currentCursorColumn][index].armor.equipped = true;
+						equipment[currentEquipmentKey] = items[currentCursorColumn][index].item[GC.ITEM_ARMOR];
+						items[currentCursorColumn][index].item[GC.ITEM_ARMOR].equipped = true;
 					}
 					
 					populateEquipmentColumns();
@@ -888,72 +883,50 @@ package utility
 			}
 			
 			// find the item object using its name
-			if (itemType == GC.ITEM_WEAPON)
+			for (i = 0; i < GC.INVENTORY_MAX_ITEM_COLUMNS; i++)
 			{
-				for each (var w:InventoryItem in items[GC.ITEM_WEAPON])
+				for each (var item:InventoryItem in items[i])
 				{
-					if (w.weapon.name == itemName)
+					if (item.item[i].name == itemName)
 					{
-						setWeaponInfoDisplayTexts(w);
-						break;
-					}
-				}
-			}
-			else if (itemType == GC.ITEM_ARMOR)
-			{
-				for each (var a:InventoryItem in items[GC.ITEM_ARMOR])
-				{
-					if (a.armor.name == itemName)
-					{
-						setArmorInfoDisplayTexts(a);
-						break;
-					}
-				}
-			}
-			else if (itemType == GC.ITEM_CONSUMABLE)
-			{
-				for each (var c:InventoryItem in items[GC.ITEM_CONSUMABLE])
-				{
-					if (c.consumable.name == itemName)
-					{
-						setConsumableInfoDisplayTexts(c);
-						break;
+						setInfoDisplayTexts(item, i);
 					}
 				}
 			}
 		}
 		
-		public function setWeaponInfoDisplayTexts(_weapon:InventoryItem):void
+		public function setInfoDisplayTexts(_item:InventoryItem, _type:int):void
 		{
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_ONE].displayText.text = GC.NAME_STRING + ": " + _weapon.weapon.name;
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_TWO].displayText.text = GC.DAMAGE_TYPE_STRING + ": " + Weapon.getDamageType(_weapon.weapon.damageType);
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_THREE].displayText.text = GC.DAMAGE_STRING + ": " + _weapon.weapon.damageRating;
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FOUR].displayText.text = GC.QUANTITY_STRING + ": " + _weapon.quantity;
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FIVE].displayText.text = GC.ATTACK_TYPE_STRING + ": " + Weapon.getAttackType(_weapon.weapon.attackType);
-			
-			if (_weapon.weapon.twoHanded)
-				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SIX].displayText.text = GC.WEAPON_TWO_HANDED_STRING;
-			else
-				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SIX].displayText.text = GC.WEAPON_ONE_HANDED_STRING;
-		}
-		
-		public function setArmorInfoDisplayTexts(_armor:InventoryItem):void
-		{
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_ONE].displayText.text = GC.NAME_STRING + ": " + _armor.armor.name;
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_TWO].displayText.text = GC.BODY_PART_STRING + ": " + Armor.getArmorType(_armor.armor.armorType);
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_THREE].displayText.text = GC.ARMOR_STRING + ": " + _armor.armor.armorRating;
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FOUR].displayText.text = GC.QUANTITY_STRING + ": " + _armor.quantity;
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FIVE].displayText.text = GC.DAMAGE_TYPE_SLASHING_STRING + " " + GC.RESISTANCE_STRING + ": " + _armor.armor.resistances[GC.DAMAGE_TYPE_SLASHING];
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SIX].displayText.text = GC.DAMAGE_TYPE_PIERCING_STRING + " " + GC.RESISTANCE_STRING + ": " + _armor.armor.resistances[GC.DAMAGE_TYPE_PIERCING];
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SEVEN].displayText.text = GC.DAMAGE_TYPE_IMPACT_STRING + " " + GC.RESISTANCE_STRING + ": " + _armor.armor.resistances[GC.DAMAGE_TYPE_IMPACT];
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_EIGHT].displayText.text = GC.DAMAGE_TYPE_MAGIC_STRING + " " + GC.RESISTANCE_STRING + ": " + _armor.armor.resistances[GC.DAMAGE_TYPE_MAGIC];
-		}
-		
-		public function setConsumableInfoDisplayTexts(_consumable:InventoryItem):void
-		{
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_ONE].displayText.text = GC.NAME_STRING + ": " + _consumable.consumable.name;
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_TWO].displayText.text = GC.EFFECT_STRING + ": " + _consumable.consumable.description;
-			displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_THREE].displayText.text = GC.QUANTITY_STRING + ": " + _consumable.quantity;
+			if (_type == GC.ITEM_WEAPON)
+			{
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_ONE].displayText.text = GC.NAME_STRING + ": " + _item.item[_type].name;
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_TWO].displayText.text = GC.DAMAGE_TYPE_STRING + ": " + Weapon.getDamageType(_item.item[_type].damageType);
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_THREE].displayText.text = GC.DAMAGE_STRING + ": " + _item.item[_type].damageRating;
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FOUR].displayText.text = GC.QUANTITY_STRING + ": " + _item.quantity;
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FIVE].displayText.text = GC.ATTACK_TYPE_STRING + ": " + Weapon.getAttackType(_item.item[_type].attackType);
+				
+				if (_item.item[_type].twoHanded)
+					displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SIX].displayText.text = GC.WEAPON_TWO_HANDED_STRING;
+				else
+					displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SIX].displayText.text = GC.WEAPON_ONE_HANDED_STRING;
+			}
+			else if (_type == GC.ITEM_ARMOR)
+			{
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_ONE].displayText.text = GC.NAME_STRING + ": " + _item.item[_type].name;
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_TWO].displayText.text = GC.BODY_PART_STRING + ": " + Armor.getArmorType(_item.item[_type].armorType);
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_THREE].displayText.text = GC.ARMOR_STRING + ": " + _item.item[_type].armorRating;
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FOUR].displayText.text = GC.QUANTITY_STRING + ": " + _item.quantity;
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_FIVE].displayText.text = GC.DAMAGE_TYPE_SLASHING_STRING + " " + GC.RESISTANCE_STRING + ": " + _item.item[_type].resistances[GC.DAMAGE_TYPE_SLASHING];
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SIX].displayText.text = GC.DAMAGE_TYPE_PIERCING_STRING + " " + GC.RESISTANCE_STRING + ": " + _item.item[_type].resistances[GC.DAMAGE_TYPE_PIERCING];
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_SEVEN].displayText.text = GC.DAMAGE_TYPE_IMPACT_STRING + " " + GC.RESISTANCE_STRING + ": " + _item.item[_type].resistances[GC.DAMAGE_TYPE_IMPACT];
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_EIGHT].displayText.text = GC.DAMAGE_TYPE_MAGIC_STRING + " " + GC.RESISTANCE_STRING + ": " + _item.item[_type].resistances[GC.DAMAGE_TYPE_MAGIC];
+			}
+			else if (_type == GC.ITEM_CONSUMABLE)
+			{
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_ONE].displayText.text = GC.NAME_STRING + ": " + _item.item[_type].name;
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_TWO].displayText.text = GC.EFFECT_STRING + ": " + _item.item[_type].description;
+				displayTexts[GC.INVENTORY_INFO_DISPLAY_TEXT_THREE].displayText.text = GC.QUANTITY_STRING + ": " + _item.quantity;
+			}
 		}
 		
 		public function initUIDatastructures(_uiDatastructures:Array):void

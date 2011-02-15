@@ -128,6 +128,12 @@ package utility
 		public static const INVENTORY_INFO_DISPLAY_TEXT_EIGHT:int = 17;
 		
 		public static const INVENTORY_MAX_ITEM_ROWS:int = 6;
+		public static const INVENTORY_MAX_ITEM_COLUMNS:int = 3;
+		public static const INVENTORY_OFFSET_X:int = 10;
+		public static const INVENTORY_OFFSET_Y:int = 10;
+		public static const INVENTORY_SCALE_X:Number = 3;
+		public static const INVENTORY_SCALE_Y:Number = 4.5;
+		
 		public static const INVENTORY_WEAPON_ITEM_COLUMN:int = 0;
 		public static const INVENTORY_ARMOR_ITEM_COLUMN:int = 1;
 		public static const INVENTORY_CONSUMABLE_ITEM_COLUMN:int = 2;
@@ -188,6 +194,8 @@ package utility
 		public static const AFTERNOON_STRING:String = "Afternoon";
 		public static const EVENING_STRING:String = "Evening";
 		
+		public static const CAMERA_OFFSET:int = 200;
+		
 		/*
 		 *  Collision Types 
 		 */
@@ -245,7 +253,7 @@ package utility
 		public static const HEALTH_STRING:String = "Health";
 		public static const MANA_STRING:String = "Mana";
 		
-		[Embed(source = "../../assets/scripts/constants_data.xml", mimeType = "application/octet-stream")] 
+		/*[Embed(source = "../../assets/scripts/constants_data.xml", mimeType = "application/octet-stream")] 
 		private static var constantsData:Class;
 
 		public static var cameraOffset:int;
@@ -306,14 +314,14 @@ package utility
 		public static var inventoryScaleX:Number;
 		public static var inventoryScaleY:Number;
 		public static var inventoryItemRows:int;
-		public static var inventoryItemColumns:int;
-	
-
+		public static var inventoryItemColumns:int;*/
+		
+		
 		public function GC() {}
 		
 		public static function loadData():void
 		{
-			var constantsDataByteArray:ByteArray = new constantsData;
+			/*var constantsDataByteArray:ByteArray = new constantsData;
 			var constantsDataXML:XML = new XML(constantsDataByteArray.readUTFBytes(constantsDataByteArray.length));
 
 			cameraOffset = constantsDataXML.camera_offset;
@@ -408,7 +416,7 @@ package utility
 			inventoryScaleX = constantsDataXML.inventory_x_scale;
 			inventoryScaleY = constantsDataXML.inventory_y_scale;
 			inventoryItemRows = constantsDataXML.inventory_item_rows;
-			inventoryItemColumns = constantsDataXML.inventory_item_columns;
+			inventoryItemColumns = constantsDataXML.inventory_item_columns;*/
 		}
 
 	}

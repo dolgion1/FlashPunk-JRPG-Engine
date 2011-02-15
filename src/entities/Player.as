@@ -232,9 +232,8 @@ package entities
 			if (Input.pressed(GC.BUTTON_ACTION) && Game.gameMode == Game.NORMAL_MODE)
 			{
 				var chest:Chest;
-				var w:InventoryItem;
-				var a:InventoryItem;
-				var c:InventoryItem;
+				var i:int;
+				var item:InventoryItem;
 				
 				if (curAnimation == "walk_up" || 
 					curAnimation == "stand_up")
@@ -245,20 +244,13 @@ package entities
 						if (chest.faceDirection == "down")
 						{
 							chest.chestSpritemap.play("open_face_down");
-							for each (w in chest.items[GC.ITEM_WEAPON])
+							for (i = 0; i < 3; i++)
 							{
-								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
-								addWeapon(w);
-							}
-							for each (a in chest.items[GC.ITEM_ARMOR])
-							{
-								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
-								addArmor(a);
-							}
-							for each (c in chest.items[GC.ITEM_CONSUMABLE])
-							{
-								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
-								addConsumable(c);
+								for each (item in chest.items[i])
+								{
+									FP.log("Picked up " + item.item[i].name + " quantity " + item.quantity);
+									addItem(item, i);
+								}
 							}
 							chest.empty();
 						}
@@ -273,20 +265,13 @@ package entities
 						if (chest.faceDirection == "right")
 						{
 							chest.chestSpritemap.play("open_face_right");
-							for each (w in chest.items[GC.ITEM_WEAPON])
+							for (i = 0; i < 3; i++)
 							{
-								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
-								addWeapon(w);
-							}
-							for each (a in chest.items[GC.ITEM_ARMOR])
-							{
-								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
-								addArmor(a);
-							}
-							for each (c in chest.items[GC.ITEM_CONSUMABLE])
-							{
-								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
-								addConsumable(c);
+								for each (item in chest.items[i])
+								{
+									FP.log("Picked up " + item.item[i].name + " quantity " + item.quantity);
+									addItem(item, i);
+								}
 							}
 							chest.empty();
 						}
@@ -301,20 +286,13 @@ package entities
 						if (chest.faceDirection == "left")
 						{
 							chest.chestSpritemap.play("open_face_left");
-							for each (w in chest.items[GC.ITEM_WEAPON])
+							for (i = 0; i < 3; i++)
 							{
-								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
-								addWeapon(w);
-							}
-							for each (a in chest.items[GC.ITEM_ARMOR])
-							{
-								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
-								addArmor(a);
-							}
-							for each (c in chest.items[GC.ITEM_CONSUMABLE])
-							{
-								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
-								addConsumable(c);
+								for each (item in chest.items[i])
+								{
+									FP.log("Picked up " + item.item[i].name + " quantity " + item.quantity);
+									addItem(item, i);
+								}
 							}
 							chest.empty();
 						}
@@ -329,20 +307,13 @@ package entities
 						if (chest.faceDirection == "up")
 						{
 							chest.chestSpritemap.play("open_face_up");
-							for each (w in chest.items[GC.ITEM_WEAPON])
+							for (i = 0; i < 3; i++)
 							{
-								FP.log("Picked up " + w.weapon.name + " quantity " + w.quantity);
-								addWeapon(w);
-							}
-							for each (a in chest.items[GC.ITEM_ARMOR])
-							{
-								FP.log("Picked up " + a.armor.name + " quantity " + a.quantity);
-								addArmor(a);
-							}
-							for each (c in chest.items[GC.ITEM_CONSUMABLE])
-							{
-								FP.log("Picked up " + c.consumable.name + " quantity " + c.quantity);
-								addConsumable(c);
+								for each (item in chest.items[i])
+								{
+									FP.log("Picked up " + item.item[i].name + " quantity " + item.quantity);
+									addItem(item, i);
+								}
 							}
 							chest.empty();
 						}
@@ -445,47 +416,19 @@ package entities
 							 damageRating, damageType, attackType, armorRating);
 		}
 		
-		public function addWeapon(_weapon:InventoryItem):void
+		public function addItem (_item:InventoryItem, _type:int):void
 		{
-			for each (var i:InventoryItem in items[GC.ITEM_WEAPON])
+			for each (var i:InventoryItem in items[_type])
 			{
-				if (i.weapon.name == _weapon.weapon.name)
+				if (i.item[_type].name == _item.item[_type].name)
 				{
-					i.quantity += _weapon.quantity;
+					i.quantity += _item.quantity;
 					return;
 				}
 			}
-			
-			items[GC.ITEM_WEAPON].push(_weapon);
+			items[_type].push(_item);
 		}
 		
-		public function addArmor(_armor:InventoryItem):void
-		{
-			for each (var i:InventoryItem in items[GC.ITEM_ARMOR])
-			{
-				if (i.armor.name == _armor.armor.name)
-				{
-					i.quantity += _armor.quantity;
-					return;
-				}
-			}
-			
-			items[GC.ITEM_ARMOR].push(_armor);
-		}
-		
-		public function addConsumable(_consumable:InventoryItem):void
-		{
-			for each (var i:InventoryItem in items[GC.ITEM_CONSUMABLE])
-			{
-				if (i.consumable.name == _consumable.consumable.name)
-				{
-					i.quantity += _consumable.quantity;
-					return;
-				}
-			}
-			
-			items[GC.ITEM_CONSUMABLE].push(_consumable);
-		}
 		
 		public function consume(_consumable:Consumable):void
 		{

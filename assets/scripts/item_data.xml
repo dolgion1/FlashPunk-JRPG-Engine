@@ -49,7 +49,7 @@
 				<impact>0</impact>
 				<magic>0</magic>
 			</armor>
-			<armor name="Gay Leather Hat">
+			<armor name="Satin Leather Hat">
 				<armortype>0</armortype>
 				<armorrating>0</armorrating>
 				<slashing>0</slashing>
@@ -65,7 +65,7 @@
 				<impact>1</impact>
 				<magic>1</magic>
 			</armor>
-			<armor name="Gay Pink Shirt">
+			<armor name="Satin Pink Shirt">
 				<armortype>1</armortype>
 				<armorrating>0</armorrating>
 				<slashing>1</slashing>
@@ -81,7 +81,7 @@
 				<impact>0</impact>
 				<magic>0</magic>
 			</armor>
-			<armor name="Gay Leopard Pants">
+			<armor name="Satin Leopard Pants">
 				<armortype>2</armortype>
 				<armorrating>0</armorrating>
 				<slashing>0</slashing>
@@ -97,7 +97,7 @@
 				<impact>0</impact>
 				<magic>0</magic>
 			</armor>
-			<armor name="Gay Sandals">
+			<armor name="Satin Sandals">
 				<armortype>4</armortype>
 				<armorrating>0</armorrating>
 				<slashing>0</slashing>
@@ -113,7 +113,7 @@
 				<impact>-4</impact>
 				<magic>1</magic>
 			</armor>
-			<armor name="Gay Leopard Gloves">
+			<armor name="Satin Leopard Gloves">
 				<armortype>3</armortype>
 				<armorrating>0</armorrating>
 				<slashing>-1</slashing>

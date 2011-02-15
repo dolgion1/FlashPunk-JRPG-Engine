@@ -71,7 +71,7 @@ package worlds
 			loadMap();
 			
 			// set up cam
-			cam = new Camera(GC.cameraOffset, GC.PLAYER_MOVEMENT_SPEED);
+			cam = new Camera(GC.CAMERA_OFFSET, GC.PLAYER_MOVEMENT_SPEED);
 			cam.adjustToPlayer(currentMap.height, currentMap.width, player);
 			
 			defineInputKeys();
@@ -289,7 +289,7 @@ package worlds
 					}
 				}
 				
-				if (Input.pressed(GC.BUTTON_UP))
+				if (Input.pressed(GC.BUTTON_DOWN))
 				{
 					if (dialogManager.currentTurn == GC.DIALOG_NPC_TURN)
 					{

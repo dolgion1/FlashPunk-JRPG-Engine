@@ -63,8 +63,6 @@
 	<inventory_y_offset>10</inventory_y_offset>
 	<inventory_x_scale>3</inventory_x_scale>
 	<inventory_y_scale>4.5</inventory_y_scale>
-	<inventory_item_rows>6</inventory_item_rows>
-	<inventory_item_columns>3</inventory_item_columns>
 
 	<!--> Status Screen <!-->
 	<status_x_offset>10</status_x_offset>
@@ -73,11 +71,6 @@
 	<status_y_scale>4.5</status_y_scale>
 	<status_portrait_x_offset>50</status_portrait_x_offset>
 	<status_portrait_y_offset>50</status_portrait_y_offset>
-	<status_display_text name="Experience: " xOffset="250" yOffset="50" width="500" fontSize="12" />
-	<status_display_text name="Strength: " xOffset="250" yOffset="90" width="500" fontSize="12" />
-	<status_display_text name="Agility: " xOffset="250" yOffset="130" width="500" fontSize="12" />
-	<status_display_text name="Intelligence: " xOffset="250" yOffset="170" width="500" fontSize="12" />
-
 </data>
 
 
