@@ -25,8 +25,6 @@ package utility
 		public var detailsHeader:DisplayText;
 		
 		public var player:Player;
-		/*public var items:Array = new Array();
-		public var equipment:Dictionary = new Dictionary();*/
 		
 		public var itemColumns:Array = new Array();
 		public var itemsStartIndex:Array = new Array();
@@ -56,8 +54,6 @@ package utility
 		public function initialize(_player:Player):void
 		{
 			player = _player;
-			//items = _player.items;
-			//equipment = _player.equipment;
 			
 			currentMode = GC.INVENTORY_NORMAL_MODE;
 			currentCursorPositionKey = GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD;
