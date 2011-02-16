@@ -306,8 +306,6 @@ package utility
 			var inventoryUIDataXML:XML = new XML(inventoryUIDataArray.readUTFBytes(inventoryUIDataArray.length));
 			var i:XML;
 			var cursorPositions:Dictionary = new Dictionary();
-			var cursorPositionsValidity:Dictionary = new Dictionary();
-			var cursorPositionsNodes:Dictionary = new Dictionary();
 			var columnKeys:Array = new Array();
 			
 			columnKeys[0] = new Array();
@@ -318,23 +316,24 @@ package utility
 			
 			for each (i in inventoryUIDataXML.cursorpositions.cursorposition)
 			{
-				cursorPositions["" + i.@key] = new Point(int(i.@x), int(i.@y));
+				var cursorPosition:CursorPosition = new CursorPosition();
+				cursorPosition.x = int(i.@x);
+				cursorPosition.y = int(i.@y);
+				cursorPosition.key = i.@key;
 				
 				if (i.@validity == "true")
 				{
-					cursorPositionsValidity["" + i.@key] = true;
+					cursorPosition.valid = true;
 				}
 				else 
 				{
-					cursorPositionsValidity["" + i.@key] = false;
+					cursorPosition.valid = false;
 				}
+				
+				cursorPosition.setKeys(i.@up, i.@down, i.@left, i.@right);
+				cursorPositions["" + i.@key] = cursorPosition;
 			}
-			
-			for each (i in inventoryUIDataXML.cursorpositionnodes.cursorpositionnode)
-			{
-				cursorPositionsNodes["" + i.@key] = new CursorPositionNode(i.up, i.down, i.left, i.right);
-			}
-			
+				
 			for each (i in inventoryUIDataXML.columnkeys.columnkey)
 			{
 				columnKeys[i.@column][i.@index] = new String(i.@key);
@@ -345,7 +344,7 @@ package utility
 				displayTexts.push(new DisplayText("" + i.@text, i.@x, i.@y, "default", i.@size, 0xFFFFFF, 500));
 			}
 			
-			return new Array(cursorPositions, cursorPositionsValidity, cursorPositionsNodes, columnKeys, displayTexts);
+			return new Array(cursorPositions, columnKeys, displayTexts);
 		}
 	}
 

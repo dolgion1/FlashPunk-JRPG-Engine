@@ -18,9 +18,7 @@
 		{
 			super(624, 480, 60, false);
 			FP.console.enable();
-			GC.loadData();
 			FP.world = new Game();
-			
 		}
 		
 		override public function init():void 

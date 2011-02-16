@@ -2,36 +2,157 @@
 <data>
 	<cursorpositions>
 		<!-->Equipment Area</!-->
-		<cursorposition key="ArmorEquipHead" x="65" y="70" validity="true" />
-		<cursorposition key="ArmorEquipTorso" x="65" y="90" validity="true" />
-		<cursorposition key="ArmorEquipLegs" x="65" y="110" validity="true" />
-		<cursorposition key="ArmorEquipHands" x="65" y="130" validity="true" />
-		<cursorposition key="ArmorEquipFeet" x="65" y="150" validity="true" />
-		<cursorposition key="WeaponEquipPrimary" x="265" y="70" validity="true" />
-		<cursorposition key="WeaponEquipSecondary" x="265" y="90" validity="true" />
+		<cursorposition key="ArmorEquipHead" x="65" y="70" validity="true" 
+			up="null"
+			down="ArmorEquipTorso"
+			left="null"
+			right="WeaponEquipPrimary" />
+			
+		<cursorposition key="ArmorEquipTorso" x="65" y="90" validity="true" 
+			up="ArmorEquipHead"
+			down="ArmorEquipLegs"
+			left="null"
+			right="WeaponEquipSecondary" />
+			
+		<cursorposition key="ArmorEquipLegs" x="65" y="110" validity="true" 
+			up="ArmorEquipTorso"
+			down="ArmorEquipHands"
+			left="null"
+			right="null" />
+			
+		<cursorposition key="ArmorEquipHands" x="65" y="130" validity="true" 
+			up="ArmorEquipLegs"
+			down="ArmorEquipFeet"
+			left="null"
+			right="null" />
+			
+		<cursorposition key="ArmorEquipFeet" x="65" y="150" validity="true"
+			up="ArmorEquipHands"
+			down="WeaponItem1"
+			left="null"
+			right="null" />
+			
+		<cursorposition key="WeaponEquipPrimary" x="265" y="70" validity="true"
+			up="null"
+			down="WeaponEquipSecondary"
+			left="ArmorEquipHead"
+			right="null" />
+			
+		<cursorposition key="WeaponEquipSecondary" x="265" y="90" validity="true" 
+			up="WeaponEquipPrimary"
+			down="ArmorEquipLegs"
+			left="ArmorEquipTorso"
+			right="null" />
 		
 		<!-->Item Area</!-->
-		<cursorposition key="WeaponItem1" x="65" y="210" validity="false" />
-		<cursorposition key="WeaponItem2" x="65" y="230" validity="false" />
-		<cursorposition key="WeaponItem3" x="65" y="250" validity="false" />
-		<cursorposition key="WeaponItem4" x="65" y="270" validity="false" />
-		<cursorposition key="WeaponItem5" x="65" y="290" validity="false" />
-		<cursorposition key="WeaponItem6" x="65" y="310" validity="false" />
+		<cursorposition key="WeaponItem1" x="65" y="210" validity="false"
+			up="ArmorEquipFeet"
+			down="WeaponItem2"
+			left="null"
+			right="ArmorItem1" />
+			
+		<cursorposition key="WeaponItem2" x="65" y="230" validity="false"
+			up="WeaponItem1"
+			down="WeaponItem3"
+			left="null"
+			right="ArmorItem2" />
+			
+		<cursorposition key="WeaponItem3" x="65" y="250" validity="false"
+			up="WeaponItem2"
+			down="WeaponItem4"
+			left="null"
+			right="ArmorItem3" />
+			
+		<cursorposition key="WeaponItem4" x="65" y="270" validity="false"
+			up="WeaponItem3"
+			down="WeaponItem5"
+			left="null"
+			right="ArmorItem4" />
+			
+		<cursorposition key="WeaponItem5" x="65" y="290" validity="false" 
+			up="WeaponItem4"
+			down="WeaponItem6"
+			left="null"
+			right="ArmorItem5" />
+			
+		<cursorposition key="WeaponItem6" x="65" y="310" validity="false"
+			up="WeaponItem5"
+			down="null"
+			left="null"
+			right="ArmorItem6" />
 		
-		<cursorposition key="ArmorItem1" x="215" y="210" validity="false" />
-		<cursorposition key="ArmorItem2" x="215" y="230" validity="false" />
-		<cursorposition key="ArmorItem3" x="215" y="250" validity="false" />
-		<cursorposition key="ArmorItem4" x="215" y="270" validity="false" />
-		<cursorposition key="ArmorItem5" x="215" y="290" validity="false" />
-		<cursorposition key="ArmorItem6" x="215" y="310" validity="false" />
+		<cursorposition key="ArmorItem1" x="215" y="210" validity="false"
+			up="ArmorEquipFeet"
+			down="ArmorItem2"
+			left="WeaponItem1"
+			right="ConsumableItem1" />
+			
+		<cursorposition key="ArmorItem2" x="215" y="230" validity="false"
+			up="ArmorItem1"
+			down="ArmorItem3"
+			left="WeaponItem2"
+			right="ConsumableItem2" />
+			
+		<cursorposition key="ArmorItem3" x="215" y="250" validity="false"
+			up="ArmorItem2"
+			down="ArmorItem4"
+			left="WeaponItem3"
+			right="ConsumableItem3" />
+			
+		<cursorposition key="ArmorItem4" x="215" y="270" validity="false"
+			up="ArmorItem3"
+			down="ArmorItem5"
+			left="WeaponItem4"
+			right="ConsumableItem4" />
+			
+		<cursorposition key="ArmorItem5" x="215" y="290" validity="false"
+			up="ArmorItem4"
+			down="ArmorItem6"
+			left="WeaponItem5"
+			right="ConsumableItem5" />
+			
+		<cursorposition key="ArmorItem6" x="215" y="310" validity="false"
+			up="ArmorItem5"
+			down="null"
+			left="WeaponItem6"
+			right="ConsumableItem6" />
 		
-		<cursorposition key="ConsumableItem1" x="365" y="210" validity="false" />
-		<cursorposition key="ConsumableItem2" x="365" y="230" validity="false" />
-		<cursorposition key="ConsumableItem3" x="365" y="250" validity="false" />
-		<cursorposition key="ConsumableItem4" x="365" y="270" validity="false" />
-		<cursorposition key="ConsumableItem5" x="365" y="290" validity="false" />
-		<cursorposition key="ConsumableItem6" x="365" y="310" validity="false" />
-		
+		<cursorposition key="ConsumableItem1" x="365" y="210" validity="false"
+			up="ArmorEquipFeet"
+			down="ConsumableItem2"
+			left="ArmorItem1"
+			right="null" />
+			
+		<cursorposition key="ConsumableItem2" x="365" y="230" validity="false"
+			up="ConsumableItem1"
+			down="ConsumableItem3"
+			left="ArmorItem2"
+			right="null" />
+			
+		<cursorposition key="ConsumableItem3" x="365" y="250" validity="false"
+			up="ConsumableItem2"
+			down="ConsumableItem4"
+			left="ArmorItem3"
+			right="null" />
+			
+		<cursorposition key="ConsumableItem4" x="365" y="270" validity="false"
+			up="ConsumableItem3"
+			down="ConsumableItem5"
+			left="ArmorItem4"
+			right="null" />
+			
+		<cursorposition key="ConsumableItem5" x="365" y="290" validity="false"
+			up="ConsumableItem4"
+			down="ConsumableItem6"
+			left="ArmorItem5"
+			right="null" />
+			
+		<cursorposition key="ConsumableItem6" x="365" y="310" validity="false"
+			up="ConsumableItem5"
+			down="null"
+			left="ArmorItem6"
+			right="null" />
+			
 		<!-->Information Area
 		<cursorposition key="Info1" x="215" y="370" validity="false" />
 		<cursorposition key="Info2" x="215" y="400" validity="false" />

@@ -22,16 +22,22 @@ package entities
 			yOffset = _yOffset;
 		}
 		
+		override public function update():void
+		{
+			x = FP.camera.x + xOffset;
+			y = FP.camera.y + yOffset;
+		}
+		
 		public function set position(_position:Point):void
 		{
 			xOffset = _position.x;
 			yOffset = _position.y;
 		}
 		
-		override public function update():void
+		public function setPosition(_position:Point):void
 		{
-			x = FP.camera.x + xOffset;
-			y = FP.camera.y + yOffset;
+			xOffset = _position.x;
+			yOffset = _position.y;
 		}
 	}
 
