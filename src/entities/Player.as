@@ -455,7 +455,6 @@ package entities
 					}
 					case (GC.STATUS_AGILITY): 
 					{
-						FP.log("asdf");
 						agility += statusAlteration.alteration;
 						break;
 					}
@@ -470,7 +469,6 @@ package entities
 			if (_consumable.temporary)
 			{
 				activeConsumables.push(_consumable);
-				FP.log(activeConsumables.length);
 			}
 		}
 		

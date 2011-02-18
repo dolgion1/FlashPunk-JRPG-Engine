@@ -455,7 +455,7 @@ package utility
 			else if (currentMode == GC.INVENTORY_EQUIP_MODE)
 			{
 				// get the Weapon or Armor instance of the currently 
-				// selected (cursored) item entry
+				// selected (cursored) item entry2/18/2011 8:02 PM
 				var index:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
 				index += itemsStartIndex[currentCursorColumn];
 				
@@ -549,7 +549,7 @@ package utility
 				}
 				if (newCursorPositionKey != null)
 				{
-					// There is a valid CursorPosition where we direction is pointing at
+					// There is a valid CursorPosition where the direction is pointing at
 					// Need to check first if instead of moving the cursor, a list must be scrolled
 					moveCursor = true;
 					
@@ -734,6 +734,7 @@ package utility
 					if (item.item[i].name == itemName)
 					{
 						setInfoDisplayTexts(item, i);
+						return;
 					}
 				}
 			}
