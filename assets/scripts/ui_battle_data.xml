@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<cursorpositions>
+		<cursorposition key="Enemy1" x="100" y="70" validity="false" 
+			up="null"
+			down="Enemy2"
+			left="Enemy3"
+			right="null" />
+			
+		<cursorposition key="Enemy2" x="100" y="340" validity="false" 
+			up="Enemy1"
+			down="null"
+			left="Enemy3"
+			right="null" />
+			
+		<cursorposition key="Enemy3" x="0" y="196" validity="false" 
+			up="Enemy1"
+			down="Enemy2"
+			left="null"
+			right="null" />
+			
+		<cursorposition key="Attack" x="340" y="390" validity="true" 
+			up="null"
+			down="null"
+			left="null"
+			right="Defend" />
+			
+		<cursorposition key="Defend" x="425" y="390" validity="true" 
+			up="null"
+			down="null"
+			left="Attack"
+			right="Item" />	
+			
+		<cursorposition key="Item" x="510" y="390" validity="true" 
+			up="null"
+			down="null"
+			left="Defend"
+			right="null" />	
+			
+		<cursorposition key="ItemListRow1" x="200" y="230" validity="true" 
+			up="null"
+			down="ItemListRow2"
+			left="null"
+			right="null" />
+			
+		<cursorposition key="ItemListRow2" x="200" y="250" validity="true" 
+			up="ItemListRow1"
+			down="ItemListRow3"
+			left="null"
+			right="null" />	
+			
+		<cursorposition key="ItemListRow3" x="200" y="270" validity="true" 
+			up="ItemListRow2"
+			down="ItemListRow4"
+			left="null"
+			right="null" />	
+			
+		<cursorposition key="ItemListRow4" x="200" y="290" validity="true" 
+			up="ItemListRow3"
+			down="ItemListRow5"
+			left="null"
+			right="null" />	
+			
+		<cursorposition key="ItemListRow5" x="200" y="310" validity="true" 
+			up="ItemListRow4"
+			down="ItemListRow6"
+			left="null"
+			right="null" />	
+			
+		<cursorposition key="ItemListRow6" x="200" y="330" validity="true" 
+			up="ItemListRow5"
+			down="null"
+			left="null"
+			right="null" />	
+	</cursorpositions>
+</data>

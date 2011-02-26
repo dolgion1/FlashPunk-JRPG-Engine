@@ -1,6 +1,7 @@
 package worlds 
 {
 	import entities.*;
+	import entities.map.*;
 	import flash.events.KeyboardEvent;
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
@@ -24,6 +25,7 @@ package worlds
 		// Entities
 		public var player:Player;
 		public var npcs:Array = new Array();
+		public var enemies:Array = new Array();
 		public var items:Array = new Array();
 		public var chests:Array = new Array();
 		public var tiles:Tiles;
@@ -64,6 +66,7 @@ package worlds
 			player = dataloader.setupPlayer();
 			currentMapIndex = player.currentMapIndex;
 			npcs = dataloader.setupNPCs(maps);
+			enemies = dataloader.setupEnemies(maps);
 			items = dataloader.setupItems();
 			chests = dataloader.setupChests(items);
 			
@@ -101,6 +104,11 @@ package worlds
 					for each (var npc:NPC in npcs)
 					{
 						npc.aiUpdate(currentTime[0], currentTime[1]);
+					}
+					
+					for each (var enemy:Enemy in enemies)
+					{
+						enemy.aiUpdate(currentTime[0], currentTime[1]);
 					}
 					
 					daytimeDisplay.displayText.text = time.daytimeString;
@@ -142,6 +150,9 @@ package worlds
 			
 			// load npcs
 			for each (var npc:NPC in npcs) add(npc);
+			
+			// load enemies
+			for each (var enemy:Enemy in enemies) add(enemy);
 			
 			// load chests
 			for each (var chest:Chest in chests) add(chest);

@@ -1,5 +1,6 @@
-package entities
+package entities.map
 {
+	import entities.*;
 	import utility.*;
 	import net.flashpunk.*;
 	import net.flashpunk.graphics.Image;

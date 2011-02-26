@@ -14,7 +14,7 @@
 		<experience>0</experience>
 		
 		<dialogs>
-			<dialog partner="Zelda" index="0">
+			<dialog partner="Peach" index="0">
 				<line index="0">
 					<version>I got this job as player character for the Doglion's FlashPunk Tutorials!</version>
 					<version>Stalkin' yo mom!</version>
@@ -24,7 +24,7 @@
 					<version>Bye Zelda!</version>
 				</line>
 			</dialog>
-			<dialog partner="Zelda" index="1">
+			<dialog partner="Peach" index="1">
 				<line index="0">
 					<version>Where was she again?!</version>
 					<version>That stupid old woman won't talk to me. Absolutely silent.</version>

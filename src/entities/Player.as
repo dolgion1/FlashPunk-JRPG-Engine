@@ -7,6 +7,7 @@ package entities
 	import net.flashpunk.utils.*;
 	import net.flashpunk.graphics.*;
 	import utility.*;
+	import worlds.Battle;
 	import worlds.Game;
 	
 	/**
@@ -88,6 +89,9 @@ package entities
 			
 			// Check if the player wants to open a chest
 			openChestCheck();
+			
+			// Check if the player is colliding with an enemy
+			checkEnemyCollide();
 		}
 		
 		public function handleMovement():void
@@ -333,6 +337,16 @@ package entities
 			else if (collide(GC.TYPE_NPC, position.x, position.y)) return true;
 			else if (collide(GC.TYPE_CHEST, position.x, position.y)) return true;
 			else return false;
+		}
+		
+		public function checkEnemyCollide():void
+		{
+			if (collide(GC.TYPE_ENEMY, x, y))
+			{
+				var enemy:Enemy = collide(GC.TYPE_ENEMY, x, y) as Enemy;
+				FP.world = new Battle(this, enemy);
+				enemy.world.remove(enemy);
+			}
 		}
 		
 		public function defineInputKeys():void

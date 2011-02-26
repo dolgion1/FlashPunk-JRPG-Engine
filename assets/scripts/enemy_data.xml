@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<enemy>
+		<name>Zelda</name>
+		<spritesheet>0</spritesheet>
+		<x>140</x>
+		<y>392</y>
+		<mapIndex>0</mapIndex>
+		
+		<appointments>
+			<appointment hour="8" minute="0" x="340" y="192" mapIndex="7"/>			
+		</appointments>
+		
+		<mobs>
+			<mob type="0" quantity="1" />
+			<mob type="1" quantity="2" />
+		</mobs>
+	</enemy>
+</data>

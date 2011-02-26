@@ -1,10 +1,7 @@
 package utility 
 {
-	import entities.Cursor;
-	import entities.CursorEquip;
-	import entities.DisplayText;
-	import entities.Player;
-	import entities.TextBox;
+	import entities.inventory.*;
+	import entities.*;
 	import flash.display.TriangleCulling;
 	import net.flashpunk.FP;
 	import flash.geom.Point;

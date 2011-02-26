@@ -24,10 +24,11 @@ package utility
 		[Embed(source = "../../assets/scripts/player_data.xml", mimeType = "application/octet-stream")] private var playerData:Class;
 		[Embed(source = "../../assets/scripts/map_data.xml", mimeType = "application/octet-stream")] private var mapData:Class;
 		[Embed(source = "../../assets/scripts/npc_data.xml", mimeType = "application/octet-stream")] private var npcData:Class;
+		[Embed(source = "../../assets/scripts/enemy_data.xml", mimeType = "application/octet-stream")] private var enemyData:Class;
 		[Embed(source = "../../assets/scripts/item_data.xml", mimeType = "application/octet-stream")] private var itemData:Class;
 		[Embed(source = "../../assets/scripts/chest_data.xml", mimeType = "application/octet-stream")] private var chestData:Class;
 		[Embed(source = "../../assets/scripts/ui_inventory_data.xml", mimeType = "application/octet-stream")] private var inventoryUIData:Class;
-		
+		[Embed(source = "../../assets/scripts/ui_battle_data.xml", mimeType = "application/octet-stream")] private var battleUIData:Class;
 		
 		public function DataLoader() {}
 		
@@ -169,6 +170,41 @@ package utility
 			}
 			
 			return npcs;
+		}
+		
+		public function setupEnemies(maps:Array):Array
+		{
+			var enemyDataByteArray:ByteArray = new enemyData;
+			var enemyDataXML:XML = new XML(enemyDataByteArray.readUTFBytes(enemyDataByteArray.length));
+			var o:XML;
+			var p:XML;
+			var q:XML;
+			var r:XML;
+			var enemy:Enemy;
+			var enemies:Array = new Array();
+			
+			for each (o in enemyDataXML.enemy)
+			{
+				// load in the appointments
+				var enemyAppointments:Array = new Array();
+				
+				for each (p in o.appointments.appointment)
+				{
+					enemyAppointments.push(new Appointment(p.@hour, p.@minute, new GlobalPosition(p.@mapIndex, p.@x, p.@y)));
+				}
+				
+				var mobs:Array = new Array();
+				
+				for each (p in o.mobs.mob)
+				{
+					mobs.push(new Mob(p.@type, p.@quantity));
+				}
+				
+				enemy = new Enemy(maps, o.name, o.spritesheet, new GlobalPosition(o.mapIndex, o.x, o.y), enemyAppointments, null, mobs);
+				enemies.push(enemy);
+			}
+			
+			return enemies;
 		}
 		
 		public function setupItems():Array
@@ -345,6 +381,36 @@ package utility
 			}
 			
 			return new Array(cursorPositions, columnKeys, displayTexts);
+		}
+		
+		public function setupBattleUIData():Array
+		{
+			var battleUIDataArray:ByteArray = new battleUIData;
+			var battleUIDataXML:XML = new XML(battleUIDataArray.readUTFBytes(battleUIDataArray.length));
+			var i:XML;
+			var cursorPositions:Dictionary = new Dictionary();
+			
+			for each (i in battleUIDataXML.cursorpositions.cursorposition)
+			{
+				var cursorPosition:CursorPosition = new CursorPosition();
+				cursorPosition.x = int(i.@x);
+				cursorPosition.y = int(i.@y);
+				cursorPosition.key = i.@key;
+				
+				if (i.@validity == "true")
+				{
+					cursorPosition.valid = true;
+				}
+				else 
+				{
+					cursorPosition.valid = false;
+				}
+				
+				cursorPosition.setKeys(i.@up, i.@down, i.@left, i.@right);
+				cursorPositions["" + i.@key] = cursorPosition;
+			}
+			
+			return new Array(cursorPositions);
 		}
 	}
 

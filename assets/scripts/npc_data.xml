@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
 	<npc>
-		<name>Zelda</name>
-		<spritesheet>0</spritesheet>
+		<name>Peach</name>
+		<spritesheet>1</spritesheet>
 		<x>200</x>
 		<y>200</y>
 		<mapIndex>3</mapIndex>
@@ -41,7 +41,7 @@
 		</dialogs>
 	</npc>
 	
-	<npc>
+	<!--><npc>
 		<name>Peach</name>
 		<spritesheet>1</spritesheet>
 		<x>140</x>
@@ -51,5 +51,5 @@
 		<appointments>
 			<appointment hour="8" minute="0" x="340" y="192" mapIndex="7"/>			
 		</appointments>
-	</npc>
+	</npc></!-->
 </data>
