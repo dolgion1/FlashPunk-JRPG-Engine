@@ -37,6 +37,10 @@ package worlds
 		public var itemListDisplays:Array = new Array();
 		public var itemListStartIndex:int = 0;
 		public var itemListEndIndex:int = 0;
+		public var itemListNameDisplay:DisplayText;
+		public var itemListQuantityDisplay:DisplayText;
+		public var itemListEffectDisplay:DisplayText;
+		
 		
 		public function Battle(_player:Player, _enemy:Enemy) 
 		{
@@ -70,9 +74,10 @@ package worlds
 				{
 					FP.log("New turn in: " + enemyTurnTimer);
 					enemyTurnTimer--;
+					
 					if (enemyTurnTimer < 1)
 					{
-						enemyTurnTimer = 4;
+						enemyTurnTimer = 1;
 						currentTurn++;
 						if (currentTurn >= combattants.length)
 						{
@@ -125,18 +130,49 @@ package worlds
 					}
 					else if (currentCursorPositionKey == "Item")
 					{
-						itemListBox.visible = true;
-						browsingItems = true;
-						for each (var d:DisplayText in itemListDisplays)
+						if (player.items[GC.ITEM_CONSUMABLE].length > 0)
 						{
-							d.visible = true;
+							populateItemListDisplays();
+							itemListBox.visible = true;
+							browsingItems = true;
+							for each (var d:DisplayText in itemListDisplays)
+							{
+								d.visible = true;
+							}
+							itemListNameDisplay.visible = true;
+							itemListQuantityDisplay.visible = true;
+							itemListEffectDisplay.visible = true;
+							
+							currentCursorPositionKey = "ItemListRow1";
+							cursor.position = cursorPositions["ItemListRow1"].getPosition();
+							
+							setInfoDisplayTexts();
 						}
-						currentCursorPositionKey = "ItemListRow1";
-						cursor.position = cursorPositions["ItemListRow1"].getPosition();
 					}
 					else if (browsingItems)
 					{
 						// TODO: consuming some shit
+						var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
+						consumableIndex += itemListStartIndex;
+						
+						var consumable:Consumable = new Consumable();
+						consumable.copy(player.items[GC.ITEM_CONSUMABLE][consumableIndex].item[GC.ITEM_CONSUMABLE]);
+						player.consume(consumable);
+						
+						// decrease quantity of the consumable
+						player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity--;
+						if (player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity < 1)
+						{
+							player.items[GC.ITEM_CONSUMABLE].splice(consumableIndex, 1);
+						}
+						itemListBox.visible = false;
+						for each (d in itemListDisplays)
+						{
+							d.visible = false;
+						}
+						itemListNameDisplay.visible = false;
+						itemListQuantityDisplay.visible = false;
+						itemListEffectDisplay.visible = false;
 						
 						endPlayerTurn();
 					}
@@ -146,32 +182,64 @@ package worlds
 				{
 					if (cursorPositions[currentCursorPositionKey].leftKey != null)
 					{
-						currentCursorPositionKey = cursorPositions[currentCursorPositionKey].leftKey;
-						cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+						var newKey:String = cursorPositions[currentCursorPositionKey].leftKey;
+						if (cursorPositions[newKey].valid)
+						{
+							currentCursorPositionKey = newKey;
+							cursor.position = cursorPositions[newKey].getPosition();
+							if (browsingItems)
+							{
+								setInfoDisplayTexts();
+							}
+						}
 					}
 				}
 				else if (Input.pressed(GC.BUTTON_RIGHT))
 				{
 					if (cursorPositions[currentCursorPositionKey].rightKey != null)
 					{
-						currentCursorPositionKey = cursorPositions[currentCursorPositionKey].rightKey;
-						cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+						newKey = cursorPositions[currentCursorPositionKey].rightKey;
+						if (cursorPositions[newKey].valid)
+						{
+							currentCursorPositionKey = newKey;
+							cursor.position = cursorPositions[newKey].getPosition();
+							if (browsingItems)
+							{
+								setInfoDisplayTexts();
+							}
+						}
 					}
 				}
 				else if (Input.pressed(GC.BUTTON_UP))
 				{
 					if (cursorPositions[currentCursorPositionKey].upKey != null)
 					{
-						currentCursorPositionKey = cursorPositions[currentCursorPositionKey].upKey;
-						cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+						newKey = cursorPositions[currentCursorPositionKey].upKey;
+						if (cursorPositions[newKey].valid)
+						{
+							currentCursorPositionKey = newKey;
+							cursor.position = cursorPositions[newKey].getPosition();
+							if (browsingItems)
+							{
+								setInfoDisplayTexts();
+							}
+						}
 					}
 				}
 				else if (Input.pressed(GC.BUTTON_DOWN))
 				{
 					if (cursorPositions[currentCursorPositionKey].downKey != null)
 					{
-						currentCursorPositionKey = cursorPositions[currentCursorPositionKey].downKey;
-						cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+						newKey = cursorPositions[currentCursorPositionKey].downKey;
+						if (cursorPositions[newKey].valid)
+						{
+							currentCursorPositionKey = newKey;
+							cursor.position = cursorPositions[newKey].getPosition();
+							if (browsingItems)
+							{
+								setInfoDisplayTexts();
+							}
+						}
 					}
 				}
 			}
@@ -211,6 +279,18 @@ package worlds
 			itemListDisplays.push(new DisplayText("", 250, 310, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
 			itemListDisplays.push(new DisplayText("", 250, 330, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
 			
+			itemListNameDisplay = new DisplayText("Name:", 400, 230, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			itemListQuantityDisplay = new DisplayText("Quantity:", 400, 250, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			itemListEffectDisplay = new DisplayText("Effect:", 400, 270, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			
+			itemListNameDisplay.visible = false;
+			itemListQuantityDisplay.visible = false;
+			itemListEffectDisplay.visible = false;
+			
+			add(itemListNameDisplay);
+			add(itemListQuantityDisplay);
+			add(itemListEffectDisplay);
+			
 			for each (var d:DisplayText in itemListDisplays)
 			{
 				add(d);
@@ -221,16 +301,34 @@ package worlds
 		
 		public function populateItemListDisplays():void
 		{
+			for (var i:int = 0; i < 6; i++)
+			{
+				itemListDisplays[i].displayText.text = "";
+				cursorPositions["ItemListRow" + (i + 1)].valid = false;
+			}
 			if (player.items[GC.ITEM_CONSUMABLE].length > 6)
 			{
 				itemListEndIndex = 6;
 			}
 			else itemListEndIndex = player.items[GC.ITEM_CONSUMABLE].length;
 			
-			for (var i:int = 0; i < itemListEndIndex; i++)
+			for (i = 0; i < itemListEndIndex; i++)
 			{
 				itemListDisplays[i].displayText.text = player.items[GC.ITEM_CONSUMABLE][i].item[GC.ITEM_CONSUMABLE].name;
+				cursorPositions["ItemListRow" + (i + 1)].valid = true;
 			}
+		}
+		
+		public function setInfoDisplayTexts ():void
+		{
+			var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
+			consumableIndex += itemListStartIndex;
+			
+			var consumable:InventoryItem = player.items[GC.ITEM_CONSUMABLE][consumableIndex];
+			
+			itemListNameDisplay.displayText.text = "Name: " + consumable.item[GC.ITEM_CONSUMABLE].name;
+			itemListQuantityDisplay.displayText.text = "Quantity: " + consumable.quantity;
+			itemListEffectDisplay.displayText.text = "Effect: " + consumable.item[GC.ITEM_CONSUMABLE].description;
 		}
 		
 		public function initEnemyPositions():void
@@ -283,7 +381,6 @@ package worlds
 				add(e.statDisplay);
 			}
 			
-			
 		}
 		
 		public function beginPlayerTurn():void
@@ -300,6 +397,7 @@ package worlds
 		{
 			currentTurn++;
 			playerTurn = false;
+			browsingItems = false;
 			attackDisplay.visible = false;
 			defendDisplay.visible = false;
 			itemDisplay.visible = false;

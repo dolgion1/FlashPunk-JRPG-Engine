@@ -37,37 +37,37 @@
 			left="Defend"
 			right="null" />	
 			
-		<cursorposition key="ItemListRow1" x="200" y="230" validity="true" 
+		<cursorposition key="ItemListRow1" x="215" y="240" validity="false" 
 			up="null"
 			down="ItemListRow2"
 			left="null"
 			right="null" />
 			
-		<cursorposition key="ItemListRow2" x="200" y="250" validity="true" 
+		<cursorposition key="ItemListRow2" x="215" y="260" validity="false" 
 			up="ItemListRow1"
 			down="ItemListRow3"
 			left="null"
 			right="null" />	
 			
-		<cursorposition key="ItemListRow3" x="200" y="270" validity="true" 
+		<cursorposition key="ItemListRow3" x="215" y="280" validity="false" 
 			up="ItemListRow2"
 			down="ItemListRow4"
 			left="null"
 			right="null" />	
 			
-		<cursorposition key="ItemListRow4" x="200" y="290" validity="true" 
+		<cursorposition key="ItemListRow4" x="215" y="300" validity="false" 
 			up="ItemListRow3"
 			down="ItemListRow5"
 			left="null"
 			right="null" />	
 			
-		<cursorposition key="ItemListRow5" x="200" y="310" validity="true" 
+		<cursorposition key="ItemListRow5" x="215" y="320" validity="false" 
 			up="ItemListRow4"
 			down="ItemListRow6"
 			left="null"
 			right="null" />	
 			
-		<cursorposition key="ItemListRow6" x="200" y="330" validity="true" 
+		<cursorposition key="ItemListRow6" x="215" y="340" validity="false" 
 			up="ItemListRow5"
 			down="null"
 			left="null"

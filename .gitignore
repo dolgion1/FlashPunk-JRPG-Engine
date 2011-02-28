@@ -1,2 +1,4 @@
 bin/*
 obj/*
+src/Main.swf
+src/makefile
