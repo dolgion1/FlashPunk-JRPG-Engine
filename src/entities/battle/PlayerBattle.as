@@ -1,8 +1,11 @@
 package entities.battle 
 {
 	import net.flashpunk.*;
+	import net.flashpunk.utils.*;
 	import net.flashpunk.graphics.*;
 	import utility.*;
+	import flash.geom.Point;
+	
 	
 	/**
 	 * ...
@@ -11,7 +14,10 @@ package entities.battle
 	public class PlayerBattle extends Entity
 	{
 		public var spritemap:Spritemap;
-		public var curAnimation:String = "melee_left";
+		public var curAnimation:String = "stand_left";
+		public var moving:Boolean = false;
+		public var delta:Point = new Point(0, 0); 
+		public var targetPosition:Point;
 		
 		public function PlayerBattle(_x:int, _y:int) 
 		{
@@ -28,6 +34,31 @@ package entities.battle
 			super.update();
 			
 			spritemap.play(curAnimation);
+			
+			if (moving)
+			{
+				x -= delta.x / FP.assignedFrameRate;
+				y -= delta.y / FP.assignedFrameRate;
+				
+				if ((Math.abs(x - targetPosition.x) < 50) &&
+					(Math.abs(y - targetPosition.y) < 50))
+				{
+					if (curAnimation == "walk_left")
+					{
+						curAnimation = "melee_left";
+						targetPosition = new Point(GC.BATTLE_PLAYER_X, GC.BATTLE_PLAYER_Y);
+						delta.x = x - targetPosition.x;
+						delta.y = y - targetPosition.y;
+						moving = false;
+					}
+					else if (curAnimation == "walk_right")
+					{
+						moving = false;
+						curAnimation = "stand_left";
+					}
+				}
+			}
+				
 		}
 		
 		public function setupSpritesheet():void
@@ -43,6 +74,26 @@ package entities.battle
 			spritemap.add("walk_right", [42, 43, 44, 45, 46, 47], 9, true);
 			spritemap.add("cast_left", [48], 0, false);
 			spritemap.add("cast_right", [49], 0, false);
+			spritemap.callback = animationCallback;
+		}
+		
+		public function meleeAttack(_targetPosition:Point):void
+		{
+			curAnimation = "walk_left";
+			moving = true;
+			
+			targetPosition = _targetPosition;
+			delta.x = x - _targetPosition.x;
+			delta.y = y - _targetPosition.y;
+		}
+		
+		public function animationCallback():void
+		{
+			if (curAnimation == "melee_left")
+			{
+				curAnimation = "walk_right";
+				moving = true;
+			}
 		}
 	}
 

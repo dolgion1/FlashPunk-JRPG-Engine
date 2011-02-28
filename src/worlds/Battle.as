@@ -21,7 +21,7 @@ package worlds
 		public var combattants:Array = new Array();
 		public var currentTurn:int;
 		public var playerTurn:Boolean;
-		public var enemyTurnTimer:int = 10;
+		public var enemyTurnTimer:int = 2;
 		public var frameCount:int = 0;
 		public var attackDisplay:DisplayText;
 		public var defendDisplay:DisplayText;
@@ -75,7 +75,7 @@ package worlds
 					FP.log("New turn in: " + enemyTurnTimer);
 					enemyTurnTimer--;
 					
-					if (enemyTurnTimer < 1)
+					if (enemyTurnTimer < 2)
 					{
 						enemyTurnTimer = 1;
 						currentTurn++;
@@ -84,7 +84,7 @@ package worlds
 							frameCount = 0;
 							beginPlayerTurn()
 						}
-						FP.log("Turn no." + currentTurn);
+						FP.log("Turn No. " + currentTurn);
 					}
 				}
 			}
@@ -104,12 +104,16 @@ package worlds
 				{
 					if (currentCursorPositionKey == "Attack")
 					{
-						targeting = true;
-						cursorPositions["Enemy1"].valid = true;
-						cursorPositions["Enemy2"].valid = true;
-						cursorPositions["Enemy3"].valid = true;
-						currentCursorPositionKey = "Enemy1";
-						cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+						if (!((player.equipment["WeaponEquipPrimary"] == null) && 
+							(player.equipment["WeaponEquipSecondar"] == null)))
+						{
+							targeting = true;
+							cursorPositions["Enemy1"].valid = true;
+							cursorPositions["Enemy2"].valid = true;
+							cursorPositions["Enemy3"].valid = true;
+							currentCursorPositionKey = "Enemy1";
+							cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+						}
 					}
 					else if (targeting)
 					{
@@ -251,6 +255,7 @@ package worlds
 			{
 				if (e.key == currentCursorPositionKey)
 				{
+					playerBattle.meleeAttack(enemyPositions[(int(e.key.charAt(e.key.length - 1)) - 1)]);
 					e.health -= player.damageRating;
 					e.updateStatDisplay();
 				}
