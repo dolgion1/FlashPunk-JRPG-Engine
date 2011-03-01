@@ -255,7 +255,15 @@ package worlds
 			{
 				if (e.key == currentCursorPositionKey)
 				{
-					playerBattle.meleeAttack(enemyPositions[(int(e.key.charAt(e.key.length - 1)) - 1)]);
+					var enemyPositionIndex:int = int(e.key.charAt(e.key.length - 1)) - 1;
+					if (player.attackType == GC.ATTACK_TYPE_MELEE)
+					{
+						playerBattle.meleeAttack(enemyPositions[enemyPositionIndex]);
+					}
+					else if (player.attackType == GC.ATTACK_TYPE_RANGED)
+					{
+						playerBattle.rangedAttack(enemyPositions[enemyPositionIndex]);
+					}
 					e.health -= player.damageRating;
 					e.updateStatDisplay();
 				}

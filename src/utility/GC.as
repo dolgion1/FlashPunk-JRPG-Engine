@@ -270,6 +270,10 @@ package utility
 		public static const BATTLE_ENEMY_THREE_X:int = 0;
 		public static const BATTLE_ENEMY_THREE_Y:int = 156;
 		
+		// Arrow constants
+		public static const ARROW_SPRITE_WIDTH:int = 72;
+		public static const ARROW_SPRITE_HEIGHT:int = 21;
+		
 		// Player Battle constants
 		public static const PLAYER_BATTLE_SPRITE_WIDTH:Number = 127;
 		public static const PLAYER_BATTLE_SPRITE_HEIGHT:Number = 91;

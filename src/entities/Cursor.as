@@ -1,4 +1,4 @@
-package entities 
+package entities
 {
 	import flash.geom.Point;
 	import net.flashpunk.Entity;

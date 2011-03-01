@@ -7,6 +7,7 @@
 		<direction>down</direction>
 		<items>
 			<item quantity="2" name="Dagger" />
+			<item quantity="1" name="Short Bow" />
 			<item quantity="1" name="Cotton Coat" />
 			<item quantity="3" name="Health Potion lvl 1" />
 		</items>	

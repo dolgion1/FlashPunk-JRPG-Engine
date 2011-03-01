@@ -22,6 +22,8 @@ package utility
 		[Embed(source = "../../assets/gfx/world_map_marker.png")] public static const WORLDMAP_MARKER:Class;
 		[Embed(source = "../../assets/gfx/zelda_battle.png")] public static const ZELDA_BATTLE:Class;
 		[Embed(source = "../../assets/gfx/velda_battle.png")] public static const VELDA_BATTLE:Class;
+		[Embed(source = "../../assets/gfx/arrow.png")] public static const ARROW:Class;
+		
 		
 		public function GFX() {}
 		
