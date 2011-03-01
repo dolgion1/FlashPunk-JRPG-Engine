@@ -52,7 +52,7 @@ package worlds
 			initEnemyPositions();
 			
 			player = _player;
-			playerBattle = new PlayerBattle(GC.BATTLE_PLAYER_X, GC.BATTLE_PLAYER_Y);
+			playerBattle = new PlayerBattle(GC.BATTLE_PLAYER_X, GC.BATTLE_PLAYER_Y, player);
 			
 			initEnemies(_enemy);
 			loadEntities();
@@ -162,6 +162,7 @@ package worlds
 						var consumable:Consumable = new Consumable();
 						consumable.copy(player.items[GC.ITEM_CONSUMABLE][consumableIndex].item[GC.ITEM_CONSUMABLE]);
 						player.consume(consumable);
+						playerBattle.updateStatDisplay();
 						
 						// decrease quantity of the consumable
 						player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity--;
@@ -258,14 +259,19 @@ package worlds
 					var enemyPositionIndex:int = int(e.key.charAt(e.key.length - 1)) - 1;
 					if (player.attackType == GC.ATTACK_TYPE_MELEE)
 					{
-						playerBattle.meleeAttack(enemyPositions[enemyPositionIndex]);
+						if (player.equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_SECONDARY] != null)
+						{
+							playerBattle.meleeAttack(enemyPositions[enemyPositionIndex], e, true);
+						}
+						else 
+						{
+							playerBattle.meleeAttack(enemyPositions[enemyPositionIndex], e, false);
+						}
 					}
 					else if (player.attackType == GC.ATTACK_TYPE_RANGED)
 					{
-						playerBattle.rangedAttack(enemyPositions[enemyPositionIndex]);
+						playerBattle.rangedAttack(enemyPositions[enemyPositionIndex], e);
 					}
-					e.health -= player.damageRating;
-					e.updateStatDisplay();
 				}
 			}
 		}
@@ -387,7 +393,7 @@ package worlds
 		public function loadEntities():void
 		{
 			add(playerBattle);
-			
+			add(playerBattle.statDisplay);
 			for each (var e:EnemyBattle in enemies)
 			{
 				add(e);

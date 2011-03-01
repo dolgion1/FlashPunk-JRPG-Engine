@@ -22,6 +22,8 @@ package entities.battle
 		public var strength:int;
 		public var agility:int; 
 		public var spirituality:int;
+		public var damageRating:int;
+		public var armorRating:int;
 		public var statDisplay:DisplayText;
 		public var key:String;
 		

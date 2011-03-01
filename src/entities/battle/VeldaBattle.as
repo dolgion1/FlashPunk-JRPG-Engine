@@ -20,8 +20,10 @@ package entities.battle
 			mana = GC.ENEMY_MANA_VELDA;
 			maxMana = GC.ENEMY_MANA_VELDA;
 			strength = GC.ENEMY_STRENGTH_VELDA;
-			agility = GC.ENEMY_AGILIGY_VELDA;
+			agility = GC.ENEMY_AGILITY_VELDA;
 			spirituality = GC.ENEMY_SPIRITUALITY_VELDA;
+			damageRating = GC.ENEMY_DAMAGE_RATING_VELDA;
+			armorRating = GC.ENEMY_ARMOR_RATING_VELDA;
 			
 			super(_position, _keyIndex);
 		}

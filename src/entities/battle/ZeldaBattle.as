@@ -21,8 +21,10 @@ package entities.battle
 			mana = GC.ENEMY_MANA_ZELDA;
 			maxMana = GC.ENEMY_MANA_ZELDA;
 			strength = GC.ENEMY_STRENGTH_ZELDA;
-			agility = GC.ENEMY_AGILIGY_ZELDA;
+			agility = GC.ENEMY_AGILITY_ZELDA;
 			spirituality = GC.ENEMY_SPIRITUALITY_ZELDA;
+			damageRating = GC.ENEMY_DAMAGE_RATING_ZELDA;
+			armorRating = GC.ENEMY_ARMOR_RATING_ZELDA;
 			
 			super(_position, _keyIndex);
 		}

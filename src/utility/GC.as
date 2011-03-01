@@ -292,15 +292,19 @@ package utility
 		public static const ENEMY_HEALTH_ZELDA:int = 60;
 		public static const ENEMY_MANA_ZELDA:int = 100;
 		public static const ENEMY_STRENGTH_ZELDA:int = 8;
-		public static const ENEMY_AGILIGY_ZELDA:int = 10;
+		public static const ENEMY_AGILITY_ZELDA:int = 10;
 		public static const ENEMY_SPIRITUALITY_ZELDA:int = 12;
+		public static const ENEMY_DAMAGE_RATING_ZELDA:int = 3;
+		public static const ENEMY_ARMOR_RATING_ZELDA:int = 2;
 		
 		public static const ENEMY_HEALTH_VELDA:int = 70;
 		public static const ENEMY_MANA_VELDA:int = 90;
 		public static const ENEMY_STRENGTH_VELDA:int = 10;
-		public static const ENEMY_AGILIGY_VELDA:int = 9;
+		public static const ENEMY_AGILITY_VELDA:int = 9;
 		public static const ENEMY_SPIRITUALITY_VELDA:int = 10;
-		
+		public static const ENEMY_DAMAGE_RATING_VELDA:int = 4;
+		public static const ENEMY_ARMOR_RATING_VELDA:int = 1;
+				
 		public function GC() {}
 		
 

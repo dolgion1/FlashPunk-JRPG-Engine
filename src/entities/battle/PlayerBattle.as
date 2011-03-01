@@ -5,7 +5,7 @@ package entities.battle
 	import net.flashpunk.graphics.*;
 	import utility.*;
 	import flash.geom.Point;
-	
+	import entities.*;
 	
 	/**
 	 * ...
@@ -16,12 +16,17 @@ package entities.battle
 		public var spritemap:Spritemap;
 		public var curAnimation:String = "stand_left";
 		public var moving:Boolean = false;
+		public var meleeTwice:Boolean = false;
 		public var delta:Point = new Point(0, 0); 
 		public var targetPosition:Point;
 		public var arrow:Arrow = new Arrow();
 		public var arrowMoving:Boolean = false;
+		public var statDisplay:DisplayText;
 		
-		public function PlayerBattle(_x:int, _y:int) 
+		public var targetEnemy:EnemyBattle;
+		public var player:Player;
+		
+		public function PlayerBattle(_x:int, _y:int, _player:Player) 
 		{
 			setupSpritesheet();
 			graphic = spritemap;
@@ -29,6 +34,15 @@ package entities.battle
 			
 			x = _x;
 			y = _y;
+			player = _player;
+			
+			statDisplay = new DisplayText(player.health + "/" + player.maxHealth + " " + player.mana + "/" + player.maxMana, 
+										  x + 40, 
+										  y - 30, 
+										  "default", 
+										  GC.INVENTORY_DEFAULT_FONT_SIZE, 
+										  0xFFFFFF, 
+										  500);
 		}
 		
 		override public function update():void
@@ -52,6 +66,7 @@ package entities.battle
 						delta.x = x - targetPosition.x;
 						delta.y = y - targetPosition.y;
 						moving = false;
+						calculateDamage("WeaponEquipPrimary");
 					}
 					else if (curAnimation == "walk_right")
 					{
@@ -70,9 +85,15 @@ package entities.battle
 				{
 					this.world.remove(arrow);
 					arrowMoving = false;
+					calculateDamage("WeaponEquipPrimary");
 				}
 			}
 				
+		}
+		
+		public function updateStatDisplay():void
+		{
+			statDisplay.displayText.text = player.health + "/" + player.maxHealth + " " + player.mana + "/" + player.maxMana;
 		}
 		
 		public function setupSpritesheet():void
@@ -91,17 +112,23 @@ package entities.battle
 			spritemap.callback = animationCallback;
 		}
 		
-		public function meleeAttack(_targetPosition:Point):void
+		public function meleeAttack(_targetPosition:Point, _enemy:EnemyBattle, _meleeTwice:Boolean):void
 		{
 			curAnimation = "walk_left";
 			moving = true;
+			meleeTwice = _meleeTwice;
 			
-			targetPosition = _targetPosition;
-			delta.x = x - _targetPosition.x;
-			delta.y = y - _targetPosition.y;
+			targetPosition = new Point(_targetPosition.x, _targetPosition.y);
+			targetPosition.y += 40;
+			
+			delta.x = x - targetPosition.x;
+			delta.y = y - targetPosition.y;
+			
+			targetEnemy = null;
+			targetEnemy = _enemy;
 		}
 		
-		public function rangedAttack(_targetPosition:Point):void
+		public function rangedAttack(_targetPosition:Point, _enemy:EnemyBattle):void
 		{
 			curAnimation = "ranged_left";
 			
@@ -111,18 +138,47 @@ package entities.battle
 			arrow.y = this.y + 40;
 			this.world.add(arrow);
 			
-			targetPosition = _targetPosition;
+			targetPosition = new Point(_targetPosition.x, _targetPosition.y);
 			targetPosition.y += 100;
 			delta.x = arrow.x - targetPosition.x;
 			delta.y = arrow.y - targetPosition.y;
+			
+			targetEnemy = null;
+			targetEnemy = _enemy;
+		}
+		
+		public function calculateDamage(_weaponEquipmentKey:String):void
+		{
+			var damage:int = 0;
+			FP.log(player.agility + " and " + targetEnemy.agility);
+			var chance:Number = (player.agility * 100)/(player.agility + targetEnemy.agility);
+			var someNum:Number = Math.random()*100;
+			FP.log("Chance: " + chance + " and number pulled: " + someNum);
+			if (someNum <= chance)
+			{
+				FP.log("Hit!");
+				damage = player.equipment[_weaponEquipmentKey].damageRating - targetEnemy.armorRating;
+				if (damage < 0) damage = 0;
+				targetEnemy.health -= damage;
+				targetEnemy.updateStatDisplay();
+			}
 		}
 		
 		public function animationCallback():void
 		{
 			if (curAnimation == "melee_left")
 			{
-				curAnimation = "walk_right";
-				moving = true;
+				if (meleeTwice)
+				{
+					spritemap.play("melee_left", true);
+					calculateDamage("WeaponEquipSecondary");
+					meleeTwice = false;
+				}
+				else 
+				{
+					curAnimation = "walk_right";
+					moving = true;
+				}
 			}
 			
 			if (curAnimation == "ranged_left")
