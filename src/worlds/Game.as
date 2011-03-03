@@ -28,6 +28,7 @@ package worlds
 		public var enemies:Array = new Array();
 		public var items:Array = new Array();
 		public var chests:Array = new Array();
+		public var spells:Array = new Array();
 		public var tiles:Tiles;
 		public var trees:Trees;
 		public var houses:Array;
@@ -69,6 +70,11 @@ package worlds
 			enemies = dataloader.setupEnemies(maps);
 			items = dataloader.setupItems();
 			chests = dataloader.setupChests(items);
+			spells = dataloader.setupSpellData();
+			
+			// just temporarily I'll give the player all spells in the game
+			// in the future spells must be obtained by the player
+			player.spells = spells;
 			
 			// prepare the stage
 			loadMap();

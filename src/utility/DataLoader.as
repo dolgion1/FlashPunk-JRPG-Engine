@@ -29,6 +29,7 @@ package utility
 		[Embed(source = "../../assets/scripts/chest_data.xml", mimeType = "application/octet-stream")] private var chestData:Class;
 		[Embed(source = "../../assets/scripts/ui_inventory_data.xml", mimeType = "application/octet-stream")] private var inventoryUIData:Class;
 		[Embed(source = "../../assets/scripts/ui_battle_data.xml", mimeType = "application/octet-stream")] private var battleUIData:Class;
+		[Embed(source = "../../assets/scripts/spell_data.xml", mimeType = "application/octet-stream")] private var spellData:Class;
 		
 		public function DataLoader() {}
 		
@@ -334,6 +335,48 @@ package utility
 			}
 			
 			return chests;
+		}
+		
+		public function setupSpellData():Array
+		{
+			var spellDataByteArray:ByteArray = new spellData;
+			var spellDataXML:XML = new XML(spellDataByteArray.readUTFBytes(spellDataByteArray.length));
+			var i:XML;
+			var spells:Array = new Array();
+						
+			for each (i in spellDataXML.defense.defenseSpell)
+			{
+				var defenseSpell:DefenseSpell = new DefenseSpell();
+				defenseSpell.name = i.@name;
+				
+				if (i.@temporary == "true") defenseSpell.temporary = true;
+				else defenseSpell.temporary = false;
+				
+				defenseSpell.duration = i.@duration;
+				defenseSpell.statusVariable = i.@statusVariable;
+				defenseSpell.alteration = i.@alteration;
+				defenseSpell.description = i.@description;
+				defenseSpell.manaCost = i.@manaCost;
+				spells.push(defenseSpell);
+			}
+			
+			for each (i in spellDataXML.offense.offenseSpell)
+			{
+				var offenseSpell:OffenseSpell = new OffenseSpell();
+				offenseSpell.name = i.@name;
+				
+				if (i.@temporary == "true") offenseSpell.temporary = true;
+				else offenseSpell.temporary = false;
+				
+				offenseSpell.duration = i.@duration;
+				offenseSpell.element = i.@element;
+				offenseSpell.damageRating = i.@damageRating;
+				offenseSpell.description = i.@description;
+				offenseSpell.manaCost = i.@manaCost;
+				spells.push(offenseSpell);
+			}
+			
+			return spells;
 		}
 		
 		public function setupInventoryUIData():Array

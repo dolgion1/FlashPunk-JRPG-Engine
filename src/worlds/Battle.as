@@ -24,6 +24,7 @@ package worlds
 		public var enemyTurnTimer:int = 2;
 		public var frameCount:int = 0;
 		public var attackDisplay:DisplayText;
+		public var spellDisplay:DisplayText;
 		public var defendDisplay:DisplayText;
 		public var itemDisplay:DisplayText;
 		public var cursor:Cursor;
@@ -31,15 +32,20 @@ package worlds
 		public var currentCursorPositionKey:String = "Attack";
 		public var dataloader:DataLoader = new DataLoader();
 		public var targeting:Boolean = false;
-		public var itemListBox:TextBox;
+		public var listBox:TextBox;
 		public var browsingItems:Boolean = false;
+		public var browsingSpells:Boolean = false;
+		public var targetingSpell:Boolean = false;
+		public var targettedSpell:OffenseSpell;
 		
-		public var itemListDisplays:Array = new Array();
-		public var itemListStartIndex:int = 0;
-		public var itemListEndIndex:int = 0;
-		public var itemListNameDisplay:DisplayText;
-		public var itemListQuantityDisplay:DisplayText;
-		public var itemListEffectDisplay:DisplayText;
+		public var listDisplays:Array = new Array();
+		public var listStartIndex:int = 0;
+		public var listEndIndex:int = 0;
+		public var listDisplayOne:DisplayText;
+		public var listDisplayTwo:DisplayText;
+		public var listDisplayThree:DisplayText;
+		public var listDisplayFour:DisplayText;
+		
 		
 		
 		public function Battle(_player:Player, _enemy:Enemy) 
@@ -48,7 +54,7 @@ package worlds
 			cursor = new Cursor(0, 0);
 			cursor.visible = true;
 			cursor.setPosition(cursorPositions[currentCursorPositionKey].getPosition());
-			itemListBox = new TextBox(200, 200, 2, 2);
+			listBox = new TextBox(200, 200, 2, 2);
 			initEnemyPositions();
 			
 			player = _player;
@@ -58,7 +64,6 @@ package worlds
 			loadEntities();
 			initCombattants();
 			initDisplayTexts();
-			populateItemListDisplays();
 		}
 		
 		override public function update():void
@@ -79,10 +84,11 @@ package worlds
 					{
 						enemyTurnTimer = 1;
 						currentTurn++;
+						playerBattle.updateStatDisplay();
 						if (currentTurn >= combattants.length)
 						{
 							frameCount = 0;
-							beginPlayerTurn()
+							beginPlayerTurn();
 						}
 						FP.log("Turn No. " + currentTurn);
 					}
@@ -127,6 +133,86 @@ package worlds
 						cursorPositions["Enemy3"].valid = false;
 						endPlayerTurn();
 					}
+					else if (currentCursorPositionKey == "Spell")
+					{
+						FP.log("player.spells.length " + player.spells.length);
+						if (player.spells.length > 0)
+						{
+							populateSpellListDisplays();
+							listBox.visible = true;
+							browsingSpells = true;
+							for each (var d:DisplayText in listDisplays)
+							{
+								d.visible = true;
+							}
+							listDisplayOne.visible = true;
+							listDisplayTwo.visible = true;
+							listDisplayThree.visible = true;
+							listDisplayFour.visible = true;
+							
+							currentCursorPositionKey = "ListRow1";
+							cursor.position = cursorPositions["ListRow1"].getPosition();
+							
+							setInfoDisplayTexts();
+						}
+					}
+					else if (browsingSpells)
+					{
+						// Get instance of the spell
+						var spellIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1 + listStartIndex;
+						
+						if (player.spells[spellIndex] is DefenseSpell)
+						{
+							var defenseSpell:DefenseSpell = new DefenseSpell();
+							defenseSpell.name = player.spells[spellIndex].name;
+							defenseSpell.temporary = player.spells[spellIndex].temporary;
+							defenseSpell.duration = player.spells[spellIndex].duration;
+							defenseSpell.statusVariable = player.spells[spellIndex].statusVariable;
+							defenseSpell.alteration = player.spells[spellIndex].alteration;
+							defenseSpell.manaCost = player.spells[spellIndex].manaCost; 
+							
+							playerBattle.castOnSelf(defenseSpell);
+							
+							listBox.visible = false;
+							for each (d in listDisplays)
+							{
+								d.visible = false;
+							}
+							listDisplayOne.visible = false;
+							listDisplayTwo.visible = false;
+							listDisplayThree.visible = false;
+							listDisplayFour.visible = false;
+							endPlayerTurn();
+						}
+						else if (player.spells[spellIndex] is OffenseSpell)
+						{
+							targettedSpell = player.spells[spellIndex];
+							targetingSpell = true;
+							cursorPositions["Enemy1"].valid = true;
+							cursorPositions["Enemy2"].valid = true;
+							cursorPositions["Enemy3"].valid = true;
+							
+							var offenseSpell:OffenseSpell = player.spells[spellIndex];
+							currentCursorPositionKey = "Enemy1";
+							cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+						}
+						browsingSpells = false;
+					}
+					else if (targetingSpell)
+					{
+						playerCastOnEnemy();
+						targetingSpell = false;
+						listBox.visible = false;
+						for each (d in listDisplays)
+						{
+							d.visible = false;
+						}
+						listDisplayOne.visible = false;
+						listDisplayTwo.visible = false;
+						listDisplayThree.visible = false;
+						listDisplayFour.visible = false;
+						endPlayerTurn();
+					}
 					else if (currentCursorPositionKey == "Defend")
 					{
 						// need to increase armorRating for one turn
@@ -137,18 +223,19 @@ package worlds
 						if (player.items[GC.ITEM_CONSUMABLE].length > 0)
 						{
 							populateItemListDisplays();
-							itemListBox.visible = true;
+							listBox.visible = true;
 							browsingItems = true;
-							for each (var d:DisplayText in itemListDisplays)
+							for each (d in listDisplays)
 							{
 								d.visible = true;
 							}
-							itemListNameDisplay.visible = true;
-							itemListQuantityDisplay.visible = true;
-							itemListEffectDisplay.visible = true;
+							listDisplayOne.visible = true;
+							listDisplayTwo.visible = true;
+							listDisplayThree.visible = true;
+							listDisplayFour.visible = false;
 							
-							currentCursorPositionKey = "ItemListRow1";
-							cursor.position = cursorPositions["ItemListRow1"].getPosition();
+							currentCursorPositionKey = "ListRow1";
+							cursor.position = cursorPositions["ListRow1"].getPosition();
 							
 							setInfoDisplayTexts();
 						}
@@ -157,7 +244,7 @@ package worlds
 					{
 						// TODO: consuming some shit
 						var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
-						consumableIndex += itemListStartIndex;
+						consumableIndex += listStartIndex;
 						
 						var consumable:Consumable = new Consumable();
 						consumable.copy(player.items[GC.ITEM_CONSUMABLE][consumableIndex].item[GC.ITEM_CONSUMABLE]);
@@ -170,16 +257,21 @@ package worlds
 						{
 							player.items[GC.ITEM_CONSUMABLE].splice(consumableIndex, 1);
 						}
-						itemListBox.visible = false;
-						for each (d in itemListDisplays)
+						listBox.visible = false;
+						for each (d in listDisplays)
 						{
 							d.visible = false;
 						}
-						itemListNameDisplay.visible = false;
-						itemListQuantityDisplay.visible = false;
-						itemListEffectDisplay.visible = false;
+						listDisplayOne.visible = false;
+						listDisplayTwo.visible = false;
+						listDisplayThree.visible = false;
+						listDisplayFour.visible = false;
 						
 						endPlayerTurn();
+					}
+					else if (currentCursorPositionKey == "Spell")
+					{
+						browsingSpells = true;
 					}
 				}
 				
@@ -192,10 +284,6 @@ package worlds
 						{
 							currentCursorPositionKey = newKey;
 							cursor.position = cursorPositions[newKey].getPosition();
-							if (browsingItems)
-							{
-								setInfoDisplayTexts();
-							}
 						}
 					}
 				}
@@ -208,10 +296,6 @@ package worlds
 						{
 							currentCursorPositionKey = newKey;
 							cursor.position = cursorPositions[newKey].getPosition();
-							if (browsingItems)
-							{
-								setInfoDisplayTexts();
-							}
 						}
 					}
 				}
@@ -224,7 +308,7 @@ package worlds
 						{
 							currentCursorPositionKey = newKey;
 							cursor.position = cursorPositions[newKey].getPosition();
-							if (browsingItems)
+							if (browsingItems || browsingSpells)
 							{
 								setInfoDisplayTexts();
 							}
@@ -240,11 +324,54 @@ package worlds
 						{
 							currentCursorPositionKey = newKey;
 							cursor.position = cursorPositions[newKey].getPosition();
-							if (browsingItems)
+							if (browsingItems || browsingSpells)
 							{
 								setInfoDisplayTexts();
 							}
 						}
+					}
+				}
+				else if (Input.pressed(GC.BUTTON_CANCEL))
+				{
+					if (targeting)
+					{
+						currentCursorPositionKey = "Attack";
+						cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+						targeting = false;
+					}
+					else if (browsingItems)
+					{
+						listBox.visible = false;
+						for each (var i:DisplayText in listDisplays)
+						{
+							i.visible = false;
+						}
+						listDisplayOne.visible = false;
+						listDisplayTwo.visible = false;
+						listDisplayThree.visible = false;
+						listDisplayFour.visible = false;
+						
+						currentCursorPositionKey = "Item";
+						cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+						
+						browsingItems = false;
+					}
+					else if (browsingSpells)
+					{
+						listBox.visible = false;
+						for each (i in listDisplays)
+						{
+							i.visible = false;
+						}
+						listDisplayOne.visible = false;
+						listDisplayTwo.visible = false;
+						listDisplayThree.visible = false;
+						listDisplayFour.visible = false;
+						
+						currentCursorPositionKey = "Spell";
+						cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+						
+						browsingItems = false;
 					}
 				}
 			}
@@ -276,41 +403,57 @@ package worlds
 			}
 		}
 		
+		public function playerCastOnEnemy():void
+		{
+			for each (var e:EnemyBattle in enemies)
+			{
+				if (e.key == currentCursorPositionKey)
+				{
+					//playerBattle.castOnEnemy(e, targettedSpell);
+				}
+			}
+		}
 		
 		public function initDisplayTexts():void
 		{
-			attackDisplay = new DisplayText("Attack", 370, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			defendDisplay = new DisplayText("Defend", 455, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			itemDisplay = new DisplayText("Item", 540, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			attackDisplay = new DisplayText("Attack", 300, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			spellDisplay = new DisplayText("Spell", 385, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			defendDisplay = new DisplayText("Defend", 470, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			itemDisplay = new DisplayText("Item", 555, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			attackDisplay.visible = true;
+			spellDisplay.visible = true;
 			defendDisplay.visible = true;
 			itemDisplay.visible = true;
-			itemListBox.visible = false;
+			listBox.visible = false;
 			add(attackDisplay);
+			add(spellDisplay);
 			add(defendDisplay);
 			add(itemDisplay);
-			add(itemListBox);
+			add(listBox);
 			
-			itemListDisplays.push(new DisplayText("", 250, 230, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
-			itemListDisplays.push(new DisplayText("", 250, 250, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
-			itemListDisplays.push(new DisplayText("", 250, 270, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
-			itemListDisplays.push(new DisplayText("", 250, 290, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
-			itemListDisplays.push(new DisplayText("", 250, 310, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
-			itemListDisplays.push(new DisplayText("", 250, 330, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
+			listDisplays.push(new DisplayText("", 250, 230, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
+			listDisplays.push(new DisplayText("", 250, 250, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
+			listDisplays.push(new DisplayText("", 250, 270, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
+			listDisplays.push(new DisplayText("", 250, 290, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
+			listDisplays.push(new DisplayText("", 250, 310, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
+			listDisplays.push(new DisplayText("", 250, 330, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
 			
-			itemListNameDisplay = new DisplayText("Name:", 400, 230, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			itemListQuantityDisplay = new DisplayText("Quantity:", 400, 250, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			itemListEffectDisplay = new DisplayText("Effect:", 400, 270, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			listDisplayOne = new DisplayText("", 400, 230, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			listDisplayTwo = new DisplayText("", 400, 250, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			listDisplayThree = new DisplayText("", 400, 270, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			listDisplayFour = new DisplayText("", 400, 290, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			
-			itemListNameDisplay.visible = false;
-			itemListQuantityDisplay.visible = false;
-			itemListEffectDisplay.visible = false;
+			listDisplayOne.visible = false;
+			listDisplayTwo.visible = false;
+			listDisplayThree.visible = false;
+			listDisplayFour.visible = false;
 			
-			add(itemListNameDisplay);
-			add(itemListQuantityDisplay);
-			add(itemListEffectDisplay);
+			add(listDisplayOne);
+			add(listDisplayTwo);
+			add(listDisplayThree);
+			add(listDisplayFour);
 			
-			for each (var d:DisplayText in itemListDisplays)
+			for each (var d:DisplayText in listDisplays)
 			{
 				add(d);
 				d.visible = false;
@@ -322,32 +465,71 @@ package worlds
 		{
 			for (var i:int = 0; i < 6; i++)
 			{
-				itemListDisplays[i].displayText.text = "";
-				cursorPositions["ItemListRow" + (i + 1)].valid = false;
+				listDisplays[i].displayText.text = "";
+				cursorPositions["ListRow" + (i + 1)].valid = false;
 			}
 			if (player.items[GC.ITEM_CONSUMABLE].length > 6)
 			{
-				itemListEndIndex = 6;
+				listEndIndex = 6;
 			}
-			else itemListEndIndex = player.items[GC.ITEM_CONSUMABLE].length;
+			else listEndIndex = player.items[GC.ITEM_CONSUMABLE].length;
 			
-			for (i = 0; i < itemListEndIndex; i++)
+			for (i = 0; i < listEndIndex; i++)
 			{
-				itemListDisplays[i].displayText.text = player.items[GC.ITEM_CONSUMABLE][i].item[GC.ITEM_CONSUMABLE].name;
-				cursorPositions["ItemListRow" + (i + 1)].valid = true;
+				listDisplays[i].displayText.text = player.items[GC.ITEM_CONSUMABLE][i].item[GC.ITEM_CONSUMABLE].name;
+				cursorPositions["ListRow" + (i + 1)].valid = true;
+			}
+		}
+		
+		public function populateSpellListDisplays():void
+		{
+			for (var i:int = 0; i < 6; i++)
+			{
+				listDisplays[i].displayText.text = "";
+				cursorPositions["ListRow" + (i + 1)].valid = false;
+			}
+			if (player.spells.length > 6)
+			{
+				listEndIndex = 6;
+			}
+			else listEndIndex = player.spells.length;
+			
+			for (i = 0; i < listEndIndex; i++)
+			{
+				listDisplays[i].displayText.text = player.spells[i].name;
+				cursorPositions["ListRow" + (i + 1)].valid = true;
 			}
 		}
 		
 		public function setInfoDisplayTexts ():void
 		{
-			var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
-			consumableIndex += itemListStartIndex;
-			
-			var consumable:InventoryItem = player.items[GC.ITEM_CONSUMABLE][consumableIndex];
-			
-			itemListNameDisplay.displayText.text = "Name: " + consumable.item[GC.ITEM_CONSUMABLE].name;
-			itemListQuantityDisplay.displayText.text = "Quantity: " + consumable.quantity;
-			itemListEffectDisplay.displayText.text = "Effect: " + consumable.item[GC.ITEM_CONSUMABLE].description;
+			if (browsingItems)
+			{
+				var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
+				consumableIndex += listStartIndex;
+				
+				var consumable:InventoryItem = player.items[GC.ITEM_CONSUMABLE][consumableIndex];
+				
+				listDisplayOne.displayText.text = "Name: " + consumable.item[GC.ITEM_CONSUMABLE].name;
+				listDisplayTwo.displayText.text = "Quantity: " + consumable.quantity;
+				listDisplayThree.displayText.text = "Effect: " + consumable.item[GC.ITEM_CONSUMABLE].description;
+			}
+			else if (browsingSpells)
+			{
+				var spellIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
+				spellIndex += listStartIndex;
+
+				var spell:Spell = player.spells[spellIndex];
+				listDisplayOne.displayText.text = "Name: " + spell.name;
+				listDisplayTwo.displayText.text = "Effect: " + spell.description;
+				listDisplayThree.displayText.text = "Manacost: " + spell.manaCost;
+				
+				if (spell.temporary)
+				{ 
+					listDisplayFour.displayText.text = "Duration: " + spell.duration;
+				}
+				else listDisplayFour.displayText.text = "";
+			}
 		}
 		
 		public function initEnemyPositions():void
@@ -407,9 +589,11 @@ package worlds
 			currentTurn = 0;
 			playerTurn = true;
 			attackDisplay.visible = true;
+			spellDisplay.visible = true;
 			defendDisplay.visible = true;
 			itemDisplay.visible = true;
 			cursor.visible = true;
+			playerBattle.updateSpellAlterations();
 		}
 		
 		public function endPlayerTurn():void
@@ -418,6 +602,7 @@ package worlds
 			playerTurn = false;
 			browsingItems = false;
 			attackDisplay.visible = false;
+			spellDisplay.visible = false;
 			defendDisplay.visible = false;
 			itemDisplay.visible = false;
 			cursor.visible = false;

@@ -23,7 +23,7 @@ package utility
 		[Embed(source = "../../assets/gfx/zelda_battle.png")] public static const ZELDA_BATTLE:Class;
 		[Embed(source = "../../assets/gfx/velda_battle.png")] public static const VELDA_BATTLE:Class;
 		[Embed(source = "../../assets/gfx/arrow.png")] public static const ARROW:Class;
-		
+		[Embed(source = "../../assets/gfx/fire_spell.png")] public static const FIRE_SPELL:Class;
 		
 		public function GFX() {}
 		

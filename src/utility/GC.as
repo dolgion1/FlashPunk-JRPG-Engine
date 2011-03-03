@@ -45,6 +45,14 @@ package utility
 		public static const ITEM_ARMOR:int = 1;
 		public static const ITEM_CONSUMABLE:int = 2;
 		
+		// Spell Elements
+		public static const ELEMENT_FIRE:int = 0;
+		public static const ELEMENT_ICE:int = 1;
+		public static const ELEMENT_LIGHTNING:int = 2;
+		public static const ELEMENT_WIND:int = 3;
+		public static const ELEMENT_EARTH:int = 4;
+		
+		
 		// Chest constants
 		public static const CHEST_SPRITE_WIDTH:int = 20;
 		public static const CHEST_SPRITE_HEIGHT:int = 28;
@@ -85,6 +93,10 @@ package utility
 		
 		// Trees constants
 		public static const TREE_TILE_SIZE:int = 48;
+		
+		// Spell Entity constants
+		public static const FIRE_SPELL_SPRITE_WIDTH:int = 221;
+		public static const FIRE_SPELL_SPRITE_HEIGHT:int = 160;
 		
 		// Armor Types
 		public static const ARMOR_TYPE_HEAD:int = 0;

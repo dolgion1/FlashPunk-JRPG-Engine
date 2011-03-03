@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<defense>
+		<!-->
+		STATUS VARIABLES:
+			Health - 0
+			Mana - 2
+			Strength - 4
+			Agility - 5
+			Spirituality - 6
+		</!-->
+
+		<defenseSpell name="Heal" 
+			temporary="false" 
+			duration="0" 
+			manaCost="15" 
+			statusVariable="0" 
+			alteration="50" 
+			description="HP +50" />
+			
+		<defenseSpell name="Temporary Heal" 
+			temporary="true" 
+			duration="2" 
+			manaCost="2" 
+			statusVariable="0" 
+			alteration="30" 
+			description="HP +30 for 2 turns" />	
+			
+		<defenseSpell name="Agility Boost" 
+			temporary="true" 
+			duration="2" 
+			manaCost="30" 
+			statusVariable="5" 
+			alteration="6"
+			description="Agility +6" />
+	
+	</defense>
+	
+	<offense>
+		<!-->
+		ELEMENTS
+			Fire - 0
+			Ice - 1
+			Lightning - 2
+			Wind - 3
+			Earth - 4
+		</!-->
+	
+		<offenseSpell name="Fire"
+			temporary="false"
+			duration="0"
+			manaCost="10"
+			element="0"
+			damageRating="10"
+			description="Fire DMG 10"
+		/>
+		
+		<offenseSpell name="Ice"
+			temporary="false"
+			duration="0"
+			manaCost="6"
+			element="1"
+			damageRating="8"
+			description="Ice DMG 8"
+		/>
+		
+	</offense>
+	
+</data>

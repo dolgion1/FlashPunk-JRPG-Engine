@@ -5,7 +5,7 @@
 			up="null"
 			down="Enemy2"
 			left="Enemy3"
-			right="null" />
+			right="Player" />
 			
 		<cursorposition key="Enemy2" x="100" y="340" validity="false" 
 			up="Enemy1"
@@ -17,58 +17,70 @@
 			up="Enemy1"
 			down="Enemy2"
 			left="null"
+			right="Player" />
+			
+		<cursorposition key="Player" x="468" y="210" validity="false" 
+			up="null"
+			down="null"
+			left="Enemy1"
 			right="null" />
 			
-		<cursorposition key="Attack" x="340" y="390" validity="true" 
+		<cursorposition key="Attack" x="270" y="390" validity="true" 
 			up="null"
 			down="null"
 			left="null"
-			right="Defend" />
+			right="Spell" />
 			
-		<cursorposition key="Defend" x="425" y="390" validity="true" 
+		<cursorposition key="Spell" x="355" y="390" validity="true" 
 			up="null"
 			down="null"
 			left="Attack"
+			right="Defend" />
+			
+		<cursorposition key="Defend" x="440" y="390" validity="true" 
+			up="null"
+			down="null"
+			left="Spell"
 			right="Item" />	
 			
-		<cursorposition key="Item" x="510" y="390" validity="true" 
+		<cursorposition key="Item" x="525" y="390" validity="true" 
 			up="null"
 			down="null"
 			left="Defend"
 			right="null" />	
 			
-		<cursorposition key="ItemListRow1" x="215" y="240" validity="false" 
+		<cursorposition key="ListRow1" x="215" y="240" validity="false" 
 			up="null"
-			down="ItemListRow2"
+			down="ListRow2"
 			left="null"
 			right="null" />
 			
-		<cursorposition key="ItemListRow2" x="215" y="260" validity="false" 
-			up="ItemListRow1"
-			down="ItemListRow3"
+		<cursorposition key="ListRow2" x="215" y="260" validity="false" 
+			up="ListRow1"
+			down="ListRow3"
 			left="null"
 			right="null" />	
 			
-		<cursorposition key="ItemListRow3" x="215" y="280" validity="false" 
-			up="ItemListRow2"
-			down="ItemListRow4"
+		<cursorposition key="ListRow3" x="215" y="280" validity="false" 
+			up="ListRow2"
+			down="ListRow4"
 			left="null"
 			right="null" />	
 			
-		<cursorposition key="ItemListRow4" x="215" y="300" validity="false" 
-			up="ItemListRow3"
-			down="ItemListRow5"
+		<cursorposition key="ListRow4" x="215" y="300" validity="false" 
+			up="ListRow3"
+			down="ListRow5"
 			left="null"
 			right="null" />	
 			
-		<cursorposition key="ItemListRow5" x="215" y="320" validity="false" 
-			up="ItemListRow4"
-			down="ItemListRow6"
+		<cursorposition key="ListRow5" x="215" y="320" validity="false" 
+			up="ListRow4"
+			down="ListRow6"
 			left="null"
 			right="null" />	
 			
-		<cursorposition key="ItemListRow6" x="215" y="340" validity="false" 
-			up="ItemListRow5"
+		<cursorposition key="ListRow6" x="215" y="340" validity="false" 
+			up="ListRow5"
 			down="null"
 			left="null"
 			right="null" />	

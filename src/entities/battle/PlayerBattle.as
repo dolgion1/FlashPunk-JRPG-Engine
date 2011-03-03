@@ -6,6 +6,7 @@ package entities.battle
 	import utility.*;
 	import flash.geom.Point;
 	import entities.*;
+	import entities.spells.*;
 	
 	/**
 	 * ...
@@ -25,6 +26,7 @@ package entities.battle
 		
 		public var targetEnemy:EnemyBattle;
 		public var player:Player;
+		public var activeSpells:Array = new Array();
 		
 		public function PlayerBattle(_x:int, _y:int, _player:Player) 
 		{
@@ -36,12 +38,12 @@ package entities.battle
 			y = _y;
 			player = _player;
 			
-			statDisplay = new DisplayText(player.health + "/" + player.maxHealth + " " + player.mana + "/" + player.maxMana, 
-										  x + 40, 
-										  y - 30, 
-										  "default", 
-										  GC.INVENTORY_DEFAULT_FONT_SIZE, 
-										  0xFFFFFF, 
+			statDisplay = new DisplayText(player.health + "/" + player.maxHealth + " " + player.mana + "/" + player.maxMana,
+										  x + 40,
+										  y - 30,
+										  "default",
+										  GC.INVENTORY_DEFAULT_FONT_SIZE,
+										  0xFFFFFF,
 										  500);
 		}
 		
@@ -55,6 +57,8 @@ package entities.battle
 			{
 				x -= delta.x / FP.assignedFrameRate;
 				y -= delta.y / FP.assignedFrameRate;
+				statDisplay.x -= delta.x / FP.assignedFrameRate;
+				statDisplay.y -= delta.y / FP.assignedFrameRate;
 				
 				if ((Math.abs(x - targetPosition.x) < 50) &&
 					(Math.abs(y - targetPosition.y) < 50))
@@ -185,6 +189,87 @@ package entities.battle
 			{
 				FP.log("ranged is done");
 				curAnimation = "stand_left";
+			}
+		}
+		
+		public function castOnSelf(_defenseSpell:DefenseSpell):void
+		{
+			switch (_defenseSpell.statusVariable)
+			{
+				case (GC.STATUS_HEALTH): 
+				{
+					player.health += _defenseSpell.alteration;
+					if (player.health > player.maxHealth) player.health = player.maxHealth;
+					break;
+				}
+				case (GC.STATUS_MANA): 
+				{
+					player.mana += _defenseSpell.alteration;
+					if (player.mana > player.maxMana) player.mana = player.maxMana;
+					break;
+				}
+				case (GC.STATUS_STRENGTH): 
+				{
+					player.strength += _defenseSpell.alteration;
+					break;
+				}
+				case (GC.STATUS_AGILITY): 
+				{
+					player.agility += _defenseSpell.alteration;
+					break;
+				}
+				case (GC.STATUS_SPIRITUALITY): 
+				{
+					player.spirituality += _defenseSpell.alteration;
+					break;
+				}
+			}
+			
+			if (_defenseSpell.temporary) activeSpells.push(_defenseSpell);
+		}
+		
+		public function updateSpellAlterations():void
+		{
+			for (var i:int = 0; i < activeSpells.length; i++)
+			{
+				FP.log("Active Spell " + i + " duration " + activeSpells[i].duration);
+				activeSpells[i].duration--;
+				
+				if (activeSpells[i].duration < 1)
+				{
+					activeSpells.splice(i, i);
+					
+					switch (activeSpells[i].statusVariable)
+					{
+						case (GC.STATUS_HEALTH): 
+						{
+							player.health -= activeSpells[i].alteration;
+							if (player.health < 1) player.health = 1;
+							break;
+						}
+						case (GC.STATUS_MANA): 
+						{
+							player.mana -= activeSpells[i].alteration;
+							if (player.mana < 1) player.mana = 0;
+							break;
+						}
+						case (GC.STATUS_STRENGTH): 
+						{
+							player.strength -= activeSpells[i].alteration;
+							break;
+						}
+						case (GC.STATUS_AGILITY): 
+						{
+							player.agility -= activeSpells[i].alteration;
+							break;
+						}
+						case (GC.STATUS_SPIRITUALITY): 
+						{
+							player.spirituality -= activeSpells[i].alteration;
+							break;
+						}
+					}
+				}
 			}
 		}
 	}

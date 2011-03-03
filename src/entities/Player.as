@@ -44,6 +44,7 @@ package entities
 		public var armorRating:int = 0;
 		
 		public var items:Array = new Array();
+		public var spells:Array = new Array();
 		public var equipment:Dictionary = new Dictionary();
 		public var activeConsumables:Array = new Array();
 		
