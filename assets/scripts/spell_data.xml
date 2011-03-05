@@ -49,7 +49,7 @@
 		<offenseSpell name="Fire"
 			temporary="false"
 			duration="0"
-			manaCost="10"
+			manaCost="1"
 			element="0"
 			damageRating="10"
 			description="Fire DMG 10"

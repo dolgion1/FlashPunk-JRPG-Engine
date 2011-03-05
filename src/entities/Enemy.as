@@ -9,6 +9,8 @@ package entities
 	public class Enemy extends NPC 
 	{
 		public var mobs:Array = new Array();
+		public var experiencePoints:int;
+		public var defeated:Boolean = false;
 		
 		public function Enemy(_maps:Array, 
 							  _name:String, 
@@ -16,11 +18,13 @@ package entities
 							  _position:GlobalPosition,
 							  _appointments:Array,
 							  _dialogs:Array,
-							  _mobs:Array)
+							  _mobs:Array,
+							  _experiencePoints:int)
 		{
 			super(_maps, _name, _spritesheetIndex, _position, _appointments, _dialogs);
 			this.type = GC.TYPE_ENEMY;
 			mobs = _mobs;
+			experiencePoints = _experiencePoints;
 		}
 		
 		override public function colliding():Boolean

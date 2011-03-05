@@ -26,6 +26,7 @@ package entities.battle
 		public var armorRating:int;
 		public var statDisplay:DisplayText;
 		public var key:String;
+		public var dead:Boolean = false;
 		
 		public function EnemyBattle(_position:Point, _keyIndex:int) 
 		{

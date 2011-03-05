@@ -158,7 +158,13 @@ package worlds
 			for each (var npc:NPC in npcs) add(npc);
 			
 			// load enemies
-			for each (var enemy:Enemy in enemies) add(enemy);
+			for each (var enemy:Enemy in enemies)
+			{
+				if (!enemy.defeated)
+				{
+					add(enemy);
+				}
+			}
 			
 			// load chests
 			for each (var chest:Chest in chests) add(chest);

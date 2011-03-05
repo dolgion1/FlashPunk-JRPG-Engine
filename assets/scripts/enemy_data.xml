@@ -6,6 +6,7 @@
 		<x>140</x>
 		<y>392</y>
 		<mapIndex>0</mapIndex>
+		<experiencePoints>200</experiencePoints>
 		
 		<appointments>
 			<appointment hour="8" minute="0" x="340" y="192" mapIndex="7"/>			

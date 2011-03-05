@@ -384,7 +384,6 @@ package utility
 					{
 						// remove the consumable from the player inventory
 						player.items[GC.ITEM_CONSUMABLE].splice(consumableIndex, 1);
-						updateItemColumn(GC.ITEM_CONSUMABLE);
 						
 						if (player.items[GC.ITEM_CONSUMABLE].length < GC.INVENTORY_MAX_ITEM_ROWS)
 						{
@@ -403,13 +402,14 @@ package utility
 							}
 							else 
 							{
-								cursor.position = cursorPositions[GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD];
+								cursor.position = cursorPositions[GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD].getPosition();
 								currentCursorPositionKey = GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD;
 								currentCursorColumn = GC.INVENTORY_ARMOR_EQUIP_COLUMN;
 								updateCurrentCursorColumn();
 							}
 						}
 					}
+					updateItemColumn(GC.ITEM_CONSUMABLE);
 					displayItemInformation();
 				}
 				else if (currentCursorColumn == GC.INVENTORY_WEAPON_EQUIP_COLUMN ||

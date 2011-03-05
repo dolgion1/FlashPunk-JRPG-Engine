@@ -347,6 +347,7 @@ package entities
 				var enemy:Enemy = collide(GC.TYPE_ENEMY, x, y) as Enemy;
 				FP.world = new Battle(this, enemy);
 				enemy.world.remove(enemy);
+				enemy.defeated = true;
 			}
 		}
 		

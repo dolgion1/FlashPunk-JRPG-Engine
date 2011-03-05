@@ -97,6 +97,8 @@ package utility
 		// Spell Entity constants
 		public static const FIRE_SPELL_SPRITE_WIDTH:int = 221;
 		public static const FIRE_SPELL_SPRITE_HEIGHT:int = 160;
+		public static const ICE_SPELL_SPRITE_WIDTH:int = 221;
+		public static const ICE_SPELL_SPRITE_HEIGHT:int = 160;
 		
 		// Armor Types
 		public static const ARMOR_TYPE_HEAD:int = 0;

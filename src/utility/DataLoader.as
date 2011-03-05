@@ -201,7 +201,8 @@ package utility
 					mobs.push(new Mob(p.@type, p.@quantity));
 				}
 				
-				enemy = new Enemy(maps, o.name, o.spritesheet, new GlobalPosition(o.mapIndex, o.x, o.y), enemyAppointments, null, mobs);
+				
+				enemy = new Enemy(maps, o.name, o.spritesheet, new GlobalPosition(o.mapIndex, o.x, o.y), enemyAppointments, null, mobs, o.experiencePoints);
 				enemies.push(enemy);
 			}
 			

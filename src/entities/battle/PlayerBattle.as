@@ -7,6 +7,8 @@ package entities.battle
 	import flash.geom.Point;
 	import entities.*;
 	import entities.spells.*;
+	import flash.utils.Dictionary;
+	import worlds.*;
 	
 	/**
 	 * ...
@@ -27,6 +29,8 @@ package entities.battle
 		public var targetEnemy:EnemyBattle;
 		public var player:Player;
 		public var activeSpells:Array = new Array();
+		public var spellEntities:Dictionary = new Dictionary();
+		
 		
 		public function PlayerBattle(_x:int, _y:int, _player:Player) 
 		{
@@ -76,6 +80,7 @@ package entities.battle
 					{
 						moving = false;
 						curAnimation = "stand_left";
+						Battle.enterNextTurn = true;
 					}
 				}
 			}
@@ -90,6 +95,7 @@ package entities.battle
 					this.world.remove(arrow);
 					arrowMoving = false;
 					calculateDamage("WeaponEquipPrimary");
+					Battle.enterNextTurn = true;
 				}
 			}
 				
@@ -111,8 +117,8 @@ package entities.battle
 			spritemap.add("melee_right", [27, 28, 29], 9, false);
 			spritemap.add("walk_left", [36, 37, 38, 39, 40, 41], 9, true);
 			spritemap.add("walk_right", [42, 43, 44, 45, 46, 47], 9, true);
-			spritemap.add("cast_left", [48], 0, false);
-			spritemap.add("cast_right", [49], 0, false);
+			spritemap.add("cast_left", [48, 0], 3, false);
+			spritemap.add("cast_right", [49, 1], 3, false);
 			spritemap.callback = animationCallback;
 		}
 		
@@ -154,17 +160,23 @@ package entities.battle
 		public function calculateDamage(_weaponEquipmentKey:String):void
 		{
 			var damage:int = 0;
-			FP.log(player.agility + " and " + targetEnemy.agility);
 			var chance:Number = (player.agility * 100)/(player.agility + targetEnemy.agility);
 			var someNum:Number = Math.random()*100;
-			FP.log("Chance: " + chance + " and number pulled: " + someNum);
+			
 			if (someNum <= chance)
 			{
-				FP.log("Hit!");
 				damage = player.equipment[_weaponEquipmentKey].damageRating - targetEnemy.armorRating;
 				if (damage < 0) damage = 0;
 				targetEnemy.health -= damage;
 				targetEnemy.updateStatDisplay();
+				FP.log("enemy was just hit");
+				
+				if (targetEnemy.health < 1)
+				{
+					targetEnemy.world.remove(targetEnemy.statDisplay);
+					targetEnemy.world.remove(targetEnemy);
+					targetEnemy.dead = true;
+				}
 			}
 		}
 		
@@ -174,8 +186,16 @@ package entities.battle
 			{
 				if (meleeTwice)
 				{
-					spritemap.play("melee_left", true);
-					calculateDamage("WeaponEquipSecondary");
+					if (!targetEnemy.dead)
+					{
+						spritemap.play("melee_left", true);
+						calculateDamage("WeaponEquipSecondary");
+					}
+					else 
+					{
+						curAnimation = "walk_right";
+						moving = true;
+					}
 					meleeTwice = false;
 				}
 				else 
@@ -187,8 +207,40 @@ package entities.battle
 			
 			if (curAnimation == "ranged_left")
 			{
-				FP.log("ranged is done");
 				curAnimation = "stand_left";
+			}
+		}
+		
+		public function castOnEnemy(_enemy:EnemyBattle, _offenseSpell:OffenseSpell):void
+		{
+			curAnimation = "cast_left";
+			
+			switch (_offenseSpell.name)
+			{
+				case "Fire": 
+				{
+					spellEntities["Fire"] = new FireSpell(_enemy.x, _enemy.y);
+					this.world.add(spellEntities["Fire"]);
+					break;
+				}
+				case "Ice": 
+				{
+					spellEntities["Ice"] = new IceSpell(_enemy.x, _enemy.y);
+					this.world.add(spellEntities["Ice"]);
+					break;
+				}
+			}
+			
+			_enemy.health -= _offenseSpell.damageRating;
+			_enemy.updateStatDisplay();
+			player.mana -= _offenseSpell.manaCost;
+			updateStatDisplay();
+			
+			if (_enemy.health < 1)
+			{
+				_enemy.world.remove(targetEnemy.statDisplay);
+				_enemy.world.remove(targetEnemy);
+				_enemy.dead = true;
 			}
 		}
 		
@@ -226,19 +278,19 @@ package entities.battle
 			}
 			
 			if (_defenseSpell.temporary) activeSpells.push(_defenseSpell);
+			
+			player.mana -= _defenseSpell.manaCost;
+			updateStatDisplay();
 		}
 		
 		public function updateSpellAlterations():void
 		{
 			for (var i:int = 0; i < activeSpells.length; i++)
 			{
-				FP.log("Active Spell " + i + " duration " + activeSpells[i].duration);
 				activeSpells[i].duration--;
 				
 				if (activeSpells[i].duration < 1)
 				{
-					activeSpells.splice(i, i);
-					
 					switch (activeSpells[i].statusVariable)
 					{
 						case (GC.STATUS_HEALTH): 
@@ -269,6 +321,8 @@ package entities.battle
 							break;
 						}
 					}
+					
+					activeSpells.splice(i, 1);
 				}
 			}
 		}

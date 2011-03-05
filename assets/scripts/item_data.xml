@@ -16,7 +16,7 @@
 				<damagetype>0</damagetype>
 				<attacktype>0</attacktype>
 				<twohanded>false</twohanded>
-				<damagerating>5</damagerating>
+				<damagerating>50</damagerating>
 			</weapon>
 			<weapon name="Dagger">
 				<damagetype>1</damagetype>

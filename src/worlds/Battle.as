@@ -16,6 +16,7 @@ package worlds
 	{
 		public var player:Player;
 		public var playerBattle:PlayerBattle;
+		public var experiencePoints:int;
 		public var enemies:Array = new Array();
 		public var enemyPositions:Array = new Array();
 		public var combattants:Array = new Array();
@@ -46,6 +47,7 @@ package worlds
 		public var listDisplayThree:DisplayText;
 		public var listDisplayFour:DisplayText;
 		
+		public static var enterNextTurn:Boolean = false;
 		
 		
 		public function Battle(_player:Player, _enemy:Enemy) 
@@ -56,6 +58,7 @@ package worlds
 			cursor.setPosition(cursorPositions[currentCursorPositionKey].getPosition());
 			listBox = new TextBox(200, 200, 2, 2);
 			initEnemyPositions();
+			experiencePoints = _enemy.experiencePoints;
 			
 			player = _player;
 			playerBattle = new PlayerBattle(GC.BATTLE_PLAYER_X, GC.BATTLE_PLAYER_Y, player);
@@ -77,24 +80,46 @@ package worlds
 				frameCount++;
 				if (frameCount % FP.assignedFrameRate == 0)
 				{
-					FP.log("New turn in: " + enemyTurnTimer);
 					enemyTurnTimer--;
 					
 					if (enemyTurnTimer < 2)
 					{
 						enemyTurnTimer = 1;
 						currentTurn++;
+						enterNextTurn = false;
 						playerBattle.updateStatDisplay();
 						if (currentTurn >= combattants.length)
 						{
 							frameCount = 0;
 							beginPlayerTurn();
 						}
-						FP.log("Turn No. " + currentTurn);
 					}
 				}
 			}
-			
+			else 
+			{
+				if (enterNextTurn)
+				{
+					var battleEnded:Boolean = true;
+					for each (var enemy:EnemyBattle in enemies)
+					{
+						if (!enemy.dead) 
+						{
+							battleEnded = false;
+							break;
+						}
+					}
+					if (!battleEnded)
+					{
+						endPlayerTurn();
+					}
+					else 
+					{
+						FP.world = Main.game;
+						player.experience += experiencePoints;
+					}
+				}
+			}
 		}
 		
 		public function processGeneralInput():void
@@ -111,13 +136,27 @@ package worlds
 					if (currentCursorPositionKey == "Attack")
 					{
 						if (!((player.equipment["WeaponEquipPrimary"] == null) && 
-							(player.equipment["WeaponEquipSecondar"] == null)))
+							(player.equipment["WeaponEquipSecondary"] == null)))
 						{
 							targeting = true;
-							cursorPositions["Enemy1"].valid = true;
-							cursorPositions["Enemy2"].valid = true;
-							cursorPositions["Enemy3"].valid = true;
-							currentCursorPositionKey = "Enemy1";
+							
+							// loop through enemies and determine
+							// which cursorPosition is valid, setting 
+							// true and false for each
+							for (var i:int = (enemies.length - 1); i >= 0; i--)
+							{
+								if (enemies[i].dead)
+								{
+									FP.log("enemy " + i + " is dead");
+									cursorPositions["Enemy" + (i + 1)].valid = false;
+								}
+								else 
+								{
+									FP.log("enemy " + i + " is alive");
+									cursorPositions["Enemy" + (i + 1)].valid = true;
+									currentCursorPositionKey = "Enemy" + (i + 1);
+								}
+							}
 							cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
 						}
 					}
@@ -128,14 +167,13 @@ package worlds
 						
 						// end turn
 						targeting = false;
+						cursor.visible = false;
 						cursorPositions["Enemy1"].valid = false;
 						cursorPositions["Enemy2"].valid = false;
 						cursorPositions["Enemy3"].valid = false;
-						endPlayerTurn();
 					}
 					else if (currentCursorPositionKey == "Spell")
 					{
-						FP.log("player.spells.length " + player.spells.length);
 						if (player.spells.length > 0)
 						{
 							populateSpellListDisplays();
@@ -161,46 +199,64 @@ package worlds
 						// Get instance of the spell
 						var spellIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1 + listStartIndex;
 						
-						if (player.spells[spellIndex] is DefenseSpell)
+						if (player.mana >= player.spells[spellIndex].manaCost)
 						{
-							var defenseSpell:DefenseSpell = new DefenseSpell();
-							defenseSpell.name = player.spells[spellIndex].name;
-							defenseSpell.temporary = player.spells[spellIndex].temporary;
-							defenseSpell.duration = player.spells[spellIndex].duration;
-							defenseSpell.statusVariable = player.spells[spellIndex].statusVariable;
-							defenseSpell.alteration = player.spells[spellIndex].alteration;
-							defenseSpell.manaCost = player.spells[spellIndex].manaCost; 
-							
-							playerBattle.castOnSelf(defenseSpell);
-							
-							listBox.visible = false;
-							for each (d in listDisplays)
+							if (player.spells[spellIndex] is DefenseSpell)
 							{
-								d.visible = false;
+								var defenseSpell:DefenseSpell = new DefenseSpell();
+								defenseSpell.name = player.spells[spellIndex].name;
+								defenseSpell.temporary = player.spells[spellIndex].temporary;
+								defenseSpell.duration = player.spells[spellIndex].duration;
+								defenseSpell.statusVariable = player.spells[spellIndex].statusVariable;
+								defenseSpell.alteration = player.spells[spellIndex].alteration;
+								defenseSpell.manaCost = player.spells[spellIndex].manaCost; 
+								
+								playerBattle.castOnSelf(defenseSpell);
+								
+								listBox.visible = false;
+								for each (d in listDisplays)
+								{
+									d.visible = false;
+								}
+								listDisplayOne.visible = false;
+								listDisplayTwo.visible = false;
+								listDisplayThree.visible = false;
+								listDisplayFour.visible = false;
+								
+								// until we have entities for the animation for casting on oneself,
+								// we just move to the next turn
+								enterNextTurn = true;
 							}
-							listDisplayOne.visible = false;
-							listDisplayTwo.visible = false;
-							listDisplayThree.visible = false;
-							listDisplayFour.visible = false;
-							endPlayerTurn();
-						}
-						else if (player.spells[spellIndex] is OffenseSpell)
-						{
-							targettedSpell = player.spells[spellIndex];
-							targetingSpell = true;
-							cursorPositions["Enemy1"].valid = true;
-							cursorPositions["Enemy2"].valid = true;
-							cursorPositions["Enemy3"].valid = true;
+							else if (player.spells[spellIndex] is OffenseSpell)
+							{
+								targettedSpell = player.spells[spellIndex];
+								targetingSpell = true;
+								for (i = (enemies.length - 1); i >= 0; i--)
+								{
+									if (enemies[i].dead)
+									{
+										FP.log("enemy " + i + " is dead");
+										cursorPositions["Enemy" + (i + 1)].valid = false;
+									}
+									else 
+									{
+										FP.log("enemy " + i + " is alive");
+										cursorPositions["Enemy" + (i + 1)].valid = true;
+										currentCursorPositionKey = "Enemy" + (i + 1);
+									}
+								}
+								cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+								
+								//var offenseSpell:OffenseSpell = player.spells[spellIndex];
+							}
 							
-							var offenseSpell:OffenseSpell = player.spells[spellIndex];
-							currentCursorPositionKey = "Enemy1";
-							cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+							browsingSpells = false;
 						}
-						browsingSpells = false;
 					}
 					else if (targetingSpell)
 					{
 						playerCastOnEnemy();
+						cursor.visible = false;
 						targetingSpell = false;
 						listBox.visible = false;
 						for each (d in listDisplays)
@@ -211,12 +267,11 @@ package worlds
 						listDisplayTwo.visible = false;
 						listDisplayThree.visible = false;
 						listDisplayFour.visible = false;
-						endPlayerTurn();
 					}
 					else if (currentCursorPositionKey == "Defend")
 					{
 						// need to increase armorRating for one turn
-						endPlayerTurn();
+						enterNextTurn = true;
 					}
 					else if (currentCursorPositionKey == "Item")
 					{
@@ -242,7 +297,6 @@ package worlds
 					}
 					else if (browsingItems)
 					{
-						// TODO: consuming some shit
 						var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
 						consumableIndex += listStartIndex;
 						
@@ -267,7 +321,7 @@ package worlds
 						listDisplayThree.visible = false;
 						listDisplayFour.visible = false;
 						
-						endPlayerTurn();
+						enterNextTurn = true;
 					}
 					else if (currentCursorPositionKey == "Spell")
 					{
@@ -342,9 +396,9 @@ package worlds
 					else if (browsingItems)
 					{
 						listBox.visible = false;
-						for each (var i:DisplayText in listDisplays)
+						for each (d in listDisplays)
 						{
-							i.visible = false;
+							d.visible = false;
 						}
 						listDisplayOne.visible = false;
 						listDisplayTwo.visible = false;
@@ -359,9 +413,9 @@ package worlds
 					else if (browsingSpells)
 					{
 						listBox.visible = false;
-						for each (i in listDisplays)
+						for each (d in listDisplays)
 						{
-							i.visible = false;
+							d.visible = false;
 						}
 						listDisplayOne.visible = false;
 						listDisplayTwo.visible = false;
@@ -373,43 +427,57 @@ package worlds
 						
 						browsingItems = false;
 					}
+					else if (targetingSpell)
+					{
+						currentCursorPositionKey = "ListRow1";
+						cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+						targetingSpell = false;
+						browsingSpells = true;
+					}
 				}
 			}
 		}
 		
 		public function playerAttackEnemy():void
 		{
-			for each (var e:EnemyBattle in enemies)
+			for (var i:int = 0; i < enemies.length; i++)
 			{
-				if (e.key == currentCursorPositionKey)
+				if (enemies[i].key == currentCursorPositionKey)
 				{
-					var enemyPositionIndex:int = int(e.key.charAt(e.key.length - 1)) - 1;
-					if (player.attackType == GC.ATTACK_TYPE_MELEE)
+					if (!enemies[i].dead)
 					{
-						if (player.equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_SECONDARY] != null)
+						var enemyPositionIndex:int = int(enemies[i].key.charAt(enemies[i].key.length - 1)) - 1;
+						if (player.attackType == GC.ATTACK_TYPE_MELEE)
 						{
-							playerBattle.meleeAttack(enemyPositions[enemyPositionIndex], e, true);
+							if (player.equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_SECONDARY] != null)
+							{
+								playerBattle.meleeAttack(enemyPositions[enemyPositionIndex], enemies[i], true);
+							}
+							else 
+							{
+								playerBattle.meleeAttack(enemyPositions[enemyPositionIndex], enemies[i], false);
+							}
 						}
-						else 
+						else if (player.attackType == GC.ATTACK_TYPE_RANGED)
 						{
-							playerBattle.meleeAttack(enemyPositions[enemyPositionIndex], e, false);
+							playerBattle.rangedAttack(enemyPositions[enemyPositionIndex], enemies[i]);
 						}
-					}
-					else if (player.attackType == GC.ATTACK_TYPE_RANGED)
-					{
-						playerBattle.rangedAttack(enemyPositions[enemyPositionIndex], e);
 					}
 				}
 			}
 		}
 		
+		
 		public function playerCastOnEnemy():void
 		{
-			for each (var e:EnemyBattle in enemies)
+			for (var i:int = 0; i < enemies.length; i++)
 			{
-				if (e.key == currentCursorPositionKey)
+				if (enemies[i].key == currentCursorPositionKey)
 				{
-					//playerBattle.castOnEnemy(e, targettedSpell);
+					if (!enemies[i].dead)
+					{
+						playerBattle.castOnEnemy(enemies[i], targettedSpell);
+					}
 				}
 			}
 		}
@@ -610,5 +678,4 @@ package worlds
 			cursor.position = cursorPositions["Attack"].getPosition();
 		}
 	}
-
 }
