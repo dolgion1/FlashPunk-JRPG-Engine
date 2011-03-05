@@ -48,7 +48,7 @@ package entities
 		public var equipment:Dictionary = new Dictionary();
 		public var activeConsumables:Array = new Array();
 		
-		public function Player(_position:GlobalPosition, _dialogs:Array, _stats:Array)
+		public function Player(_position:GlobalPosition, _dialogs:Array, _stats:Array, _spells:Array)
 		{
 			setupSpritesheet();
 			graphic = playerSpritemap;
@@ -59,6 +59,7 @@ package entities
 			currentMapIndex = _position.mapIndex;
 			dialogs = _dialogs;
 			setupUpDialogsInTotal();
+			spells = _spells;
 			
 			health = _stats[GC.STATUS_HEALTH];
 			maxHealth = _stats[GC.STATUS_MAX_HEALTH];

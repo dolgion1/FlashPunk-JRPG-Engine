@@ -14,6 +14,8 @@ package worlds
 	 */
 	public class Battle extends World
 	{
+		public var dl:DataLoader = new DataLoader();
+		public var spells:Array = new Array();
 		public var player:Player;
 		public var playerBattle:PlayerBattle;
 		public var experiencePoints:int;
@@ -52,6 +54,7 @@ package worlds
 		
 		public function Battle(_player:Player, _enemy:Enemy) 
 		{
+			spells = dl.setupSpellData();
 			cursorPositions = dataloader.setupBattleUIData()[0];
 			cursor = new Cursor(0, 0);
 			cursor.visible = true;
@@ -67,6 +70,7 @@ package worlds
 			loadEntities();
 			initCombattants();
 			initDisplayTexts();
+			beginPlayerTurn();
 		}
 		
 		override public function update():void
@@ -75,30 +79,33 @@ package worlds
 			
 			processGeneralInput();
 			
-			if (!playerTurn)
+			
+			if (enterNextTurn)
 			{
-				frameCount++;
-				if (frameCount % FP.assignedFrameRate == 0)
+				if (!playerTurn)
 				{
-					enemyTurnTimer--;
+					currentTurn++;
+					enterNextTurn = false;
+					playerBattle.updateStatDisplay();
 					
-					if (enemyTurnTimer < 2)
+					if (currentTurn >= combattants.length)
 					{
-						enemyTurnTimer = 1;
-						currentTurn++;
-						enterNextTurn = false;
-						playerBattle.updateStatDisplay();
-						if (currentTurn >= combattants.length)
+						beginPlayerTurn();
+					}
+					else
+					{
+						// the current enemy must do something
+						if (!combattants[currentTurn].dead)
 						{
-							frameCount = 0;
-							beginPlayerTurn();
+							combattants[currentTurn].attackPlayer(playerBattle);
+						}
+						else
+						{
+							enterNextTurn = true;
 						}
 					}
 				}
-			}
-			else 
-			{
-				if (enterNextTurn)
+				else 
 				{
 					var battleEnded:Boolean = true;
 					for each (var enemy:EnemyBattle in enemies)
@@ -628,11 +635,11 @@ package worlds
 					switch (mob.type)
 					{
 						case (GC.ENEMY_TYPE_ZELDA): {
-							enemies.push(new ZeldaBattle(enemyPositions[enemyIndex++], enemyIndex));
+							enemies.push(new ZeldaBattle(enemyPositions[enemyIndex++], enemyIndex, spells));
 							break;
 						}
 						case (GC.ENEMY_TYPE_VELDA): {
-							enemies.push(new VeldaBattle(enemyPositions[enemyIndex++], enemyIndex));
+							enemies.push(new VeldaBattle(enemyPositions[enemyIndex++], enemyIndex, spells));
 							break;
 						}
 					}
@@ -654,6 +661,7 @@ package worlds
 		
 		public function beginPlayerTurn():void
 		{
+			FP.log("in beginPlayerTurn");
 			currentTurn = 0;
 			playerTurn = true;
 			attackDisplay.visible = true;
@@ -666,7 +674,6 @@ package worlds
 		
 		public function endPlayerTurn():void
 		{
-			currentTurn++;
 			playerTurn = false;
 			browsingItems = false;
 			attackDisplay.visible = false;

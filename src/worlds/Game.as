@@ -64,17 +64,13 @@ package worlds
 		{
 			// dataloader, do your thing...
 			maps = dataloader.setupMaps();
-			player = dataloader.setupPlayer();
-			currentMapIndex = player.currentMapIndex;
-			npcs = dataloader.setupNPCs(maps);
-			enemies = dataloader.setupEnemies(maps);
 			items = dataloader.setupItems();
 			chests = dataloader.setupChests(items);
 			spells = dataloader.setupSpellData();
-			
-			// just temporarily I'll give the player all spells in the game
-			// in the future spells must be obtained by the player
-			player.spells = spells;
+			player = dataloader.setupPlayer(spells);
+			currentMapIndex = player.currentMapIndex;
+			npcs = dataloader.setupNPCs(maps);
+			enemies = dataloader.setupEnemies(maps, spells);
 			
 			// prepare the stage
 			loadMap();

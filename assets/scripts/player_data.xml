@@ -13,6 +13,14 @@
 		<spirituality>12</spirituality>
 		<experience>0</experience>
 		
+		<spells>
+			<spell name="Heal"/>
+			<spell name="Temporary Heal"/>
+			<spell name="Agility Boost"/>
+			<spell name="Fire"/>
+			<spell name="Ice"/>
+		</spells>
+		
 		<dialogs>
 			<dialog partner="Peach" index="0">
 				<line index="0">

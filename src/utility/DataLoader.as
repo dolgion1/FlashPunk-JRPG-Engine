@@ -30,10 +30,11 @@ package utility
 		[Embed(source = "../../assets/scripts/ui_inventory_data.xml", mimeType = "application/octet-stream")] private var inventoryUIData:Class;
 		[Embed(source = "../../assets/scripts/ui_battle_data.xml", mimeType = "application/octet-stream")] private var battleUIData:Class;
 		[Embed(source = "../../assets/scripts/spell_data.xml", mimeType = "application/octet-stream")] private var spellData:Class;
+		[Embed(source = "../../assets/scripts/mob_data.xml", mimeType = "application/octet-stream")] private var mobData:Class;
 		
 		public function DataLoader() {}
 		
-		public function setupPlayer():Player
+		public function setupPlayer(_spells:Array):Player
 		{
 			var playerDataByteArray:ByteArray = new playerData;
 			var playerDataXML:XML = new XML(playerDataByteArray.readUTFBytes(playerDataByteArray.length));
@@ -41,6 +42,7 @@ package utility
 			var q:XML;
 			var r:XML;
 			var stats:Array = new Array();
+			var spells:Array = new Array();
 			
 			// load in the dialog
 			var playerDialogs:Array = new Array();
@@ -74,7 +76,18 @@ package utility
 			stats[GC.STATUS_SPIRITUALITY] = playerDataXML.player.spirituality;
 			stats[GC.STATUS_EXPERIENCE] = playerDataXML.player.experience;
 			
-			return new Player(new GlobalPosition(playerDataXML.player.mapIndex, playerDataXML.player.x, playerDataXML.player.y), playerDialogs, stats);
+			for each (p in playerDataXML.player.spells.spell)
+			{
+				for each (var spell:Spell in _spells)
+				{
+					if (spell.name == p.name)
+					{
+						spells.push(spell);
+					}
+				}
+			}
+			
+			return new Player(new GlobalPosition(playerDataXML.player.mapIndex, playerDataXML.player.x, playerDataXML.player.y), playerDialogs, stats, spells);
 		}
 		
 		public function setupMaps():Array
@@ -173,7 +186,7 @@ package utility
 			return npcs;
 		}
 		
-		public function setupEnemies(maps:Array):Array
+		public function setupEnemies(_maps:Array, _spells:Array):Array
 		{
 			var enemyDataByteArray:ByteArray = new enemyData;
 			var enemyDataXML:XML = new XML(enemyDataByteArray.readUTFBytes(enemyDataByteArray.length));
@@ -202,11 +215,40 @@ package utility
 				}
 				
 				
-				enemy = new Enemy(maps, o.name, o.spritesheet, new GlobalPosition(o.mapIndex, o.x, o.y), enemyAppointments, null, mobs, o.experiencePoints);
+				enemy = new Enemy(_maps, o.name, o.spritesheet, new GlobalPosition(o.mapIndex, o.x, o.y), enemyAppointments, null, mobs, o.experiencePoints);
 				enemies.push(enemy);
 			}
 			
 			return enemies;
+		}
+		
+		public function setupMob(_name:String, _spells:Array):Array
+		{
+			var mobDataByteArray:ByteArray = new mobData;
+			var mobDataXML:XML = new XML(mobDataByteArray.readUTFBytes(mobDataByteArray.length));
+			var o:XML;
+			var s:XML;
+			var spells:Array = new Array();
+			
+			for each (o in mobDataXML.mob)
+			{
+				if (o.@name == _name)
+				{
+					for each (s in o.spells.spell)
+					{
+						for each (var spell:Spell in _spells)
+						{
+							if (spell.name == s.@name)
+							{
+								spells.push(spell);
+							}
+						}
+					}
+					
+					return spells;
+				}
+			}
+			return null;
 		}
 		
 		public function setupItems():Array

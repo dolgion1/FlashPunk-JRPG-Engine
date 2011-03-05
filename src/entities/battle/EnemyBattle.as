@@ -5,6 +5,8 @@ package entities.battle
 	import net.flashpunk.*;
 	import net.flashpunk.graphics.*;
 	import utility.*;
+	import entities.*;
+	
 	/**
 	 * ...
 	 * @author dolgion1
@@ -27,8 +29,11 @@ package entities.battle
 		public var statDisplay:DisplayText;
 		public var key:String;
 		public var dead:Boolean = false;
+		public var player:PlayerBattle;
+		public var dataloader:DataLoader = new DataLoader();
+		public var spells:Array = new Array();
 		
-		public function EnemyBattle(_position:Point, _keyIndex:int) 
+		public function EnemyBattle(_position:Point, _keyIndex:int, _name:String, _spells:Array) 
 		{
 			graphic = spritemap;
 			spritemap.play(curAnimation);
@@ -44,6 +49,8 @@ package entities.battle
 										  GC.INVENTORY_DEFAULT_FONT_SIZE, 
 										  0xFFFFFF, 
 										  500);
+			spells = dataloader.setupMob(_name, _spells);
+			FP.log("loading spells. length: " + spells.length);
 		}
 		
 		override public function update():void
@@ -57,6 +64,7 @@ package entities.battle
 		{
 			statDisplay.displayText.text = health + "/" + maxHealth + " " + mana + "/" + maxMana;
 		}
+		
 	}
 
 }
