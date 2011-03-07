@@ -49,18 +49,18 @@
 		<offenseSpell name="Fire"
 			temporary="false"
 			duration="0"
-			manaCost="1"
+			manaCost="30"
 			element="0"
-			damageRating="10"
+			damageRating="4"
 			description="Fire DMG 10"
 		/>
 		
 		<offenseSpell name="Ice"
 			temporary="false"
 			duration="0"
-			manaCost="6"
+			manaCost="24"
 			element="1"
-			damageRating="8"
+			damageRating="5"
 			description="Ice DMG 8"
 		/>
 		

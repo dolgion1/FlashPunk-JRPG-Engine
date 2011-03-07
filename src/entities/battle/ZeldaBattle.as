@@ -16,7 +16,7 @@ package entities.battle
 	{
 		public var fireSpell:FireSpell;
 		
-		public function ZeldaBattle(_position:Point, _keyIndex:int, _spells:Array) 
+		public function ZeldaBattle(_position:Point, _keyIndex:int, _spells:Array, _items:Array) 
 		{
 			setupSpritesheets();
 			curAnimation = "stand_right";
@@ -30,14 +30,52 @@ package entities.battle
 			damageRating = GC.ENEMY_DAMAGE_RATING_ZELDA;
 			armorRating = GC.ENEMY_ARMOR_RATING_ZELDA;
 			
-			super(_position, _keyIndex, "Zelda", _spells);
+			super(_position, _keyIndex, "Zelda", _spells, _items);
+		}
+		
+		override public function update():void
+		{
+			super.update();
+			
+			if (moving)
+			{
+				x -= delta.x / FP.assignedFrameRate;
+				y -= delta.y / FP.assignedFrameRate;
+				statDisplay.x -= delta.x / FP.assignedFrameRate;
+				statDisplay.y -= delta.y / FP.assignedFrameRate;
+				
+				if ((Math.abs(x - targetPosition.x) < 2) &&
+					(Math.abs(y - targetPosition.y) < 2))
+				{
+					if (curAnimation == "walk_right")
+					{
+						curAnimation = "melee_right";
+						targetPosition.x = defaultPosition.x;
+						targetPosition.y = defaultPosition.y;
+						delta.x = x - targetPosition.x;
+						delta.y = y - targetPosition.y;
+						moving = false;
+						calculateDamage();
+					}
+					else if (curAnimation == "walk_left")
+					{
+						FP.log("ZELDA: gonna go back now to " + targetPosition.x +  " " + targetPosition.y);
+						moving = false;
+						curAnimation = "stand_right";
+						Battle.enterNextTurn = true;
+						x = targetPosition.x;
+						y = targetPosition.y;
+					}
+				}
+			}
+			
 		}
 		
 		public function setupSpritesheets():void
 		{
 			spritemap = new Spritemap(GFX.ZELDA_BATTLE, GC.ZELDA_BATTLE_SPRITE_WIDTH, GC.ZELDA_BATTLE_SPRITE_HEIGHT);
 			spritemap.add("stand_right", [0], 0, false);
-			spritemap.add("stand_left", [1], 0, false);
+			spritemap.add("stand_lefpublic var moving:Boolean = false;t", [1], 0, false);
 			spritemap.add("walk_right", [5, 6, 7, 8, 9], 9, true);
 			spritemap.add("walk_left", [10, 11, 12, 13, 14], 9, true);
 			spritemap.add("cast_right", [15, 16, 17, 18, 19], 9, false);
@@ -47,13 +85,92 @@ package entities.battle
 			spritemap.callback = animationCallback;
 		}
 		
-		public function attackPlayer(_player:PlayerBattle):void
+		public function battleAction(_player:PlayerBattle):void
 		{
-			FP.log("Zelda: Hiiyaaah!");
-			curAnimation = "cast_right";
-			spritemap.play("cast_right");
+			if (health < (maxHealth/2))
+			{
+				// the amount of HP we need to heal
+ 				var healthDeficit:int = maxHealth - health; 
+				
+				var healthPotionIndices:Array = new Array();
+				
+				// get all possible health potions
+				for (var i:int = 0; i < consumables.length; i++)
+				{
+					if (consumables[i].item[GC.ITEM_CONSUMABLE].statusAlterations.length == 1)
+					{
+						if (consumables[i].item[GC.ITEM_CONSUMABLE].statusAlterations[0].statusVariable == 0)
+						{
+							if (consumables[i].item[GC.ITEM_CONSUMABLE].statusAlterations[0].alteration > 0)
+							{
+								healthPotionIndices.push(i);
+								continue;
+							}
+						}
+					}
+				}
+				
+				if (healthPotionIndices.length > 0) 
+				{
+					// figure out with potion is the most efficient to heal the damage
+					var bestSuitedPotionIndex:int = 0;
+					for (i = 0; i < healthPotionIndices.length; i++)
+					{
+						var healthBoost:int = consumables[healthPotionIndices[i]].item[GC.ITEM_CONSUMABLE].statusAlterations[0].alteration;
+						if (Math.abs(healthDeficit - healthBoost) < Math.abs(healthDeficit - consumables[healthPotionIndices[bestSuitedPotionIndex]].item[GC.ITEM_CONSUMABLE].statusAlterations[0].alteration))
+						{
+							bestSuitedPotionIndex = i;
+						}
+					}
+					
+					// drink the potion
+					consume(consumables[healthPotionIndices[bestSuitedPotionIndex]]);
+					
+					// decrease the potion's quantity and remove it if all of its kind are used up
+					consumables[healthPotionIndices[bestSuitedPotionIndex]].quantity--;
+					if (consumables[healthPotionIndices[bestSuitedPotionIndex]].quantity < 1)
+					{
+						consumables.splice(healthPotionIndices[bestSuitedPotionIndex], 1);
+					}
+					
+					updateStatDisplay();
+					Battle.enterNextTurn = true;
+					return;
+				}
+			}
 			
-			player = _player;
+			var useSpell:Boolean = false;
+			if (spells.length > 0)
+			{
+				if (spells[0].manaCost <= mana)
+				{
+					if (spells[0].damageRating > attackDamage)
+					{
+						useSpell = true;
+					}
+				}
+			}
+			
+			if (useSpell)
+			{	
+				FP.log("Zelda: Hiiyaaah!");
+				curAnimation = "cast_right";
+				spritemap.play("cast_right");
+				
+				player = _player;
+			}
+			else
+			{
+				// if there isn't, do a melee attack
+				curAnimation = "walk_right";
+				spritemap.play(curAnimation);
+				moving = true;
+				player = _player;
+				targetPosition.x = _player.x;
+				targetPosition.y = _player.y;
+				delta.x = x - targetPosition.x;
+				delta.y = y - targetPosition.y;
+			}
 		}
 		
 		public function animationCallback():void
@@ -64,8 +181,73 @@ package entities.battle
 				fireSpell = new FireSpell(player.x, player.y);
 				this.world.add(fireSpell);
 				player.player.health -= spells[0].damageRating;
+				mana -= spells[0].manaCost;
+				if (mana < 0) mana = 0;
+				FP.log("remaining mana is " + mana);
+				
+				if (player.player.health < 1) 
+				{
+					player.player.dead = true;
+				}
 				curAnimation = "stand_right";
 				spritemap.play(curAnimation);
+			}
+			else if (curAnimation == "melee_right")
+			{
+				moving = true;
+				curAnimation = "walk_left";
+				spritemap.play(curAnimation);
+				FP.log("walk back now!");
+			}
+		}
+		
+		public function consume(_inventoryItem:InventoryItem):void
+		{
+			switch (_inventoryItem.item[GC.ITEM_CONSUMABLE].statusAlterations[0].statusVariable)
+			{
+				case (GC.STATUS_HEALTH): 
+				{
+					health += _inventoryItem.item[GC.ITEM_CONSUMABLE].statusAlterations[0].alteration;
+					if (health > maxHealth) health = maxHealth;
+					break;
+				}
+				case (GC.STATUS_MANA): 
+				{
+					mana += _inventoryItem.item[GC.ITEM_CONSUMABLE].statusAlterations[0].alteration;
+					if (mana > maxMana) mana = maxMana;
+					break;
+				}
+				case (GC.STATUS_STRENGTH): 
+				{
+					strength += _inventoryItem.item[GC.ITEM_CONSUMABLE].statusAlterations[0].alteration;
+					break;
+				}
+				case (GC.STATUS_AGILITY): 
+				{
+					agility += _inventoryItem.item[GC.ITEM_CONSUMABLE].statusAlterations[0].alteration;
+					break;
+				}
+				case (GC.STATUS_SPIRITUALITY): 
+				{
+					spirituality += _inventoryItem.item[GC.ITEM_CONSUMABLE].statusAlterations[0].alteration;
+					break;
+				}
+			}
+		}
+		
+		public function calculateDamage():void
+		{
+			FP.log("strength of the slap: " + attackDamage);
+			var damage:int = attackDamage - player.player.armorRating;
+			FP.log("damage of the slap: " + damage);
+			if (damage < 0) damage = 0;
+			player.player.health -= damage;
+			FP.log("and health is: " + player.player.health);
+			player.updateStatDisplay();
+			if (player.player.health < 1)
+			{
+				player.player.dead = true;
+				FP.log("dead bitch!");
 			}
 		}
 	}

@@ -19,6 +19,7 @@ package entities
 		public var playerSpritemap:Spritemap;
 		public var curAnimation:String = "stand_down";
 		public var currentMapIndex:int;
+		public var dead:Boolean = false;
 		
 		public var dialogs:Array = new Array();
 		public var dialogPartner:String;
@@ -43,6 +44,7 @@ package entities
 		public var attackType:int = GC.ATTACK_TYPE_NO_ATTACK;
 		public var armorRating:int = 0;
 		
+		public var gold:int = 0;
 		public var items:Array = new Array();
 		public var spells:Array = new Array();
 		public var equipment:Dictionary = new Dictionary();
@@ -347,8 +349,6 @@ package entities
 			{
 				var enemy:Enemy = collide(GC.TYPE_ENEMY, x, y) as Enemy;
 				FP.world = new Battle(this, enemy);
-				enemy.world.remove(enemy);
-				enemy.defeated = true;
 			}
 		}
 		
@@ -431,6 +431,19 @@ package entities
 		{
 			return new Array(health, maxHealth, mana, maxMana, strength, agility, spirituality, experience, 
 							 damageRating, damageType, attackType, armorRating);
+		}
+		
+		public function takeLoot(_loot:Array):void
+		{
+			var item:InventoryItem;
+			for (var i:int = 0; i < 3; i++)
+			{
+				for each (item in _loot[i])
+				{
+					FP.log("Received " + item.item[i].name + " quantity " + item.quantity);
+					addItem(item, i);
+				}
+			}
 		}
 		
 		public function addItem (_item:InventoryItem, _type:int):void

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
-	<mob name="Zelda">
+	<mob name="Zelda" attackDamage="5">
+		<consumables>
+			<consumable quantity="2" name="Health Potion lvl 1" />
+		</consumables>
 		<spells>
 			<spell name="Fire" />
 		</spells>
 	</mob>
-	<mob name="Velda">
+	<mob name="Velda" attackDamage="2">
+		<consumables>
+		</consumables>
 		<spells>
 			<spell name="Ice" />
 		</spells>

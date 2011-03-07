@@ -186,7 +186,7 @@ package utility
 			return npcs;
 		}
 		
-		public function setupEnemies(_maps:Array, _spells:Array):Array
+		public function setupEnemies(_maps:Array, _spells:Array, _items:Array):Array
 		{
 			var enemyDataByteArray:ByteArray = new enemyData;
 			var enemyDataXML:XML = new XML(enemyDataByteArray.readUTFBytes(enemyDataByteArray.length));
@@ -196,6 +196,10 @@ package utility
 			var r:XML;
 			var enemy:Enemy;
 			var enemies:Array = new Array();
+			var loot:Array = new Array();
+			loot.push(new Array());
+			loot.push(new Array());
+			loot.push(new Array());
 			
 			for each (o in enemyDataXML.enemy)
 			{
@@ -214,26 +218,73 @@ package utility
 					mobs.push(new Mob(p.@type, p.@quantity));
 				}
 				
+				// look for items
+				for each (p in o.loot.item)
+				{
+					var found:Boolean = false;
+					var inventoryItem:InventoryItem;
+					for each (var w:Weapon in _items[GC.ITEM_WEAPON])
+					{
+						if (p.@name == w.name)
+						{
+							found = true;
+							inventoryItem = new InventoryItem();
+							inventoryItem.setWeapon(w, p.@quantity);
+							loot[GC.ITEM_WEAPON].push(inventoryItem);
+							break;
+						}
+					}
+					if (found) continue;
+					
+					for each (var a:Armor in _items[GC.ITEM_ARMOR])
+					{
+						if (p.@name == a.name)
+						{
+							found = true;
+							inventoryItem = new InventoryItem();
+							inventoryItem.setArmor(a, p.@quantity);
+							loot[GC.ITEM_ARMOR].push(inventoryItem);
+							break;
+						}
+					}
+					if (found) continue;
+					
+					for each (var c:Consumable in _items[GC.ITEM_CONSUMABLE])
+					{
+						if (p.@name == c.name)
+						{
+							found = true;
+							inventoryItem = new InventoryItem();
+							inventoryItem.setConsumable(c, p.@quantity);
+							loot[GC.ITEM_CONSUMABLE].push(inventoryItem);
+							break;
+						}
+					}
+					if (found) continue;
+				}
 				
-				enemy = new Enemy(_maps, o.name, o.spritesheet, new GlobalPosition(o.mapIndex, o.x, o.y), enemyAppointments, null, mobs, o.experiencePoints);
+				enemy = new Enemy(_maps, o.name, o.spritesheet, new GlobalPosition(o.mapIndex, o.x, o.y), enemyAppointments, null, mobs, o.experiencePoints, loot, o.loot.@gold);
 				enemies.push(enemy);
 			}
 			
 			return enemies;
 		}
 		
-		public function setupMob(_name:String, _spells:Array):Array
+		public function setupMob(_name:String, _spells:Array, _items:Array):Array
 		{
 			var mobDataByteArray:ByteArray = new mobData;
 			var mobDataXML:XML = new XML(mobDataByteArray.readUTFBytes(mobDataByteArray.length));
 			var o:XML;
 			var s:XML;
+			var properties:Array = new Array();
 			var spells:Array = new Array();
+			var consumables:Array = new Array();
 			
 			for each (o in mobDataXML.mob)
 			{
 				if (o.@name == _name)
 				{
+					properties.push(o.@attackDamage);
 					for each (s in o.spells.spell)
 					{
 						for each (var spell:Spell in _spells)
@@ -244,8 +295,24 @@ package utility
 							}
 						}
 					}
+					for each (s in o.consumables.consumable)
+					{
+						var inventoryItem:InventoryItem;
+						for each (var c:Consumable in _items[GC.ITEM_CONSUMABLE])
+						{
+							if (s.@name == c.name)
+							{
+								inventoryItem = new InventoryItem();
+								inventoryItem.setConsumable(c, s.@quantity);
+								consumables.push(inventoryItem);
+								break;
+							}
+						}
+					}
 					
-					return spells;
+					properties.push(spells);
+					properties.push(consumables);
+					return properties;
 				}
 			}
 			return null;

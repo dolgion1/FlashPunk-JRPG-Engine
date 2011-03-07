@@ -17,6 +17,7 @@ package entities.battle
 		public var spritemap:Spritemap;
 		public var curAnimation:String;
 		public var mobType:int;
+		public var attackDamage:int;
 		public var health:int;
 		public var maxHealth:int;
 		public var mana:int;
@@ -32,14 +33,21 @@ package entities.battle
 		public var player:PlayerBattle;
 		public var dataloader:DataLoader = new DataLoader();
 		public var spells:Array = new Array();
+		public var defaultPosition:Point = new Point(0, 0);
+		public var moving:Boolean = false;
+		public var delta:Point = new Point(0,0);
+		public var targetPosition:Point = new Point(0,0);
+		public var speed:int = 1;
+		public var consumables:Array = new Array();
 		
-		public function EnemyBattle(_position:Point, _keyIndex:int, _name:String, _spells:Array) 
+		public function EnemyBattle(_position:Point, _keyIndex:int, _name:String, _spells:Array, _items:Array) 
 		{
 			graphic = spritemap;
 			spritemap.play(curAnimation);
 			
 			x = _position.x;
 			y = _position.y;
+			defaultPosition = _position;
 			key = "Enemy" + _keyIndex;
 			
 			statDisplay = new DisplayText(health + "/" + maxHealth + " " + mana + "/" + maxMana, 
@@ -49,8 +57,11 @@ package entities.battle
 										  GC.INVENTORY_DEFAULT_FONT_SIZE, 
 										  0xFFFFFF, 
 										  500);
-			spells = dataloader.setupMob(_name, _spells);
-			FP.log("loading spells. length: " + spells.length);
+			
+			var properties:Array = dataloader.setupMob(_name, _spells, _items);
+			attackDamage = properties[0];
+			spells = properties[1];
+			consumables = properties[2];
 		}
 		
 		override public function update():void

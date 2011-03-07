@@ -81,6 +81,7 @@ package entities.battle
 						moving = false;
 						curAnimation = "stand_left";
 						Battle.enterNextTurn = true;
+						FP.log("Player's turn ended here");
 					}
 				}
 			}

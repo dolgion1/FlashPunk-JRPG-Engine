@@ -70,7 +70,7 @@ package worlds
 			player = dataloader.setupPlayer(spells);
 			currentMapIndex = player.currentMapIndex;
 			npcs = dataloader.setupNPCs(maps);
-			enemies = dataloader.setupEnemies(maps, spells);
+			enemies = dataloader.setupEnemies(maps, spells, items);
 			
 			// prepare the stage
 			loadMap();

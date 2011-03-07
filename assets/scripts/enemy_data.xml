@@ -16,5 +16,9 @@
 			<mob type="0" quantity="1" />
 			<mob type="1" quantity="2" />
 		</mobs>
+		
+		<loot gold="164">
+			<item name="Leather Pants" quantity="1" />
+		</loot>
 	</enemy>
 </data>
