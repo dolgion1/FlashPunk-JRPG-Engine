@@ -2,6 +2,7 @@ package entities.battle
 {
 	import entities.DisplayText;
 	import flash.geom.Point;
+	import flash.utils.*;
 	import net.flashpunk.*;
 	import net.flashpunk.graphics.*;
 	import utility.*;
@@ -40,7 +41,7 @@ package entities.battle
 		public var speed:int = 1;
 		public var consumables:Array = new Array();
 		
-		public function EnemyBattle(_position:Point, _keyIndex:int, _name:String, _spells:Array, _items:Array) 
+		public function EnemyBattle(_position:Point, _keyIndex:int, _name:String, _items:Array) 
 		{
 			graphic = spritemap;
 			spritemap.play(curAnimation);
@@ -58,7 +59,7 @@ package entities.battle
 										  0xFFFFFF, 
 										  500);
 			
-			var properties:Array = dataloader.setupMob(_name, _spells, _items);
+			var properties:Array = dataloader.setupMob(_name, _items);
 			attackDamage = properties[0];
 			spells = properties[1];
 			consumables = properties[2];

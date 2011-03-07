@@ -212,11 +212,11 @@ package entities.battle
 			}
 		}
 		
-		public function castOnEnemy(_enemy:EnemyBattle, _offenseSpell:OffenseSpell):void
+		public function castOnEnemy(_enemy:EnemyBattle, _offenseSpell:String):void
 		{
 			curAnimation = "cast_left";
 			
-			switch (_offenseSpell.name)
+			switch (_offenseSpell)
 			{
 				case "Fire": 
 				{
@@ -232,9 +232,9 @@ package entities.battle
 				}
 			}
 			
-			_enemy.health -= _offenseSpell.damageRating;
+			_enemy.health -= Battle.spells[_offenseSpell].damageRating;
 			_enemy.updateStatDisplay();
-			player.mana -= _offenseSpell.manaCost;
+			player.mana -= Battle.spells[_offenseSpell].manaCost;
 			updateStatDisplay();
 			
 			if (_enemy.health < 1)

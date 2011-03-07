@@ -7,6 +7,7 @@ package entities.battle
 	import entities.*;
 	import entities.spells.*;
 	import worlds.*;
+	import flash.utils.*;
 	
 	/**
 	 * ...
@@ -16,7 +17,7 @@ package entities.battle
 	{
 		public var iceSpell:IceSpell;
 		
-		public function VeldaBattle(_position:Point, _keyIndex:int, _spells:Array, _items:Array) 
+		public function VeldaBattle(_position:Point, _keyIndex:int, _items:Array) 
 		{
 			setupSpritesheets();
 			curAnimation = "stand_right";
@@ -30,7 +31,7 @@ package entities.battle
 			damageRating = GC.ENEMY_DAMAGE_RATING_VELDA;
 			armorRating = GC.ENEMY_ARMOR_RATING_VELDA;
 			
-			super(_position, _keyIndex, "Velda", _spells, _items);
+			super(_position, _keyIndex, "Velda", _items);
 		}
 		
 		override public function update():void
@@ -142,9 +143,9 @@ package entities.battle
 			var useSpell:Boolean = false;
 			if (spells.length > 0)
 			{
-				if (spells[0].manaCost <= mana)
+				if (Battle.spells[spells[0] + ""].manaCost <= mana)
 				{
-					if (spells[0].damageRating > attackDamage)
+					if (Battle.spells[spells[0] + ""].damageRating > attackDamage)
 					{
 						useSpell = true;
 					}
@@ -152,7 +153,7 @@ package entities.battle
 			}
 			
 			if (useSpell)
-			{
+			{	
 				FP.log("Velda: Hiiyaaah!");
 				curAnimation = "cast_right";
 				spritemap.play("cast_right");
@@ -180,8 +181,8 @@ package entities.battle
 				FP.log("animation callback velda");
 				iceSpell = new IceSpell(player.x, player.y);
 				this.world.add(iceSpell);
-				player.player.health -= spells[0].damageRating;
-				mana -= spells[0].manaCost;
+				player.player.health -= Battle.spells[spells[0]].damageRating;
+				mana -= Battle.spells[spells[0]].manaCost;
 				if (mana < 0) mana = 0;
 				FP.log("remaining mana is " + mana);
 				

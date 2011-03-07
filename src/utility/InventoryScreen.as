@@ -375,11 +375,19 @@ package utility
 					// need to copy the instance or else the consume function is only given a reference
 					var consumable:Consumable = new Consumable();
 					consumable.copy(player.items[GC.ITEM_CONSUMABLE][consumableIndex].item[GC.ITEM_CONSUMABLE]);
-					player.consume(consumable);
+					
+					if (consumable.consumableType == GC.CONSUMABLE_TYPE_POTION)
+					{
+						player.consume(consumable);
+					}
+					else if (consumable.consumableType == GC.CONSUMABLE_TYPE_SCROLL)
+					{
+						player.addSpell(consumable.spellName);
+					}
 					
 					// decrease quantity of the consumable
 					player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity--;
-					
+						
 					if (player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity < 1)
 					{
 						// remove the consumable from the player inventory
@@ -409,6 +417,7 @@ package utility
 							}
 						}
 					}
+					
 					updateItemColumn(GC.ITEM_CONSUMABLE);
 					displayItemInformation();
 				}

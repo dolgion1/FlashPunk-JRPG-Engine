@@ -34,7 +34,7 @@ package utility
 		
 		public function DataLoader() {}
 		
-		public function setupPlayer(_spells:Array):Player
+		public function setupPlayer(_spells:Dictionary):Player
 		{
 			var playerDataByteArray:ByteArray = new playerData;
 			var playerDataXML:XML = new XML(playerDataByteArray.readUTFBytes(playerDataByteArray.length));
@@ -78,13 +78,7 @@ package utility
 			
 			for each (p in playerDataXML.player.spells.spell)
 			{
-				for each (var spell:Spell in _spells)
-				{
-					if (spell.name == p.name)
-					{
-						spells.push(spell);
-					}
-				}
+				spells.push(p.@name + "");
 			}
 			
 			return new Player(new GlobalPosition(playerDataXML.player.mapIndex, playerDataXML.player.x, playerDataXML.player.y), playerDialogs, stats, spells);
@@ -186,7 +180,7 @@ package utility
 			return npcs;
 		}
 		
-		public function setupEnemies(_maps:Array, _spells:Array, _items:Array):Array
+		public function setupEnemies(_maps:Array, _items:Array):Array
 		{
 			var enemyDataByteArray:ByteArray = new enemyData;
 			var enemyDataXML:XML = new XML(enemyDataByteArray.readUTFBytes(enemyDataByteArray.length));
@@ -270,7 +264,7 @@ package utility
 			return enemies;
 		}
 		
-		public function setupMob(_name:String, _spells:Array, _items:Array):Array
+		public function setupMob(_name:String, _items:Array):Array
 		{
 			var mobDataByteArray:ByteArray = new mobData;
 			var mobDataXML:XML = new XML(mobDataByteArray.readUTFBytes(mobDataByteArray.length));
@@ -287,13 +281,7 @@ package utility
 					properties.push(o.@attackDamage);
 					for each (s in o.spells.spell)
 					{
-						for each (var spell:Spell in _spells)
-						{
-							if (spell.name == s.@name)
-							{
-								spells.push(spell);
-							}
-						}
+						spells.push(s.@name + "");
 					}
 					for each (s in o.consumables.consumable)
 					{
@@ -361,20 +349,29 @@ package utility
 				consumable.name = i.@name;
 				consumable.description = i.@description;
 				
-				if (i.@temporary == "true") consumable.temporary = true;
-				else consumable.temporary = false;
-				
-				consumable.duration = i.@duration;
-				
-				for each (var j:XML in i.statusalteration)
+				if (i.@type == "potion")
 				{
-					var statusAlteration:StatusAlteration = new StatusAlteration();
-					statusAlteration.statusVariable = j.@statusVariable;
-					statusAlteration.alteration = j.@alteration;
-					consumable.statusAlterations.push(statusAlteration);
+					if (i.@temporary == "true") consumable.temporary = true;
+					else consumable.temporary = false;
+					
+					consumable.duration = i.@duration;
+					
+					for each (var j:XML in i.statusalteration)
+					{
+						var statusAlteration:StatusAlteration = new StatusAlteration();
+						statusAlteration.statusVariable = j.@statusVariable;
+						statusAlteration.alteration = j.@alteration;
+						consumable.statusAlterations.push(statusAlteration);
+					}
+					consumable.consumableType = GC.CONSUMABLE_TYPE_POTION;
+					consumables.push(consumable);
 				}
-				
-				consumables.push(consumable);
+				else if (i.@type == "scroll")
+				{
+					consumable.spellName = i.@spell + "";
+					consumable.consumableType = GC.CONSUMABLE_TYPE_SCROLL;
+					consumables.push(consumable);
+				}
 			}
 			
 			items.push(weapons);
@@ -447,12 +444,12 @@ package utility
 			return chests;
 		}
 		
-		public function setupSpellData():Array
+		public function setupSpells():Dictionary
 		{
 			var spellDataByteArray:ByteArray = new spellData;
 			var spellDataXML:XML = new XML(spellDataByteArray.readUTFBytes(spellDataByteArray.length));
 			var i:XML;
-			var spells:Array = new Array();
+			var spells:Dictionary = new Dictionary();
 						
 			for each (i in spellDataXML.defense.defenseSpell)
 			{
@@ -467,7 +464,7 @@ package utility
 				defenseSpell.alteration = i.@alteration;
 				defenseSpell.description = i.@description;
 				defenseSpell.manaCost = i.@manaCost;
-				spells.push(defenseSpell);
+				spells[i.@name + ""] = defenseSpell;
 			}
 			
 			for each (i in spellDataXML.offense.offenseSpell)
@@ -483,7 +480,7 @@ package utility
 				offenseSpell.damageRating = i.@damageRating;
 				offenseSpell.description = i.@description;
 				offenseSpell.manaCost = i.@manaCost;
-				spells.push(offenseSpell);
+				spells[i.@name + ""] = offenseSpell;
 			}
 			
 			return spells;

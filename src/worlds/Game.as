@@ -9,6 +9,7 @@ package worlds
 	import utility.*;
 	import net.flashpunk.*;
 	import net.flashpunk.utils.*;
+	import flash.utils.*;
 	
 	/**
 	 * ...
@@ -28,7 +29,7 @@ package worlds
 		public var enemies:Array = new Array();
 		public var items:Array = new Array();
 		public var chests:Array = new Array();
-		public var spells:Array = new Array();
+		public static var spells:Dictionary = new Dictionary();
 		public var tiles:Tiles;
 		public var trees:Trees;
 		public var houses:Array;
@@ -64,13 +65,13 @@ package worlds
 		{
 			// dataloader, do your thing...
 			maps = dataloader.setupMaps();
+			spells = dataloader.setupSpells();
 			items = dataloader.setupItems();
 			chests = dataloader.setupChests(items);
-			spells = dataloader.setupSpellData();
 			player = dataloader.setupPlayer(spells);
 			currentMapIndex = player.currentMapIndex;
 			npcs = dataloader.setupNPCs(maps);
-			enemies = dataloader.setupEnemies(maps, spells, items);
+			enemies = dataloader.setupEnemies(maps, items);
 			
 			// prepare the stage
 			loadMap();

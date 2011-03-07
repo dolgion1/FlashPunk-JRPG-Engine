@@ -45,6 +45,10 @@ package utility
 		public static const ITEM_ARMOR:int = 1;
 		public static const ITEM_CONSUMABLE:int = 2;
 		
+		// Consumable Types
+		public static const CONSUMABLE_TYPE_POTION:int = 0;
+		public static const CONSUMABLE_TYPE_SCROLL:int = 1;
+		
 		// Spell Elements
 		public static const ELEMENT_FIRE:int = 0;
 		public static const ELEMENT_ICE:int = 1;

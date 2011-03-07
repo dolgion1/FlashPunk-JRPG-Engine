@@ -132,7 +132,7 @@
 				Spirituality - 6
 		</!-->
 		<consumables>
-			<consumable name="Health Potion lvl 1" temporary="false" duration="0" description="HP +50">
+			<consumable name="Health Potion lvl 1" type="potion" temporary="false" duration="0" description="HP +50">
 				<statusalteration statusVariable="0" alteration="50" />
 			</consumable>
 			<consumable name="Health Potion lvl 2" temporary="false" duration="0" description="HP +250">
@@ -144,6 +144,11 @@
 			<consumable name="Agility Booster" temporary="true" duration="120" description="Agility +5">
 				<statusalteration statusVariable="5" alteration="5" />
 			</consumable>
+			
+			<consumable name="Scroll of Fire" type="scroll" spell="Fire" description="Teaches Fire Spell" />
+			<consumable name="Scroll of Ice" type="scroll" spell="Ice" description="Teaches Ice Spell" />
+			<consumable name="Scroll of Healing" type="scroll" spell="Heal" description="Teaches Heal Spell" /> 
+			<consumable name="Scroll of Agility Boost" type="scroll" spell="Agility Boost" description="Teaches Agility Boost Spell" />
 		</consumables>
 	</items>
 </data>

@@ -21,7 +21,7 @@ package worlds
 		public var resultsLootReceived:DisplayText;
 		public var battleEnded:Boolean = false;
 		
-		public var spells:Array = new Array();
+		public static var spells:Dictionary = new Dictionary();
 		public var items:Array = new Array();
 		public var player:Player;
 		public var playerBattle:PlayerBattle;
@@ -47,7 +47,7 @@ package worlds
 		public var browsingItems:Boolean = false;
 		public var browsingSpells:Boolean = false;
 		public var targetingSpell:Boolean = false;
-		public var targettedSpell:OffenseSpell;
+		public var targetedSpell:String;
 		
 		public var listDisplays:Array = new Array();
 		public var listStartIndex:int = 0;
@@ -62,7 +62,7 @@ package worlds
 		
 		public function Battle(_player:Player, _enemy:Enemy) 
 		{
-			spells = dl.setupSpellData();
+			spells = dl.setupSpells();
 			items = dl.setupItems();
 			cursorPositions = dataloader.setupBattleUIData()[0];
 			cursor = new Cursor(0, 0);
@@ -175,11 +175,6 @@ package worlds
 		
 		public function processGeneralInput():void
 		{
-			if (Input.pressed(GC.BUTTON_EXIT))
-			{
-				FP.world = Main.game;
-			}
-			
 			if (battleEnded)
 			{
 				if (Input.pressed(GC.BUTTON_ACTION))
@@ -193,8 +188,10 @@ package worlds
 				{
 					if (Input.pressed(GC.BUTTON_ACTION))
 					{
+						FP.log("current cursor position key: " + currentCursorPositionKey);
 						if (currentCursorPositionKey == "Attack")
 						{
+							FP.log("FFS: attack");
 							if (!((player.equipment["WeaponEquipPrimary"] == null) && 
 								(player.equipment["WeaponEquipSecondary"] == null)))
 							{
@@ -222,6 +219,7 @@ package worlds
 						}
 						else if (targeting)
 						{
+							FP.log("FFS: targeting");
 							// reduce health of the targetted EnemyBattle
 							playerAttackEnemy(); // still need to implement proper damage calculation
 							
@@ -234,6 +232,7 @@ package worlds
 						}
 						else if (currentCursorPositionKey == "Spell")
 						{
+							FP.log("FFS: Spell");
 							if (player.spells.length > 0)
 							{
 								populateSpellListDisplays();
@@ -256,20 +255,21 @@ package worlds
 						}
 						else if (browsingSpells)
 						{
+							FP.log("FFS: browsingSpells");
 							// Get instance of the spell
 							var spellIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1 + listStartIndex;
 							
-							if (player.mana >= player.spells[spellIndex].manaCost)
+							if (player.mana >= spells[player.spells[spellIndex]].manaCost)
 							{
-								if (player.spells[spellIndex] is DefenseSpell)
+								if (spells[player.spells[spellIndex]] is DefenseSpell)
 								{
 									var defenseSpell:DefenseSpell = new DefenseSpell();
-									defenseSpell.name = player.spells[spellIndex].name;
-									defenseSpell.temporary = player.spells[spellIndex].temporary;
-									defenseSpell.duration = player.spells[spellIndex].duration;
-									defenseSpell.statusVariable = player.spells[spellIndex].statusVariable;
-									defenseSpell.alteration = player.spells[spellIndex].alteration;
-									defenseSpell.manaCost = player.spells[spellIndex].manaCost; 
+									defenseSpell.name = spells[player.spells[spellIndex]].name;
+									defenseSpell.temporary = spells[player.spells[spellIndex]].temporary;
+									defenseSpell.duration = spells[player.spells[spellIndex]].duration;
+									defenseSpell.statusVariable = spells[player.spells[spellIndex]].statusVariable;
+									defenseSpell.alteration = spells[player.spells[spellIndex]].alteration;
+									defenseSpell.manaCost = spells[player.spells[spellIndex]].manaCost; 
 									
 									playerBattle.castOnSelf(defenseSpell);
 									
@@ -287,9 +287,9 @@ package worlds
 									// we just move to the next turn
 									enterNextTurn = true;
 								}
-								else if (player.spells[spellIndex] is OffenseSpell)
+								else if (spells[player.spells[spellIndex]] is OffenseSpell)
 								{
-									targettedSpell = player.spells[spellIndex];
+									targetedSpell = player.spells[spellIndex];
 									targetingSpell = true;
 									for (i = (enemies.length - 1); i >= 0; i--)
 									{
@@ -306,8 +306,6 @@ package worlds
 										}
 									}
 									cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
-									
-									//var offenseSpell:OffenseSpell = player.spells[spellIndex];
 								}
 								
 								browsingSpells = false;
@@ -315,6 +313,7 @@ package worlds
 						}
 						else if (targetingSpell)
 						{
+							FP.log("FFS: targetingSpell");
 							playerCastOnEnemy();
 							cursor.visible = false;
 							targetingSpell = false;
@@ -330,11 +329,16 @@ package worlds
 						}
 						else if (currentCursorPositionKey == "Defend")
 						{
+							FP.log("FFS: Defend");
 							// need to increase armorRating for one turn
+							FP.log("what is the problem..??");
+							FP.log("what is the problem..??" + enterNextTurn);
 							enterNextTurn = true;
+							FP.log("Really.." + enterNextTurn);
 						}
 						else if (currentCursorPositionKey == "Item")
 						{
+							FP.log("FFS: Item");
 							if (player.items[GC.ITEM_CONSUMABLE].length > 0)
 							{
 								populateItemListDisplays();
@@ -357,39 +361,40 @@ package worlds
 						}
 						else if (browsingItems)
 						{
+							FP.log("FFS: browsingItems");
 							var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
 							consumableIndex += listStartIndex;
 							
 							var consumable:Consumable = new Consumable();
 							consumable.copy(player.items[GC.ITEM_CONSUMABLE][consumableIndex].item[GC.ITEM_CONSUMABLE]);
-							player.consume(consumable);
-							playerBattle.updateStatDisplay();
-							
-							// decrease quantity of the consumable
-							player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity--;
-							if (player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity < 1)
+							if (consumable.consumableType == GC.CONSUMABLE_TYPE_POTION)
 							{
-								player.items[GC.ITEM_CONSUMABLE].splice(consumableIndex, 1);
+								player.consume(consumable);
+								playerBattle.updateStatDisplay();
+								
+								// decrease quantity of the consumable
+								player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity--;
+								if (player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity < 1)
+								{
+									player.items[GC.ITEM_CONSUMABLE].splice(consumableIndex, 1);
+								}
+								listBox.visible = false;
+								for each (d in listDisplays)
+								{
+									d.visible = false;
+								}
+								listDisplayOne.visible = false;
+								listDisplayTwo.visible = false;
+								listDisplayThree.visible = false;
+								listDisplayFour.visible = false;
+								
+								enterNextTurn = true;
 							}
-							listBox.visible = false;
-							for each (d in listDisplays)
-							{
-								d.visible = false;
-							}
-							listDisplayOne.visible = false;
-							listDisplayTwo.visible = false;
-							listDisplayThree.visible = false;
-							listDisplayFour.visible = false;
+							// write functionality for targeting scrolls at enemies
 							
-							enterNextTurn = true;
-						}
-						else if (currentCursorPositionKey == "Spell")
-						{
-							browsingSpells = true;
 						}
 					}
-					
-					if (Input.pressed(GC.BUTTON_LEFT))
+					else if (Input.pressed(GC.BUTTON_LEFT))
 					{
 						if (cursorPositions[currentCursorPositionKey].leftKey != null)
 						{
@@ -485,7 +490,8 @@ package worlds
 							currentCursorPositionKey = "Spell";
 							cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
 							
-							browsingItems = false;
+							browsingSpells = false;
+							FP.log("cancelled browsing spells");
 						}
 						else if (targetingSpell)
 						{
@@ -537,7 +543,7 @@ package worlds
 				{
 					if (!enemies[i].dead)
 					{
-						playerBattle.castOnEnemy(enemies[i], targettedSpell);
+						playerBattle.castOnEnemy(enemies[i], targetedSpell);
 					}
 				}
 			}
@@ -617,6 +623,7 @@ package worlds
 				listDisplays[i].displayText.text = "";
 				cursorPositions["ListRow" + (i + 1)].valid = false;
 			}
+			FP.log("spells: " + player.spells.length)
 			if (player.spells.length > 6)
 			{
 				listEndIndex = 6;
@@ -625,7 +632,8 @@ package worlds
 			
 			for (i = 0; i < listEndIndex; i++)
 			{
-				listDisplays[i].displayText.text = player.spells[i].name;
+				listDisplays[i].displayText.text = player.spells[i];
+				FP.log(player.spells[i]);
 				cursorPositions["ListRow" + (i + 1)].valid = true;
 			}
 		}
@@ -646,16 +654,20 @@ package worlds
 			else if (browsingSpells)
 			{
 				var spellIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
-				spellIndex += listStartIndex;
-
-				var spell:Spell = player.spells[spellIndex];
-				listDisplayOne.displayText.text = "Name: " + spell.name;
-				listDisplayTwo.displayText.text = "Effect: " + spell.description;
-				listDisplayThree.displayText.text = "Manacost: " + spell.manaCost;
+				//spellIndex += listStartIndex;
 				
-				if (spell.temporary)
+
+				//var spell:String = player.spells[spellIndex];
+				var spell:String = listDisplays[spellIndex].displayText.text;
+				
+				FP.log("FfS: " + player.spells.length + " which is " + spell);
+				listDisplayOne.displayText.text = "Name: " + spell;
+				listDisplayTwo.displayText.text = "Effect: " + spells[spell].description;
+				listDisplayThree.displayText.text = "Manacost: " + spells[spell].manaCost;
+				
+				if (spells[spell].temporary)
 				{ 
-					listDisplayFour.displayText.text = "Duration: " + spell.duration;
+					listDisplayFour.displayText.text = "Duration: " + spells[spell].duration;
 				}
 				else listDisplayFour.displayText.text = "";
 			}
@@ -689,11 +701,11 @@ package worlds
 					switch (mob.type)
 					{
 						case (GC.ENEMY_TYPE_ZELDA): {
-							enemies.push(new ZeldaBattle(enemyPositions[enemyIndex++], enemyIndex, spells, items));
+							enemies.push(new ZeldaBattle(enemyPositions[enemyIndex++], enemyIndex, items));
 							break;
 						}
 						case (GC.ENEMY_TYPE_VELDA): {
-							enemies.push(new VeldaBattle(enemyPositions[enemyIndex++], enemyIndex, spells, items));
+							enemies.push(new VeldaBattle(enemyPositions[enemyIndex++], enemyIndex, items));
 							break;
 						}
 					}

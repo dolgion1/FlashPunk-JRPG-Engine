@@ -10,6 +10,10 @@
 			<item quantity="1" name="Short Bow" />
 			<item quantity="1" name="Cotton Coat" />
 			<item quantity="3" name="Health Potion lvl 1" />
+			<item quantity="1" name="Scroll of Fire" />
+			<item quantity="1" name="Scroll of Ice" />
+			<item quantity="1" name="Scroll of Agility Boost" />
+			<item quantity="1" name="Scroll of Healing" />
 		</items>	
 	</chest>
 	<chest>

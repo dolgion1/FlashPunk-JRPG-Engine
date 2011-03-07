@@ -535,5 +535,24 @@ package entities
 				}
 			}
 		}
+		
+		public function addSpell(_spellName:String):void
+		{
+			FP.log("FfS 1: " + spells.length);
+			var found:Boolean = false;
+			for each (var s:String in spells)
+			{
+				if (s == _spellName)
+				{
+					found = true;
+				}
+			}
+			
+			if (!found)
+			{
+				spells.push(_spellName);
+				FP.log("Added new spell " + _spellName);
+			}
+		}
 	}
 }
