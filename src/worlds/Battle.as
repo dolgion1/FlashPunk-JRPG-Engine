@@ -48,6 +48,7 @@ package worlds
 		public var browsingSpells:Boolean = false;
 		public var targetingSpell:Boolean = false;
 		public var targetedSpell:String;
+		public var castingScroll:Boolean = false;
 		
 		public var listDisplays:Array = new Array();
 		public var listStartIndex:int = 0;
@@ -326,6 +327,27 @@ package worlds
 							listDisplayTwo.visible = false;
 							listDisplayThree.visible = false;
 							listDisplayFour.visible = false;
+							
+							if (castingScroll)
+							{
+								// go through player's inventory and decrease quantity of consumable 
+								// with spell name targetedSpell
+								for (i = 0; i < player.items[GC.ITEM_CONSUMABLE].length; i++)
+								{
+									if (player.items[GC.ITEM_CONSUMABLE][i].item[GC.ITEM_CONSUMABLE].consumableType == GC.CONSUMABLE_TYPE_SCROLL)
+									{
+										if (player.items[GC.ITEM_CONSUMABLE][i].item[GC.ITEM_CONSUMABLE].spellName == targetedSpell)
+										{
+											player.items[GC.ITEM_CONSUMABLE][i].quantity--;
+											if (player.items[GC.ITEM_CONSUMABLE][i].quantity < 1)
+											{
+												player.items[GC.ITEM_CONSUMABLE].splice(i, 1);
+											}
+										}
+									}
+								}
+								castingScroll = false;
+							}
 						}
 						else if (currentCursorPositionKey == "Defend")
 						{
@@ -390,8 +412,64 @@ package worlds
 								
 								enterNextTurn = true;
 							}
-							// write functionality for targeting scrolls at enemies
-							
+							// functionality for casting spells from scrolls 
+							else if (consumable.consumableType == GC.CONSUMABLE_TYPE_SCROLL)
+							{
+								FP.log("Casting scroll: " + consumable.spellName);
+								if (spells[consumable.spellName] is DefenseSpell)
+								{
+									defenseSpell = new DefenseSpell();
+									defenseSpell.name = spells[consumable.spellName].name;
+									defenseSpell.temporary = spells[consumable.spellName].temporary;
+									defenseSpell.duration = spells[consumable.spellName].duration;
+									defenseSpell.statusVariable = spells[consumable.spellName].statusVariable;
+									defenseSpell.alteration = spells[consumable.spellName].alteration;
+									defenseSpell.manaCost = 0; 
+									
+									playerBattle.castOnSelf(defenseSpell);
+									
+									listBox.visible = false;
+									for each (d in listDisplays)
+									{
+										d.visible = false;
+									}
+									listDisplayOne.visible = false;
+									listDisplayTwo.visible = false;
+									listDisplayThree.visible = false;
+									listDisplayFour.visible = false;
+									
+									// until we have entities for the animation for casting on oneself,
+									// we just move to the next turn
+									enterNextTurn = true;
+									player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity--;
+									if (player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity < 1)
+									{
+										player.items[GC.ITEM_CONSUMABLE].splice(consumableIndex, 1);
+									}
+								}
+								else if (spells[consumable.spellName] is OffenseSpell)
+								{
+									targetedSpell = consumable.spellName;
+									targetingSpell = true;
+									for (i = (enemies.length - 1); i >= 0; i--)
+									{
+										if (enemies[i].dead)
+										{
+											FP.log("enemy " + i + " is dead");
+											cursorPositions["Enemy" + (i + 1)].valid = false;
+										}
+										else 
+										{
+											FP.log("enemy " + i + " is alive");
+											cursorPositions["Enemy" + (i + 1)].valid = true;
+											currentCursorPositionKey = "Enemy" + (i + 1);
+										}
+									}
+									cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+									castingScroll = true;
+								}
+							}
+							browsingItems = false;
 						}
 					}
 					else if (Input.pressed(GC.BUTTON_LEFT))
@@ -499,6 +577,7 @@ package worlds
 							cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
 							targetingSpell = false;
 							browsingSpells = true;
+							castingScroll = false;
 						}
 					}
 				}
@@ -543,7 +622,7 @@ package worlds
 				{
 					if (!enemies[i].dead)
 					{
-						playerBattle.castOnEnemy(enemies[i], targetedSpell);
+						playerBattle.castOnEnemy(enemies[i], targetedSpell, castingScroll);
 					}
 				}
 			}

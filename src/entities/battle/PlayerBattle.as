@@ -212,7 +212,7 @@ package entities.battle
 			}
 		}
 		
-		public function castOnEnemy(_enemy:EnemyBattle, _offenseSpell:String):void
+		public function castOnEnemy(_enemy:EnemyBattle, _offenseSpell:String, _castingScroll:Boolean):void
 		{
 			curAnimation = "cast_left";
 			
@@ -234,7 +234,12 @@ package entities.battle
 			
 			_enemy.health -= Battle.spells[_offenseSpell].damageRating;
 			_enemy.updateStatDisplay();
-			player.mana -= Battle.spells[_offenseSpell].manaCost;
+			
+			if (!_castingScroll) 
+			{
+				player.mana -= Battle.spells[_offenseSpell].manaCost;
+			}
+			
 			updateStatDisplay();
 			
 			if (_enemy.health < 1)
