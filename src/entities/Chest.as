@@ -15,15 +15,17 @@ package entities
 		public var currentMapIndex:int;
 		public var faceDirection:String;
 		public var items:Array = new Array();
+		public var gold:int = 0;
 		
 		public var chestSpritemap:Spritemap = new Spritemap(GFX.CHEST_SPRITESHEET, GC.CHEST_SPRITE_WIDTH, GC.CHEST_SPRITE_HEIGHT);
 		
-		public function Chest(_position:GlobalPosition, _faceDirection:String)
+		public function Chest(_position:GlobalPosition, _faceDirection:String, _gold:int)
 		{
 			setupSpritesheet();
 			
 			graphic = chestSpritemap;
 			faceDirection = _faceDirection;
+			gold = _gold;
 			
 			switch (faceDirection)
 			{

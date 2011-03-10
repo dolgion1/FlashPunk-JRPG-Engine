@@ -5,6 +5,7 @@
 		<y>100</y>
 		<mapIndex>0</mapIndex>
 		<direction>down</direction>
+		<gold>12</gold>
 		<items>
 			<item quantity="2" name="Dagger" />
 			<item quantity="1" name="Short Bow" />
@@ -21,6 +22,7 @@
 		<y>100</y>
 		<mapIndex>0</mapIndex>
 		<direction>left</direction>
+		<gold>50</gold>
 		<items>
 			<item quantity="3" name="Agility Booster" />
 			<item quantity="1" name="Cotton Coat" />

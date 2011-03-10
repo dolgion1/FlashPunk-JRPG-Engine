@@ -24,6 +24,7 @@ package utility
 		public var armorRatingDisplay:DisplayText;
 		public var healthDisplay:DisplayText;
 		public var manaDisplay:DisplayText;
+		public var goldDisplay:DisplayText;
 		
 		private var visibility:Boolean = false;
 		
@@ -42,6 +43,7 @@ package utility
 			armorRatingDisplay = new DisplayText(GC.ARMOR_STRING + ": ", 245, 155, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			healthDisplay = new DisplayText(GC.HEALTH_STRING + ": ", 55, 170, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			manaDisplay = new DisplayText(GC.MANA_STRING + ": ", 55, 185, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			goldDisplay = new DisplayText(GC.GOLD_STRING + ": ", 55, 200, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			
 			displayTexts.push(experienceDisplay);
 			displayTexts.push(strengthDisplay);
@@ -53,12 +55,15 @@ package utility
 			displayTexts.push(armorRatingDisplay);
 			displayTexts.push(healthDisplay);
 			displayTexts.push(manaDisplay);
+			displayTexts.push(goldDisplay);
 		}
 		
 		public function set stats(_stats:Array):void
 		{
 			healthDisplay.displayText.text = GC.HEALTH_STRING + ": " + _stats[GC.STATUS_HEALTH] + "/" + _stats[GC.STATUS_MAX_HEALTH];
 			manaDisplay.displayText.text = GC.MANA_STRING + ": " + _stats[GC.STATUS_MANA] + "/" + _stats[GC.STATUS_MAX_MANA];
+			goldDisplay.displayText.text = GC.GOLD_STRING + ": " + _stats[GC.STATUS_GOLD];
+			
 			strengthDisplay.displayText.text = GC.STRENGTH_STRING + ": " + _stats[GC.STATUS_STRENGTH];
 			agilityDisplay.displayText.text = GC.AGILITY_STRING + ": " + _stats[GC.STATUS_AGILITY];
 			spiritualityDisplay.displayText.text = GC.SPIRITUALITY_STRING + ": " + _stats[GC.STATUS_SPIRITUALITY];

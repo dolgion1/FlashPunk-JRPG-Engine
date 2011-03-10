@@ -22,6 +22,7 @@ package worlds
 		public static const DIALOG_MODE:int = 2;
 		public static const STATUS_SCREEN_MODE:int = 3;
 		public static const INVENTORY_SCREEN_MODE:int = 4;
+		public static const SPELLS_SCREEN_MODE:int = 5;
 		
 		// Entities
 		public var player:Player;
@@ -43,6 +44,7 @@ package worlds
 		public var gridOverlays:Array = new Array();
 		public var statusScreen:StatusScreen;
 		public var inventoryScreen:InventoryScreen;
+		public var spellsScreen:SpellsScreen;
 		
 		// Helper Datastructures
 		public var maps:Array = new Array();
@@ -253,6 +255,12 @@ package worlds
 			add(inventoryScreen.cursor);
 			add(inventoryScreen.cursorEquip);
 			addList(inventoryScreen.displayTexts);
+			
+			spellsScreen = new SpellsScreen(dataloader.setupSpellsScreenUIData());
+			spellsScreen.visible = false;
+			add(spellsScreen.background)
+			add(spellsScreen.cursor);
+			addList(spellsScreen.displayTexts);
 		}
 		
 		public function initiateDialogMode():void
@@ -332,6 +340,10 @@ package worlds
 				{
 					openInventoryScreen();
 				}
+				else if (Input.pressed(GC.BUTTON_SPELLS_SCREEN))
+				{
+					openSpellsScreen();
+				}
 				
 				if (dialogEndedThisFrame) dialogEndedThisFrame = false;
 			}
@@ -391,6 +403,30 @@ package worlds
 					inventoryScreen.cancelPress();
 				}
 			}
+			else if (gameMode == SPELLS_SCREEN_MODE)
+			{
+				if (Input.pressed(GC.BUTTON_SPELLS_SCREEN))
+				{
+					closeSpellsScreen();
+				}
+				else if (Input.pressed(GC.BUTTON_EXIT))
+				{
+					closeSpellsScreen();
+				}
+				else if (Input.pressed(GC.BUTTON_UP))
+				{
+					spellsScreen.cursorMovement(GC.BUTTON_UP);
+				}
+				else if (Input.pressed(GC.BUTTON_DOWN))
+				{
+					spellsScreen.cursorMovement(GC.BUTTON_DOWN);
+				}
+				else if (Input.pressed(GC.BUTTON_ACTION))
+				{
+					spellsScreen.actionPress();
+				}
+			}
+			
 			
 		}
 		
@@ -453,6 +489,19 @@ package worlds
 			gameMode = NORMAL_MODE;
 			inventoryScreen.visible = false;
 			player.updateStats();
+		}
+		
+		public function openSpellsScreen():void
+		{
+			gameMode = SPELLS_SCREEN_MODE;
+			spellsScreen.visible = true;
+			spellsScreen.initialize(player);
+		}
+		
+		public function closeSpellsScreen():void
+		{
+			gameMode = NORMAL_MODE;
+			spellsScreen.visible = false;
 		}
 		
 		public function checkSwitchToNewMap():Boolean
@@ -530,6 +579,7 @@ package worlds
 			Input.define(GC.BUTTON_ACTION, Key.SPACE);
 			Input.define(GC.BUTTON_STATUS_SCREEN, Key.C);
 			Input.define(GC.BUTTON_INVENTORY_SCREEN, Key.I);
+			Input.define(GC.BUTTON_SPELLS_SCREEN, Key.V);
 		}
 		
 		public function getNPCByName(_name:String):NPC

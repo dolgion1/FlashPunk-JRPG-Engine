@@ -367,6 +367,8 @@ package utility
 			{
 				if (currentCursorColumn == GC.INVENTORY_CONSUMABLE_ITEM_COLUMN)
 				{
+					var decreaseQuantity:Boolean = true;
+					
 					// find the consumable in the items array
 					var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
 					consumableIndex += itemsStartIndex[currentCursorColumn];
@@ -382,38 +384,41 @@ package utility
 					}
 					else if (consumable.consumableType == GC.CONSUMABLE_TYPE_SCROLL)
 					{
-						player.addSpell(consumable.spellName);
+						decreaseQuantity = player.addSpell(consumable.spellName);
 					}
 					
-					// decrease quantity of the consumable
-					player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity--;
-						
-					if (player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity < 1)
+					if (decreaseQuantity)
 					{
-						// remove the consumable from the player inventory
-						player.items[GC.ITEM_CONSUMABLE].splice(consumableIndex, 1);
-						
-						if (player.items[GC.ITEM_CONSUMABLE].length < GC.INVENTORY_MAX_ITEM_ROWS)
-						{
-							var removedConsumableKey:String = GC.INVENTORY_KEY_CONSUMABLE_ITEM + (player.items[GC.ITEM_CONSUMABLE].length + 1);
-							cursorPositions[removedConsumableKey].valid = false;
-							itemsEndIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN]--;
+						// decrease quantity of the consumable
+						player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity--;
 							
-							if (player.items[GC.ITEM_CONSUMABLE].length > 0)
+						if (player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity < 1)
+						{
+							// remove the consumable from the player inventory
+							player.items[GC.ITEM_CONSUMABLE].splice(consumableIndex, 1);
+							
+							if (player.items[GC.ITEM_CONSUMABLE].length < GC.INVENTORY_MAX_ITEM_ROWS)
 							{
-								if (currentCursorPositionKey == removedConsumableKey)
+								var removedConsumableKey:String = GC.INVENTORY_KEY_CONSUMABLE_ITEM + (player.items[GC.ITEM_CONSUMABLE].length + 1);
+								cursorPositions[removedConsumableKey].valid = false;
+								itemsEndIndex[GC.INVENTORY_CONSUMABLE_ITEM_COLUMN]--;
+								
+								if (player.items[GC.ITEM_CONSUMABLE].length > 0)
 								{
-									currentCursorPositionKey = GC.INVENTORY_KEY_CONSUMABLE_ITEM + player.items[GC.ITEM_CONSUMABLE].length;
-									cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+									if (currentCursorPositionKey == removedConsumableKey)
+									{
+										currentCursorPositionKey = GC.INVENTORY_KEY_CONSUMABLE_ITEM + player.items[GC.ITEM_CONSUMABLE].length;
+										cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+										updateCurrentCursorColumn();
+									}
+								}
+								else 
+								{
+									cursor.position = cursorPositions[GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD].getPosition();
+									currentCursorPositionKey = GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD;
+									currentCursorColumn = GC.INVENTORY_ARMOR_EQUIP_COLUMN;
 									updateCurrentCursorColumn();
 								}
-							}
-							else 
-							{
-								cursor.position = cursorPositions[GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD].getPosition();
-								currentCursorPositionKey = GC.INVENTORY_KEY_ARMOR_EQUIP_HEAD;
-								currentCursorColumn = GC.INVENTORY_ARMOR_EQUIP_COLUMN;
-								updateCurrentCursorColumn();
 							}
 						}
 					}

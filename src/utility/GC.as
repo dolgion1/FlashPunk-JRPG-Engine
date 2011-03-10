@@ -25,6 +25,7 @@ package utility
 		public static const BUTTON_ACTION:String = "action";
 		public static const BUTTON_STATUS_SCREEN:String = "status_screen";
 		public static const BUTTON_INVENTORY_SCREEN:String = "inventory_screen";
+		public static const BUTTON_SPELLS_SCREEN:String = "spells_screen";
 		
 		// Status Variables
 		public static const STATUS_HEALTH:int = 0;
@@ -39,6 +40,7 @@ package utility
 		public static const STATUS_DAMAGE_TYPE:int = 9;
 		public static const STATUS_ATTACK_TYPE:int = 10;
 		public static const STATUS_ARMOR:int = 11;
+		public static const STATUS_GOLD:int = 12;
 		
 		// Item Types
 		public static const ITEM_WEAPON:int = 0;
@@ -240,6 +242,7 @@ package utility
 		public static const ARMOR_STRING:String = "Armor";
 		public static const RESISTANCE_STRING:String = "Resistance";
 		public static const EFFECT_STRING:String = "Effect";
+		public static const SPELLS_STRING:String = "Spells";
 		
 		// Damage Type names
 		public static const DAMAGE_TYPE_NO_DAMAGE_STRING:String = "Unarmed";
@@ -271,6 +274,7 @@ package utility
 		public static const SPIRITUALITY_STRING:String = "Spirituality";
 		public static const HEALTH_STRING:String = "Health";
 		public static const MANA_STRING:String = "Mana";
+		public static const GOLD_STRING:String = "Gold";
 		
 		/*
 		 * Battle Screen Constants

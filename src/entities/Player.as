@@ -261,6 +261,7 @@ package entities
 								}
 							}
 							chest.empty();
+							gold += chest.gold;
 						}
 					}
 				}
@@ -282,6 +283,7 @@ package entities
 								}
 							}
 							chest.empty();
+							gold += chest.gold;
 						}
 					}
 				}
@@ -303,6 +305,7 @@ package entities
 								}
 							}
 							chest.empty();
+							gold += chest.gold;
 						}
 					}
 				}
@@ -324,6 +327,7 @@ package entities
 								}
 							}
 							chest.empty();
+							gold += chest.gold;
 						}
 					}
 				}
@@ -430,7 +434,7 @@ package entities
 		public function get stats():Array
 		{
 			return new Array(health, maxHealth, mana, maxMana, strength, agility, spirituality, experience, 
-							 damageRating, damageType, attackType, armorRating);
+							 damageRating, damageType, attackType, armorRating, gold);
 		}
 		
 		public function takeLoot(_loot:Array):void
@@ -459,6 +463,44 @@ package entities
 			items[_type].push(_item);
 		}
 		
+		public function castOnSelf(_defenseSpell:DefenseSpell):void
+		{
+			if (mana >= _defenseSpell.manaCost)
+			{
+				mana -= _defenseSpell.manaCost;
+			
+				switch (_defenseSpell.statusVariable)
+				{
+					case (GC.STATUS_HEALTH): 
+					{
+						health += _defenseSpell.alteration;
+						if (health > maxHealth) health = maxHealth;
+						break;
+					}
+					case (GC.STATUS_MANA): 
+					{
+						mana += _defenseSpell.alteration;
+						if (mana > maxMana) mana = maxMana;
+						break;
+					}
+					case (GC.STATUS_STRENGTH): 
+					{
+						strength += _defenseSpell.alteration;
+						break;
+					}
+					case (GC.STATUS_AGILITY): 
+					{
+						agility += _defenseSpell.alteration;
+						break;
+					}
+					case (GC.STATUS_SPIRITUALITY): 
+					{
+						spirituality += _defenseSpell.alteration;
+						break;
+					}
+				}
+			}
+		}
 		
 		public function consume(_consumable:Consumable):void
 		{
@@ -536,9 +578,8 @@ package entities
 			}
 		}
 		
-		public function addSpell(_spellName:String):void
+		public function addSpell(_spellName:String):Boolean
 		{
-			FP.log("FfS 1: " + spells.length);
 			var found:Boolean = false;
 			for each (var s:String in spells)
 			{
@@ -551,7 +592,11 @@ package entities
 			if (!found)
 			{
 				spells.push(_spellName);
-				FP.log("Added new spell " + _spellName);
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 	}

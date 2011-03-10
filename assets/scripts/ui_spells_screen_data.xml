@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<cursorpositions>
+		<cursorposition key="ListRow1" x="45" y="80" validity="false" 
+			up="null"
+			down="ListRow2"
+			left="null"
+			right="null" />
+			
+		<cursorposition key="ListRow2" x="45" y="100" validity="false" 
+			up="ListRow1"
+			down="ListRow3"
+			left="null"
+			right="null" />	
+			
+		<cursorposition key="ListRow3" x="45" y="120" validity="false" 
+			up="ListRow2"
+			down="ListRow4"
+			left="null"
+			right="null" />	
+			
+		<cursorposition key="ListRow4" x="45" y="140" validity="false" 
+			up="ListRow3"
+			down="ListRow5"
+			left="null"
+			right="null" />	
+			
+		<cursorposition key="ListRow5" x="45" y="160" validity="false" 
+			up="ListRow4"
+			down="ListRow6"
+			left="null"
+			right="null" />	
+			
+		<cursorposition key="ListRow6" x="45" y="180" validity="false" 
+			up="ListRow5"
+			down="null"
+			left="null"
+			right="null" />	
+	</cursorpositions>
+</data>

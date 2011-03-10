@@ -29,8 +29,10 @@ package utility
 		[Embed(source = "../../assets/scripts/chest_data.xml", mimeType = "application/octet-stream")] private var chestData:Class;
 		[Embed(source = "../../assets/scripts/ui_inventory_data.xml", mimeType = "application/octet-stream")] private var inventoryUIData:Class;
 		[Embed(source = "../../assets/scripts/ui_battle_data.xml", mimeType = "application/octet-stream")] private var battleUIData:Class;
+		[Embed(source = "../../assets/scripts/ui_spells_screen_data.xml", mimeType = "application/octet-stream")] private var spellsScreenUIData:Class;
 		[Embed(source = "../../assets/scripts/spell_data.xml", mimeType = "application/octet-stream")] private var spellData:Class;
 		[Embed(source = "../../assets/scripts/mob_data.xml", mimeType = "application/octet-stream")] private var mobData:Class;
+		
 		
 		public function DataLoader() {}
 		
@@ -391,7 +393,7 @@ package utility
 			
 			for each (i in chestDataXML.chest)
 			{
-				var chest:Chest = new Chest(new GlobalPosition(i.mapIndex, i.x, i.y), i.direction);
+				var chest:Chest = new Chest(new GlobalPosition(i.mapIndex, i.x, i.y), i.direction, i.gold);
 				var inventoryItem:InventoryItem;
 				
 				// look for items
@@ -541,6 +543,36 @@ package utility
 			var cursorPositions:Dictionary = new Dictionary();
 			
 			for each (i in battleUIDataXML.cursorpositions.cursorposition)
+			{
+				var cursorPosition:CursorPosition = new CursorPosition();
+				cursorPosition.x = int(i.@x);
+				cursorPosition.y = int(i.@y);
+				cursorPosition.key = i.@key;
+				
+				if (i.@validity == "true")
+				{
+					cursorPosition.valid = true;
+				}
+				else 
+				{
+					cursorPosition.valid = false;
+				}
+				
+				cursorPosition.setKeys(i.@up, i.@down, i.@left, i.@right);
+				cursorPositions["" + i.@key] = cursorPosition;
+			}
+			
+			return new Array(cursorPositions);
+		}
+		
+		public function setupSpellsScreenUIData():Array
+		{
+			var spellsScreenUIDataArray:ByteArray = new spellsScreenUIData;
+			var spellsScreenUIDataXML:XML = new XML(spellsScreenUIDataArray.readUTFBytes(spellsScreenUIDataArray.length));
+			var i:XML;
+			var cursorPositions:Dictionary = new Dictionary();
+			
+			for each (i in spellsScreenUIDataXML.cursorpositions.cursorposition)
 			{
 				var cursorPosition:CursorPosition = new CursorPosition();
 				cursorPosition.x = int(i.@x);
