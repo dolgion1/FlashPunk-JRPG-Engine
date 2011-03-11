@@ -143,9 +143,9 @@ package entities.battle
 			var useSpell:Boolean = false;
 			if (spells.length > 0)
 			{
-				if (Battle.spells[spells[0] + ""].manaCost <= mana)
+				if (Game.spells[spells[0] + ""].manaCost <= mana)
 				{
-					if (Battle.spells[spells[0] + ""].damageRating > attackDamage)
+					if (Game.spells[spells[0] + ""].damageRating > attackDamage)
 					{
 						useSpell = true;
 					}
@@ -181,8 +181,8 @@ package entities.battle
 				FP.log("animation callback velda");
 				iceSpell = new IceSpell(player.x, player.y);
 				this.world.add(iceSpell);
-				player.player.health -= Battle.spells[spells[0]].damageRating;
-				mana -= Battle.spells[spells[0]].manaCost;
+				player.player.health -= Game.spells[spells[0]].damageRating;
+				mana -= Game.spells[spells[0]].manaCost;
 				if (mana < 0) mana = 0;
 				FP.log("remaining mana is " + mana);
 				

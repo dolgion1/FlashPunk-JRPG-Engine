@@ -7,6 +7,7 @@ package entities.battle
 	import net.flashpunk.graphics.*;
 	import utility.*;
 	import entities.*;
+	import worlds.*;
 	
 	/**
 	 * ...
@@ -32,7 +33,6 @@ package entities.battle
 		public var key:String;
 		public var dead:Boolean = false;
 		public var player:PlayerBattle;
-		public var dataloader:DataLoader = new DataLoader();
 		public var spells:Array = new Array();
 		public var defaultPosition:Point = new Point(0, 0);
 		public var moving:Boolean = false;
@@ -59,7 +59,7 @@ package entities.battle
 										  0xFFFFFF, 
 										  500);
 			
-			var properties:Array = dataloader.setupMob(_name, _items);
+			var properties:Array = Game.dataloader.setupMob(_name, _items);
 			attackDamage = properties[0];
 			spells = properties[1];
 			consumables = properties[2];

@@ -110,7 +110,7 @@ package entities.battle
 						}
 					}
 				}
-				
+				FP.log("Zelda health: " + health + " and potions: " + healthPotionIndices.length);
 				if (healthPotionIndices.length > 0) 
 				{
 					// figure out with potion is the most efficient to heal the damage
@@ -120,6 +120,7 @@ package entities.battle
 						var healthBoost:int = consumables[healthPotionIndices[i]].item[GC.ITEM_CONSUMABLE].statusAlterations[0].alteration;
 						if (Math.abs(healthDeficit - healthBoost) < Math.abs(healthDeficit - consumables[healthPotionIndices[bestSuitedPotionIndex]].item[GC.ITEM_CONSUMABLE].statusAlterations[0].alteration))
 						{
+							FP.log("found the potion");
 							bestSuitedPotionIndex = i;
 						}
 					}
@@ -143,9 +144,9 @@ package entities.battle
 			var useSpell:Boolean = false;
 			if (spells.length > 0)
 			{
-				if (Battle.spells[spells[0] + ""].manaCost <= mana)
+				if (Game.spells[spells[0] + ""].manaCost <= mana)
 				{
-					if (Battle.spells[spells[0] + ""].damageRating > attackDamage)
+					if (Game.spells[spells[0] + ""].damageRating > attackDamage)
 					{
 						useSpell = true;
 					}
@@ -181,8 +182,8 @@ package entities.battle
 				FP.log("animation callback zelda");
 				fireSpell = new FireSpell(player.x, player.y);
 				this.world.add(fireSpell);
-				player.player.health -= Battle.spells[spells[0]].damageRating;
-				mana -= Battle.spells[spells[0]].manaCost;
+				player.player.health -= Game.spells[spells[0]].damageRating;
+				mana -= Game.spells[spells[0]].manaCost;
 				if (mana < 0) mana = 0;
 				FP.log("remaining mana is " + mana);
 				

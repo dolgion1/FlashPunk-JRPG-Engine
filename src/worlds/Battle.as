@@ -14,15 +14,19 @@ package worlds
 	 */
 	public class Battle extends World
 	{
-		public var dl:DataLoader = new DataLoader();
+		public const NORMAL_MODE:int = 0;
+		public const ATTACK_TARGETING_MODE:int = 1;
+		public const BROWSING_SPELLS_MODE:int = 2;
+		public const SPELL_TARGETING_MODE:int = 3;
+		public const BROWSING_ITEMS_MODE:int = 4;
+		
+		public var currentMode:int = NORMAL_MODE;
 		public var resultsScreen:TextBox;
 		public var resultsExperienceGained:DisplayText;
 		public var resultsGoldReceived:DisplayText;
 		public var resultsLootReceived:DisplayText;
 		public var battleEnded:Boolean = false;
 		
-		public static var spells:Dictionary = new Dictionary();
-		public var items:Array = new Array();
 		public var player:Player;
 		public var playerBattle:PlayerBattle;
 		public var experiencePoints:int;
@@ -41,12 +45,7 @@ package worlds
 		public var cursor:Cursor;
 		public var cursorPositions:Dictionary;
 		public var currentCursorPositionKey:String = "Attack";
-		public var dataloader:DataLoader = new DataLoader();
-		public var targeting:Boolean = false;
 		public var listBox:TextBox;
-		public var browsingItems:Boolean = false;
-		public var browsingSpells:Boolean = false;
-		public var targetingSpell:Boolean = false;
 		public var targetedSpell:String;
 		public var castingScroll:Boolean = false;
 		
@@ -61,40 +60,17 @@ package worlds
 		public static var enterNextTurn:Boolean = false;
 		
 		
-		public function Battle(_player:Player, _enemy:Enemy) 
+		public function Battle(_player:Player, _enemy:Enemy, _battleUIData:Array) 
 		{
-			spells = dl.setupSpells();
-			items = dl.setupItems();
-			cursorPositions = dataloader.setupBattleUIData()[0];
-			cursor = new Cursor(0, 0);
-			cursor.visible = true;
-			cursor.setPosition(cursorPositions[currentCursorPositionKey].getPosition());
-			listBox = new TextBox(200, 200, 2, 2);
-			initEnemyPositions();
-			experiencePoints = _enemy.experiencePoints;
-			
 			enemy = _enemy;
 			player = _player;
-			playerBattle = new PlayerBattle(GC.BATTLE_PLAYER_X, GC.BATTLE_PLAYER_Y, player);
+			experiencePoints = _enemy.experiencePoints;
 			
-			initEnemies(_enemy);
-			loadEntities();
+			initCursor(_battleUIData);
+			initEntities();
 			initCombattants();
-			initDisplayTexts();
-			beginPlayerTurn();
 			
-			resultsScreen = new TextBox(GC.INVENTORY_OFFSET_X, GC.INVENTORY_OFFSET_Y, GC.INVENTORY_SCALE_X, GC.INVENTORY_SCALE_Y);
-			resultsExperienceGained = new DisplayText("Experience Gained: ", 100, 100, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			resultsGoldReceived = new DisplayText("Gold Received: ", 100, 130, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			resultsLootReceived = new DisplayText("Loot: ", 100, 160, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			resultsScreen.visible = false;
-			resultsExperienceGained.visible = false;
-			resultsGoldReceived.visible = false;
-			resultsLootReceived.visible = false;
-			add(resultsScreen);
-			add(resultsExperienceGained);
-			add(resultsGoldReceived);
-			add(resultsLootReceived);
+			beginPlayerTurn();
 		}
 		
 		override public function update():void
@@ -135,12 +111,10 @@ package worlds
 						// the current enemy must do something
 						if (!combattants[currentTurn].dead)
 						{
-							FP.log("combattant " + currentTurn + " not dead, start battle action");
 							combattants[currentTurn].battleAction(playerBattle);
 						}
 						else
 						{
-							FP.log("combattant " + currentTurn + " dead, skip battle action");
 							enterNextTurn = true;
 						}
 					}
@@ -153,7 +127,6 @@ package worlds
 						if (!e.dead) 
 						{
 							battleEnded = false;
-							FP.log("There are still survivors");
 							break;
 						}
 					}
@@ -174,6 +147,14 @@ package worlds
 			}
 		}
 		
+		public function initCursor(_battleUIData:Array):void
+		{
+			cursorPositions = _battleUIData[0];
+			cursor = new Cursor(0, 0);
+			cursor.visible = true;
+			cursor.setPosition(cursorPositions[currentCursorPositionKey].getPosition());
+		}
+		
 		public function processGeneralInput():void
 		{
 			if (battleEnded)
@@ -189,397 +170,310 @@ package worlds
 				{
 					if (Input.pressed(GC.BUTTON_ACTION))
 					{
-						FP.log("current cursor position key: " + currentCursorPositionKey);
-						if (currentCursorPositionKey == "Attack")
-						{
-							FP.log("FFS: attack");
-							if (!((player.equipment["WeaponEquipPrimary"] == null) && 
-								(player.equipment["WeaponEquipSecondary"] == null)))
-							{
-								targeting = true;
-								
-								// loop through enemies and determine
-								// which cursorPosition is valid, setting 
-								// true and false for each
-								for (var i:int = (enemies.length - 1); i >= 0; i--)
-								{
-									if (enemies[i].dead)
-									{
-										FP.log("enemy " + i + " is dead");
-										cursorPositions["Enemy" + (i + 1)].valid = false;
-									}
-									else 
-									{
-										FP.log("enemy " + i + " is alive");
-										cursorPositions["Enemy" + (i + 1)].valid = true;
-										currentCursorPositionKey = "Enemy" + (i + 1);
-									}
-								}
-								cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
-							}
-						}
-						else if (targeting)
-						{
-							FP.log("FFS: targeting");
-							// reduce health of the targetted EnemyBattle
-							playerAttackEnemy(); // still need to implement proper damage calculation
-							
-							// end turn
-							targeting = false;
-							cursor.visible = false;
-							cursorPositions["Enemy1"].valid = false;
-							cursorPositions["Enemy2"].valid = false;
-							cursorPositions["Enemy3"].valid = false;
-						}
-						else if (currentCursorPositionKey == "Spell")
-						{
-							FP.log("FFS: Spell");
-							if (player.spells.length > 0)
-							{
-								populateSpellListDisplays();
-								listBox.visible = true;
-								browsingSpells = true;
-								for each (var d:DisplayText in listDisplays)
-								{
-									d.visible = true;
-								}
-								listDisplayOne.visible = true;
-								listDisplayTwo.visible = true;
-								listDisplayThree.visible = true;
-								listDisplayFour.visible = true;
-								
-								currentCursorPositionKey = "ListRow1";
-								cursor.position = cursorPositions["ListRow1"].getPosition();
-								
-								setInfoDisplayTexts();
-							}
-						}
-						else if (browsingSpells)
-						{
-							FP.log("FFS: browsingSpells");
-							// Get instance of the spell
-							var spellIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1 + listStartIndex;
-							
-							if (player.mana >= spells[player.spells[spellIndex]].manaCost)
-							{
-								if (spells[player.spells[spellIndex]] is DefenseSpell)
-								{
-									var defenseSpell:DefenseSpell = new DefenseSpell();
-									defenseSpell.name = spells[player.spells[spellIndex]].name;
-									defenseSpell.temporary = spells[player.spells[spellIndex]].temporary;
-									defenseSpell.duration = spells[player.spells[spellIndex]].duration;
-									defenseSpell.statusVariable = spells[player.spells[spellIndex]].statusVariable;
-									defenseSpell.alteration = spells[player.spells[spellIndex]].alteration;
-									defenseSpell.manaCost = spells[player.spells[spellIndex]].manaCost; 
-									
-									playerBattle.castOnSelf(defenseSpell);
-									
-									listBox.visible = false;
-									for each (d in listDisplays)
-									{
-										d.visible = false;
-									}
-									listDisplayOne.visible = false;
-									listDisplayTwo.visible = false;
-									listDisplayThree.visible = false;
-									listDisplayFour.visible = false;
-									
-									// until we have entities for the animation for casting on oneself,
-									// we just move to the next turn
-									enterNextTurn = true;
-								}
-								else if (spells[player.spells[spellIndex]] is OffenseSpell)
-								{
-									targetedSpell = player.spells[spellIndex];
-									targetingSpell = true;
-									for (i = (enemies.length - 1); i >= 0; i--)
-									{
-										if (enemies[i].dead)
-										{
-											FP.log("enemy " + i + " is dead");
-											cursorPositions["Enemy" + (i + 1)].valid = false;
-										}
-										else 
-										{
-											FP.log("enemy " + i + " is alive");
-											cursorPositions["Enemy" + (i + 1)].valid = true;
-											currentCursorPositionKey = "Enemy" + (i + 1);
-										}
-									}
-									cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
-								}
-								
-								browsingSpells = false;
-							}
-						}
-						else if (targetingSpell)
-						{
-							FP.log("FFS: targetingSpell");
-							playerCastOnEnemy();
-							cursor.visible = false;
-							targetingSpell = false;
-							listBox.visible = false;
-							for each (d in listDisplays)
-							{
-								d.visible = false;
-							}
-							listDisplayOne.visible = false;
-							listDisplayTwo.visible = false;
-							listDisplayThree.visible = false;
-							listDisplayFour.visible = false;
-							
-							if (castingScroll)
-							{
-								// go through player's inventory and decrease quantity of consumable 
-								// with spell name targetedSpell
-								for (i = 0; i < player.items[GC.ITEM_CONSUMABLE].length; i++)
-								{
-									if (player.items[GC.ITEM_CONSUMABLE][i].item[GC.ITEM_CONSUMABLE].consumableType == GC.CONSUMABLE_TYPE_SCROLL)
-									{
-										if (player.items[GC.ITEM_CONSUMABLE][i].item[GC.ITEM_CONSUMABLE].spellName == targetedSpell)
-										{
-											player.items[GC.ITEM_CONSUMABLE][i].quantity--;
-											if (player.items[GC.ITEM_CONSUMABLE][i].quantity < 1)
-											{
-												player.items[GC.ITEM_CONSUMABLE].splice(i, 1);
-											}
-										}
-									}
-								}
-								castingScroll = false;
-							}
-						}
-						else if (currentCursorPositionKey == "Defend")
-						{
-							FP.log("FFS: Defend");
-							// need to increase armorRating for one turn
-							FP.log("what is the problem..??");
-							FP.log("what is the problem..??" + enterNextTurn);
-							enterNextTurn = true;
-							FP.log("Really.." + enterNextTurn);
-						}
-						else if (currentCursorPositionKey == "Item")
-						{
-							FP.log("FFS: Item");
-							if (player.items[GC.ITEM_CONSUMABLE].length > 0)
-							{
-								populateItemListDisplays();
-								listBox.visible = true;
-								browsingItems = true;
-								for each (d in listDisplays)
-								{
-									d.visible = true;
-								}
-								listDisplayOne.visible = true;
-								listDisplayTwo.visible = true;
-								listDisplayThree.visible = true;
-								listDisplayFour.visible = false;
-								
-								currentCursorPositionKey = "ListRow1";
-								cursor.position = cursorPositions["ListRow1"].getPosition();
-								
-								setInfoDisplayTexts();
-							}
-						}
-						else if (browsingItems)
-						{
-							FP.log("FFS: browsingItems");
-							var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
-							consumableIndex += listStartIndex;
-							
-							var consumable:Consumable = new Consumable();
-							consumable.copy(player.items[GC.ITEM_CONSUMABLE][consumableIndex].item[GC.ITEM_CONSUMABLE]);
-							if (consumable.consumableType == GC.CONSUMABLE_TYPE_POTION)
-							{
-								player.consume(consumable);
-								playerBattle.updateStatDisplay();
-								
-								// decrease quantity of the consumable
-								player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity--;
-								if (player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity < 1)
-								{
-									player.items[GC.ITEM_CONSUMABLE].splice(consumableIndex, 1);
-								}
-								listBox.visible = false;
-								for each (d in listDisplays)
-								{
-									d.visible = false;
-								}
-								listDisplayOne.visible = false;
-								listDisplayTwo.visible = false;
-								listDisplayThree.visible = false;
-								listDisplayFour.visible = false;
-								
-								enterNextTurn = true;
-							}
-							// functionality for casting spells from scrolls 
-							else if (consumable.consumableType == GC.CONSUMABLE_TYPE_SCROLL)
-							{
-								FP.log("Casting scroll: " + consumable.spellName);
-								if (spells[consumable.spellName] is DefenseSpell)
-								{
-									defenseSpell = new DefenseSpell();
-									defenseSpell.name = spells[consumable.spellName].name;
-									defenseSpell.temporary = spells[consumable.spellName].temporary;
-									defenseSpell.duration = spells[consumable.spellName].duration;
-									defenseSpell.statusVariable = spells[consumable.spellName].statusVariable;
-									defenseSpell.alteration = spells[consumable.spellName].alteration;
-									defenseSpell.manaCost = 0; 
-									
-									playerBattle.castOnSelf(defenseSpell);
-									
-									listBox.visible = false;
-									for each (d in listDisplays)
-									{
-										d.visible = false;
-									}
-									listDisplayOne.visible = false;
-									listDisplayTwo.visible = false;
-									listDisplayThree.visible = false;
-									listDisplayFour.visible = false;
-									
-									// until we have entities for the animation for casting on oneself,
-									// we just move to the next turn
-									enterNextTurn = true;
-									player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity--;
-									if (player.items[GC.ITEM_CONSUMABLE][consumableIndex].quantity < 1)
-									{
-										player.items[GC.ITEM_CONSUMABLE].splice(consumableIndex, 1);
-									}
-								}
-								else if (spells[consumable.spellName] is OffenseSpell)
-								{
-									targetedSpell = consumable.spellName;
-									targetingSpell = true;
-									for (i = (enemies.length - 1); i >= 0; i--)
-									{
-										if (enemies[i].dead)
-										{
-											FP.log("enemy " + i + " is dead");
-											cursorPositions["Enemy" + (i + 1)].valid = false;
-										}
-										else 
-										{
-											FP.log("enemy " + i + " is alive");
-											cursorPositions["Enemy" + (i + 1)].valid = true;
-											currentCursorPositionKey = "Enemy" + (i + 1);
-										}
-									}
-									cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
-									castingScroll = true;
-								}
-							}
-							browsingItems = false;
-						}
+						actionPress();
 					}
-					else if (Input.pressed(GC.BUTTON_LEFT))
+					else if (Input.pressed(GC.BUTTON_LEFT) ||
+							 Input.pressed(GC.BUTTON_RIGHT) ||
+							 Input.pressed(GC.BUTTON_UP) ||
+							 Input.pressed(GC.BUTTON_DOWN))
 					{
-						if (cursorPositions[currentCursorPositionKey].leftKey != null)
-						{
-							var newKey:String = cursorPositions[currentCursorPositionKey].leftKey;
-							if (cursorPositions[newKey].valid)
-							{
-								currentCursorPositionKey = newKey;
-								cursor.position = cursorPositions[newKey].getPosition();
-							}
-						}
+						cursorMovement();
 					}
-					else if (Input.pressed(GC.BUTTON_RIGHT))
-					{
-						if (cursorPositions[currentCursorPositionKey].rightKey != null)
-						{
-							newKey = cursorPositions[currentCursorPositionKey].rightKey;
-							if (cursorPositions[newKey].valid)
-							{
-								currentCursorPositionKey = newKey;
-								cursor.position = cursorPositions[newKey].getPosition();
-							}
-						}
-					}
-					else if (Input.pressed(GC.BUTTON_UP))
-					{
-						if (cursorPositions[currentCursorPositionKey].upKey != null)
-						{
-							newKey = cursorPositions[currentCursorPositionKey].upKey;
-							if (cursorPositions[newKey].valid)
-							{
-								currentCursorPositionKey = newKey;
-								cursor.position = cursorPositions[newKey].getPosition();
-								if (browsingItems || browsingSpells)
-								{
-									setInfoDisplayTexts();
-								}
-							}
-						}
-					}
-					else if (Input.pressed(GC.BUTTON_DOWN))
-					{
-						if (cursorPositions[currentCursorPositionKey].downKey != null)
-						{
-							newKey = cursorPositions[currentCursorPositionKey].downKey;
-							if (cursorPositions[newKey].valid)
-							{
-								currentCursorPositionKey = newKey;
-								cursor.position = cursorPositions[newKey].getPosition();
-								if (browsingItems || browsingSpells)
-								{
-									setInfoDisplayTexts();
-								}
-							}
-						}
-					}
+					
 					else if (Input.pressed(GC.BUTTON_CANCEL))
 					{
-						if (targeting)
+						cancelPress();
+					}
+				}
+			}
+		}
+		
+		public function actionPress():void
+		{
+			if (currentMode == NORMAL_MODE)
+			{
+				if (currentCursorPositionKey == "Attack")
+				{
+					if (!((player.equipment["WeaponEquipPrimary"] == null) && 
+						(player.equipment["WeaponEquipSecondary"] == null)))
+					{
+						currentMode = ATTACK_TARGETING_MODE;
+						startTargeting();
+					}
+				}
+				else if (currentCursorPositionKey == "Spell")
+				{
+					if (player.spells.length > 0)
+					{
+						currentMode = BROWSING_SPELLS_MODE;
+						populateSpellListDisplays();
+						showListBox(true);
+						setCursorPosition("ListRow1");
+						setInfoDisplayTexts();
+					}
+				}
+				else if (currentCursorPositionKey == "Defend")
+				{
+					enterNextTurn = true;
+				}
+				else if (currentCursorPositionKey == "Item")
+				{
+					if (player.items[GC.ITEM_CONSUMABLE].length > 0)
+					{
+						currentMode = BROWSING_ITEMS_MODE;	
+						populateItemListDisplays();
+						showListBox(true);
+						setCursorPosition("ListRow1");
+						setInfoDisplayTexts();
+					}
+				}
+			}
+			
+			else if (currentMode == ATTACK_TARGETING_MODE)
+			{
+				currentMode = NORMAL_MODE;
+				playerAttackEnemy();
+				cursor.visible = false;
+			}
+			
+			else if (currentMode == BROWSING_SPELLS_MODE)
+			{
+				selectSpell();
+			}
+			else if (currentMode == SPELL_TARGETING_MODE)
+			{
+				currentMode = NORMAL_MODE;
+				playerCastOnEnemy();
+				cursor.visible = false;							
+				showListBox(false);
+				
+				if (castingScroll)
+				{
+					// go through player's inventory and decrease quantity of consumable 
+					// with spell name targetedSpell
+					for (var i:int = 0; i < player.items[GC.ITEM_CONSUMABLE].length; i++)
+					{
+						if (player.items[GC.ITEM_CONSUMABLE][i].item[GC.ITEM_CONSUMABLE].consumableType == GC.CONSUMABLE_TYPE_SCROLL)
 						{
-							currentCursorPositionKey = "Attack";
-							cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
-							targeting = false;
-						}
-						else if (browsingItems)
-						{
-							listBox.visible = false;
-							for each (d in listDisplays)
+							if (player.items[GC.ITEM_CONSUMABLE][i].item[GC.ITEM_CONSUMABLE].spellName == targetedSpell)
 							{
-								d.visible = false;
+								player.items[GC.ITEM_CONSUMABLE][i].quantity--;
+								if (player.items[GC.ITEM_CONSUMABLE][i].quantity < 1)
+								{
+									player.items[GC.ITEM_CONSUMABLE].splice(i, 1);
+								}
 							}
-							listDisplayOne.visible = false;
-							listDisplayTwo.visible = false;
-							listDisplayThree.visible = false;
-							listDisplayFour.visible = false;
-							
-							currentCursorPositionKey = "Item";
-							cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
-							
-							browsingItems = false;
-						}
-						else if (browsingSpells)
-						{
-							listBox.visible = false;
-							for each (d in listDisplays)
-							{
-								d.visible = false;
-							}
-							listDisplayOne.visible = false;
-							listDisplayTwo.visible = false;
-							listDisplayThree.visible = false;
-							listDisplayFour.visible = false;
-							
-							currentCursorPositionKey = "Spell";
-							cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
-							
-							browsingSpells = false;
-							FP.log("cancelled browsing spells");
-						}
-						else if (targetingSpell)
-						{
-							currentCursorPositionKey = "ListRow1";
-							cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
-							targetingSpell = false;
-							browsingSpells = true;
-							castingScroll = false;
 						}
 					}
+					castingScroll = false;
+				}
+			}
+			
+			else if (currentMode == BROWSING_ITEMS_MODE)
+			{
+				var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
+				consumableIndex += listStartIndex;
+				
+				var consumable:Consumable = new Consumable();
+				consumable.copy(player.items[GC.ITEM_CONSUMABLE][consumableIndex].item[GC.ITEM_CONSUMABLE]);
+			
+				if (consumable.consumableType == GC.CONSUMABLE_TYPE_POTION)
+				{
+					currentMode = NORMAL_MODE;
+					player.consume(consumable, consumableIndex);
+					playerBattle.updateStatDisplay();
+					showListBox(false);
+					enterNextTurn = true;
+				}
+				// functionality for casting spells from scrolls 
+				else if (consumable.consumableType == GC.CONSUMABLE_TYPE_SCROLL)
+				{
+					if (Game.spells[consumable.spellName] is DefenseSpell)
+					{
+						currentMode = NORMAL_MODE;
+						
+						var defenseSpell:DefenseSpell = new DefenseSpell();
+						defenseSpell.copy(Game.spells[consumable.spellName]);
+						defenseSpell.manaCost = 0; 
+						
+						playerBattle.castOnSelf(defenseSpell);
+						player.decreaseInventoryItemQuantity(GC.ITEM_CONSUMABLE, consumableIndex);
+						showListBox(false);
+						
+						// until we have entities for the animation for casting on oneself,
+						// we just move to the next turn
+						enterNextTurn = true;
+					}
+					else if (Game.spells[consumable.spellName] is OffenseSpell)
+					{
+						currentMode = SPELL_TARGETING_MODE;
+						targetedSpell = consumable.spellName;
+						startTargeting();
+						castingScroll = true;
+					}
+				}
+			}
+		}
+		
+		public function cursorMovement():void
+		{
+			if (Input.pressed(GC.BUTTON_LEFT))
+			{
+				if (cursorPositions[currentCursorPositionKey].leftKey != null)
+				{
+					var newKey:String = cursorPositions[currentCursorPositionKey].leftKey;
+					if (cursorPositions[newKey].valid)
+					{
+						currentCursorPositionKey = newKey;
+						cursor.position = cursorPositions[newKey].getPosition();
+					}
+				}
+			}
+			else if (Input.pressed(GC.BUTTON_RIGHT))
+			{
+				if (cursorPositions[currentCursorPositionKey].rightKey != null)
+				{
+					newKey = cursorPositions[currentCursorPositionKey].rightKey;
+					if (cursorPositions[newKey].valid)
+					{
+						setCursorPosition(newKey);
+					}
+				}
+			}
+			else if (Input.pressed(GC.BUTTON_UP))
+			{
+				if (cursorPositions[currentCursorPositionKey].upKey != null)
+				{
+					newKey = cursorPositions[currentCursorPositionKey].upKey;
+					if (cursorPositions[newKey].valid)
+					{
+						setCursorPosition(newKey);
+						
+						if (currentMode == BROWSING_ITEMS_MODE || 
+							currentMode == BROWSING_SPELLS_MODE)
+						{
+							setInfoDisplayTexts();
+						}
+					}
+				}
+			}
+			else if (Input.pressed(GC.BUTTON_DOWN))
+			{
+				if (cursorPositions[currentCursorPositionKey].downKey != null)
+				{
+					newKey = cursorPositions[currentCursorPositionKey].downKey;
+					if (cursorPositions[newKey].valid)
+					{
+						setCursorPosition(newKey);
+						
+						if (currentMode == BROWSING_ITEMS_MODE || 
+							currentMode == BROWSING_SPELLS_MODE)
+						{
+							setInfoDisplayTexts();
+						}
+					}
+				}
+			}
+		}
+		
+		public function cancelPress():void
+		{
+			if (currentMode == ATTACK_TARGETING_MODE)
+			{
+				setCursorPosition("Attack");
+				currentMode = NORMAL_MODE;
+			}
+			else if (currentMode == BROWSING_ITEMS_MODE)
+			{
+				showListBox(false);
+				setCursorPosition("Item");
+				currentMode = NORMAL_MODE;
+			}
+			else if (currentMode == BROWSING_SPELLS_MODE)
+			{
+				showListBox(false);
+				setCursorPosition("Spell");
+				currentMode = NORMAL_MODE;
+			}
+			else if (currentMode == SPELL_TARGETING_MODE)
+			{
+				setCursorPosition("ListRow1");
+				currentMode = BROWSING_SPELLS_MODE;
+				castingScroll = false;
+			}
+		}
+		
+		public function setCursorPosition(_positionKey:String):void
+		{
+			currentCursorPositionKey = _positionKey;
+			cursor.position = cursorPositions[_positionKey].getPosition();			
+		}
+		
+		public function showListBox(_visible:Boolean):void
+		{
+			listBox.visible = _visible;
+			
+			for each (var d:DisplayText in listDisplays)
+			{
+				d.visible = _visible;
+			}
+			
+			listDisplayOne.visible = _visible;
+			listDisplayTwo.visible = _visible;
+			listDisplayThree.visible = _visible;
+			listDisplayFour.visible = _visible;
+			
+			if ((_visible) && (currentMode == BROWSING_ITEMS_MODE))
+			{
+				listDisplayFour.visible = false;
+			}
+		}
+		
+		public function startTargeting():void
+		{			
+			// loop through enemies and determine
+			// which cursorPosition is valid, setting 
+			// true and false for each
+			for (var i:int = (enemies.length - 1); i >= 0; i--)
+			{
+				if (enemies[i].dead)
+				{
+					cursorPositions["Enemy" + (i + 1)].valid = false;
+				}
+				else 
+				{
+					cursorPositions["Enemy" + (i + 1)].valid = true;
+					currentCursorPositionKey = "Enemy" + (i + 1);
+				}
+			}
+			cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
+		}
+		
+		public function selectSpell():void
+		{
+			// Get instance of the spell
+			var spellIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1 + listStartIndex;
+			
+			if (player.mana >= Game.spells[player.spells[spellIndex]].manaCost)
+			{
+				if (Game.spells[player.spells[spellIndex]] is DefenseSpell)
+				{
+					currentMode = NORMAL_MODE;
+					
+					var defenseSpell:DefenseSpell = new DefenseSpell();
+					defenseSpell.copy(Game.spells[player.spells[spellIndex]]);
+					playerBattle.castOnSelf(defenseSpell);
+					showListBox(true);
+					
+					// until we have entities for the animation for casting on oneself,
+					// we just move to the next turn
+					enterNextTurn = true;
+				}
+				else if (Game.spells[player.spells[spellIndex]] is OffenseSpell)
+				{
+					currentMode = SPELL_TARGETING_MODE;
+					targetedSpell = player.spells[spellIndex];
+					startTargeting();
 				}
 			}
 		}
@@ -628,22 +522,19 @@ package worlds
 			}
 		}
 		
-		public function initDisplayTexts():void
+		public function initEntities():void
 		{
+			// Initialize the actors
+			playerBattle = new PlayerBattle(GC.BATTLE_PLAYER_X, GC.BATTLE_PLAYER_Y, player);
+			initEnemyPositions();
+			initMobs(enemy);
+			
+			// Initialize UI elements
+			listBox = new TextBox(200, 200, 2, 2);
 			attackDisplay = new DisplayText("Attack", 300, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			spellDisplay = new DisplayText("Spell", 385, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			defendDisplay = new DisplayText("Defend", 470, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			itemDisplay = new DisplayText("Item", 555, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			attackDisplay.visible = true;
-			spellDisplay.visible = true;
-			defendDisplay.visible = true;
-			itemDisplay.visible = true;
-			listBox.visible = false;
-			add(attackDisplay);
-			add(spellDisplay);
-			add(defendDisplay);
-			add(itemDisplay);
-			add(listBox);
 			
 			listDisplays.push(new DisplayText("", 250, 230, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
 			listDisplays.push(new DisplayText("", 250, 250, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
@@ -657,10 +548,42 @@ package worlds
 			listDisplayThree = new DisplayText("", 400, 270, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			listDisplayFour = new DisplayText("", 400, 290, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			
+			resultsScreen = new TextBox(GC.INVENTORY_OFFSET_X, GC.INVENTORY_OFFSET_Y, GC.INVENTORY_SCALE_X, GC.INVENTORY_SCALE_Y);
+			resultsExperienceGained = new DisplayText("Experience Gained: ", 100, 100, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			resultsGoldReceived = new DisplayText("Gold Received: ", 100, 130, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			resultsLootReceived = new DisplayText("Loot: ", 100, 160, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			
+			// Set the visibility of UI
+			listBox.visible = false;
+			attackDisplay.visible = true;
+			spellDisplay.visible = true;
+			defendDisplay.visible = true;
+			itemDisplay.visible = true;
+			
 			listDisplayOne.visible = false;
 			listDisplayTwo.visible = false;
 			listDisplayThree.visible = false;
 			listDisplayFour.visible = false;
+			
+			resultsScreen.visible = false;
+			resultsExperienceGained.visible = false;
+			resultsGoldReceived.visible = false;
+			resultsLootReceived.visible = false;
+			
+			// Add the entities to the stage
+			add(playerBattle);
+			add(playerBattle.statDisplay);
+			for each (var e:EnemyBattle in enemies)
+			{
+				add(e);
+				add(e.statDisplay);
+			}
+			
+			add(attackDisplay);
+			add(spellDisplay);
+			add(defendDisplay);
+			add(itemDisplay);
+			add(listBox);
 			
 			add(listDisplayOne);
 			add(listDisplayTwo);
@@ -672,7 +595,13 @@ package worlds
 				add(d);
 				d.visible = false;
 			}
+			
 			add(cursor);
+			
+			add(resultsScreen);
+			add(resultsExperienceGained);
+			add(resultsGoldReceived);
+			add(resultsLootReceived);
 		}
 		
 		public function populateItemListDisplays():void
@@ -702,7 +631,7 @@ package worlds
 				listDisplays[i].displayText.text = "";
 				cursorPositions["ListRow" + (i + 1)].valid = false;
 			}
-			FP.log("spells: " + player.spells.length)
+			
 			if (player.spells.length > 6)
 			{
 				listEndIndex = 6;
@@ -719,7 +648,7 @@ package worlds
 		
 		public function setInfoDisplayTexts ():void
 		{
-			if (browsingItems)
+			if (currentMode == BROWSING_ITEMS_MODE)
 			{
 				var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
 				consumableIndex += listStartIndex;
@@ -730,7 +659,7 @@ package worlds
 				listDisplayTwo.displayText.text = "Quantity: " + consumable.quantity;
 				listDisplayThree.displayText.text = "Effect: " + consumable.item[GC.ITEM_CONSUMABLE].description;
 			}
-			else if (browsingSpells)
+			else if (currentMode == BROWSING_SPELLS_MODE)
 			{
 				var spellIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
 				//spellIndex += listStartIndex;
@@ -739,14 +668,13 @@ package worlds
 				//var spell:String = player.spells[spellIndex];
 				var spell:String = listDisplays[spellIndex].displayText.text;
 				
-				FP.log("FfS: " + player.spells.length + " which is " + spell);
 				listDisplayOne.displayText.text = "Name: " + spell;
-				listDisplayTwo.displayText.text = "Effect: " + spells[spell].description;
-				listDisplayThree.displayText.text = "Manacost: " + spells[spell].manaCost;
+				listDisplayTwo.displayText.text = "Effect: " + Game.spells[spell].description;
+				listDisplayThree.displayText.text = "Manacost: " + Game.spells[spell].manaCost;
 				
-				if (spells[spell].temporary)
+				if (Game.spells[spell].temporary)
 				{ 
-					listDisplayFour.displayText.text = "Duration: " + spells[spell].duration;
+					listDisplayFour.displayText.text = "Duration: " + Game.spells[spell].duration;
 				}
 				else listDisplayFour.displayText.text = "";
 			}
@@ -770,7 +698,7 @@ package worlds
 			playerTurn = true;
 		}
 		
-		public function initEnemies(_enemy:Enemy):void
+		public function initMobs(_enemy:Enemy):void
 		{
 			var enemyIndex:int = 0;
 			for each (var mob:Mob in _enemy.mobs)
@@ -780,11 +708,11 @@ package worlds
 					switch (mob.type)
 					{
 						case (GC.ENEMY_TYPE_ZELDA): {
-							enemies.push(new ZeldaBattle(enemyPositions[enemyIndex++], enemyIndex, items));
+							enemies.push(new ZeldaBattle(enemyPositions[enemyIndex++], enemyIndex, Game.items));
 							break;
 						}
 						case (GC.ENEMY_TYPE_VELDA): {
-							enemies.push(new VeldaBattle(enemyPositions[enemyIndex++], enemyIndex, items));
+							enemies.push(new VeldaBattle(enemyPositions[enemyIndex++], enemyIndex, Game.items));
 							break;
 						}
 					}
@@ -792,21 +720,8 @@ package worlds
 			}
 		}
 		
-		public function loadEntities():void
-		{
-			add(playerBattle);
-			add(playerBattle.statDisplay);
-			for each (var e:EnemyBattle in enemies)
-			{
-				add(e);
-				add(e.statDisplay);
-			}
-			
-		}
-		
 		public function beginPlayerTurn():void
 		{
-			FP.log("in beginPlayerTurn");
 			currentTurn = 0;
 			playerTurn = true;
 			attackDisplay.visible = true;
@@ -819,16 +734,16 @@ package worlds
 		
 		public function endPlayerTurn():void
 		{
+			currentMode = NORMAL_MODE;
 			playerTurn = false;
-			browsingItems = false;
+			
+			showListBox(false);
 			attackDisplay.visible = false;
 			spellDisplay.visible = false;
 			defendDisplay.visible = false;
 			itemDisplay.visible = false;
 			cursor.visible = false;
-			currentCursorPositionKey = "Attack";
-			cursor.position = cursorPositions["Attack"].getPosition();
-			FP.log("in endplayerturn. currentTurn is " + currentTurn);
+			setCursorPosition("Attack");
 		}
 		
 		public function showResultsScreen():void

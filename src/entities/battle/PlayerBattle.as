@@ -232,12 +232,12 @@ package entities.battle
 				}
 			}
 			
-			_enemy.health -= Battle.spells[_offenseSpell].damageRating;
+			_enemy.health -= Game.spells[_offenseSpell].damageRating;
 			_enemy.updateStatDisplay();
 			
 			if (!_castingScroll) 
 			{
-				player.mana -= Battle.spells[_offenseSpell].manaCost;
+				player.mana -= Game.spells[_offenseSpell].manaCost;
 			}
 			
 			updateStatDisplay();

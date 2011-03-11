@@ -290,8 +290,10 @@ package utility
 						var inventoryItem:InventoryItem;
 						for each (var c:Consumable in _items[GC.ITEM_CONSUMABLE])
 						{
+							FP.log("looking around..." + c.name);
 							if (s.@name == c.name)
 							{
+								FP.log("Found it!" + s.@name);
 								inventoryItem = new InventoryItem();
 								inventoryItem.setConsumable(c, s.@quantity);
 								consumables.push(inventoryItem);

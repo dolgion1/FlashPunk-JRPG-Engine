@@ -352,7 +352,7 @@ package entities
 			if (collide(GC.TYPE_ENEMY, x, y))
 			{
 				var enemy:Enemy = collide(GC.TYPE_ENEMY, x, y) as Enemy;
-				FP.world = new Battle(this, enemy);
+				FP.world = new Battle(this, enemy, Game.dataloader.setupBattleUIData());
 			}
 		}
 		
@@ -502,7 +502,17 @@ package entities
 			}
 		}
 		
-		public function consume(_consumable:Consumable):void
+		public function decreaseInventoryItemQuantity(_itemType:int, _itemIndex:int):void
+		{
+			// decrease quantity of the consumable
+			items[_itemType][_itemIndex].quantity--;
+			if (items[_itemType][_itemIndex].quantity < 1)
+			{
+				items[_itemType].splice(_itemIndex, 1);
+			}
+		}
+		
+		public function consume(_consumable:Consumable, _consumableIndex:int):void
 		{
 			for each (var statusAlteration:StatusAlteration in _consumable.statusAlterations)
 			{
@@ -542,6 +552,8 @@ package entities
 			{
 				activeConsumables.push(_consumable);
 			}
+			
+			decreaseInventoryItemQuantity(GC.ITEM_CONSUMABLE, _consumableIndex);
 		}
 		
 		public function updateAlterations():void

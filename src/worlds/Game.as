@@ -28,7 +28,7 @@ package worlds
 		public var player:Player;
 		public var npcs:Array = new Array();
 		public var enemies:Array = new Array();
-		public var items:Array = new Array();
+		public static var items:Array = new Array();
 		public var chests:Array = new Array();
 		public static var spells:Dictionary = new Dictionary();
 		public var tiles:Tiles;
@@ -60,7 +60,7 @@ package worlds
 		// Utilities
 		public var time:Time = new Time();
 		public var cam:Camera;
-		public var dataloader:DataLoader = new DataLoader();
+		public static var dataloader:DataLoader = new DataLoader();
 		public var dialogManager:DialogManager = new DialogManager();
 		
 		public function Game() 
