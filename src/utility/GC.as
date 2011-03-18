@@ -243,6 +243,16 @@ package utility
 		public static const RESISTANCE_STRING:String = "Resistance";
 		public static const EFFECT_STRING:String = "Effect";
 		public static const SPELLS_STRING:String = "Spells";
+		public static const MANACOST_STRING:String = "Manacost";
+		public static const DURATION_STRING:String = "Duration";
+		public static const BATTLE_LOST_STRING:String = "You died. You will respawn at starting position.";
+		public static const EXPERIENCE_GAINED_STRING:String = "Experience Gained";
+		public static const GOLD_RECEIVED_STRING:String = "Gold Received";
+		public static const LOOT_STRING:String = "Loot";
+		public static const ATTACK_STRING:String = "Attack";
+		public static const SPELL_STRING:String = "Spell";
+		public static const DEFEND_STRING:String = "Defend";
+		public static const ITEM_STRING:String = "Item";
 		
 		// Damage Type names
 		public static const DAMAGE_TYPE_NO_DAMAGE_STRING:String = "Unarmed";
@@ -327,6 +337,24 @@ package utility
 		public static const ENEMY_DAMAGE_RATING_VELDA:int = 4;
 		public static const ENEMY_ARMOR_RATING_VELDA:int = 1;
 				
+				
+		// Cursor Position Keys
+		public static const BATTLE_KEY_ATTACK:String = "Attack";
+		public static const BATTLE_KEY_SPELL:String = "Spell";
+		public static const BATTLE_KEY_DEFEND:String = "Defend";
+		public static const BATTLE_KEY_ITEM:String = "Item";
+		public static const BATTLE_KEY_LIST_ROW:String = "ListRow";
+		public static const BATTLE_KEY_ENEMY:String = "Enemy";
+		
+		// Spell Names
+		public static const FIRE_SPELL:String = "Fire";
+		public static const ICE_SPELL:String = "Fire";
+		
+		// Mob Names
+		public static const ZELDA_MOB:String = "Zelda";
+		public static const VELDA_MOB:String = "Velda";
+		
+		
 		public function GC() {}
 		
 

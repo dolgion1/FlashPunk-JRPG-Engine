@@ -26,7 +26,7 @@ package entities.battle
 		public var arrowMoving:Boolean = false;
 		public var statDisplay:DisplayText;
 		
-		public var targetEnemy:EnemyBattle;
+		public var targetEnemy:MobEntity;
 		public var player:Player;
 		public var activeSpells:Array = new Array();
 		public var spellEntities:Dictionary = new Dictionary();
@@ -74,7 +74,7 @@ package entities.battle
 						delta.x = x - targetPosition.x;
 						delta.y = y - targetPosition.y;
 						moving = false;
-						calculateDamage("WeaponEquipPrimary");
+						calculateDamage(GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY);
 					}
 					else if (curAnimation == "walk_right")
 					{
@@ -95,7 +95,7 @@ package entities.battle
 				{
 					this.world.remove(arrow);
 					arrowMoving = false;
-					calculateDamage("WeaponEquipPrimary");
+					calculateDamage(GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY);
 					Battle.enterNextTurn = true;
 				}
 			}
@@ -123,7 +123,7 @@ package entities.battle
 			spritemap.callback = animationCallback;
 		}
 		
-		public function meleeAttack(_targetPosition:Point, _enemy:EnemyBattle, _meleeTwice:Boolean):void
+		public function meleeAttack(_targetPosition:Point, _enemy:MobEntity, _meleeTwice:Boolean):void
 		{
 			curAnimation = "walk_left";
 			moving = true;
@@ -139,7 +139,7 @@ package entities.battle
 			targetEnemy = _enemy;
 		}
 		
-		public function rangedAttack(_targetPosition:Point, _enemy:EnemyBattle):void
+		public function rangedAttack(_targetPosition:Point, _enemy:MobEntity):void
 		{
 			curAnimation = "ranged_left";
 			
@@ -170,7 +170,6 @@ package entities.battle
 				if (damage < 0) damage = 0;
 				targetEnemy.health -= damage;
 				targetEnemy.updateStatDisplay();
-				FP.log("enemy was just hit");
 				
 				if (targetEnemy.health < 1)
 				{
@@ -190,7 +189,7 @@ package entities.battle
 					if (!targetEnemy.dead)
 					{
 						spritemap.play("melee_left", true);
-						calculateDamage("WeaponEquipSecondary");
+						calculateDamage(GC.INVENTORY_KEY_WEAPON_EQUIP_SECONDARY);
 					}
 					else 
 					{
@@ -212,22 +211,22 @@ package entities.battle
 			}
 		}
 		
-		public function castOnEnemy(_enemy:EnemyBattle, _offenseSpell:String, _castingScroll:Boolean):void
+		public function castOnEnemy(_enemy:MobEntity, _offenseSpell:String, _castingScroll:Boolean):void
 		{
 			curAnimation = "cast_left";
 			
 			switch (_offenseSpell)
 			{
-				case "Fire": 
+				case GC.FIRE_SPELL: 
 				{
-					spellEntities["Fire"] = new FireSpell(_enemy.x, _enemy.y);
-					this.world.add(spellEntities["Fire"]);
+					spellEntities[GC.FIRE_SPELL] = new FireSpell(_enemy.x, _enemy.y);
+					this.world.add(spellEntities[GC.FIRE_SPELL]);
 					break;
 				}
-				case "Ice": 
+				case GC.ICE_SPELL: 
 				{
-					spellEntities["Ice"] = new IceSpell(_enemy.x, _enemy.y);
-					this.world.add(spellEntities["Ice"]);
+					spellEntities[GC.ICE_SPELL] = new IceSpell(_enemy.x, _enemy.y);
+					this.world.add(spellEntities[GC.ICE_SPELL]);
 					break;
 				}
 			}

@@ -44,7 +44,7 @@ package worlds
 		public var itemDisplay:DisplayText;
 		public var cursor:Cursor;
 		public var cursorPositions:Dictionary;
-		public var currentCursorPositionKey:String = "Attack";
+		public var currentCursorPositionKey:String = GC.BATTLE_KEY_ATTACK;
 		public var listBox:TextBox;
 		public var targetedSpell:String;
 		public var castingScroll:Boolean = false;
@@ -122,7 +122,7 @@ package worlds
 				else 
 				{
 					var battleEnded:Boolean = true;
-					for each (var e:EnemyBattle in enemies)
+					for each (var e:MobEntity in enemies)
 					{
 						if (!e.dead) 
 						{
@@ -192,38 +192,38 @@ package worlds
 		{
 			if (currentMode == NORMAL_MODE)
 			{
-				if (currentCursorPositionKey == "Attack")
+				if (currentCursorPositionKey == GC.BATTLE_KEY_ATTACK)
 				{
-					if (!((player.equipment["WeaponEquipPrimary"] == null) && 
-						(player.equipment["WeaponEquipSecondary"] == null)))
+					if (!((player.equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY] == null) && 
+						(player.equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_SECONDARY] == null)))
 					{
 						currentMode = ATTACK_TARGETING_MODE;
 						startTargeting();
 					}
 				}
-				else if (currentCursorPositionKey == "Spell")
+				else if (currentCursorPositionKey == GC.BATTLE_KEY_SPELL)
 				{
 					if (player.spells.length > 0)
 					{
 						currentMode = BROWSING_SPELLS_MODE;
 						populateSpellListDisplays();
 						showListBox(true);
-						setCursorPosition("ListRow1");
+						setCursorPosition(GC.BATTLE_KEY_LIST_ROW + "1");
 						setInfoDisplayTexts();
 					}
 				}
-				else if (currentCursorPositionKey == "Defend")
+				else if (currentCursorPositionKey == GC.BATTLE_KEY_DEFEND)
 				{
 					enterNextTurn = true;
 				}
-				else if (currentCursorPositionKey == "Item")
+				else if (currentCursorPositionKey == GC.BATTLE_KEY_ITEM)
 				{
 					if (player.items[GC.ITEM_CONSUMABLE].length > 0)
 					{
 						currentMode = BROWSING_ITEMS_MODE;	
 						populateItemListDisplays();
 						showListBox(true);
-						setCursorPosition("ListRow1");
+						setCursorPosition(GC.BATTLE_KEY_LIST_ROW + "1");
 						setInfoDisplayTexts();
 					}
 				}
@@ -380,24 +380,24 @@ package worlds
 		{
 			if (currentMode == ATTACK_TARGETING_MODE)
 			{
-				setCursorPosition("Attack");
+				setCursorPosition(GC.BATTLE_KEY_ATTACK);
 				currentMode = NORMAL_MODE;
 			}
 			else if (currentMode == BROWSING_ITEMS_MODE)
 			{
 				showListBox(false);
-				setCursorPosition("Item");
+				setCursorPosition(GC.BATTLE_KEY_ITEM);
 				currentMode = NORMAL_MODE;
 			}
 			else if (currentMode == BROWSING_SPELLS_MODE)
 			{
 				showListBox(false);
-				setCursorPosition("Spell");
+				setCursorPosition(GC.BATTLE_KEY_SPELL);
 				currentMode = NORMAL_MODE;
 			}
 			else if (currentMode == SPELL_TARGETING_MODE)
 			{
-				setCursorPosition("ListRow1");
+				setCursorPosition(GC.BATTLE_KEY_LIST_ROW + "1");
 				currentMode = BROWSING_SPELLS_MODE;
 				castingScroll = false;
 			}
@@ -438,12 +438,12 @@ package worlds
 			{
 				if (enemies[i].dead)
 				{
-					cursorPositions["Enemy" + (i + 1)].valid = false;
+					cursorPositions[GC.BATTLE_KEY_ENEMY + (i + 1)].valid = false;
 				}
 				else 
 				{
-					cursorPositions["Enemy" + (i + 1)].valid = true;
-					currentCursorPositionKey = "Enemy" + (i + 1);
+					cursorPositions[GC.BATTLE_KEY_ENEMY + (i + 1)].valid = true;
+					currentCursorPositionKey = GC.BATTLE_KEY_ENEMY + (i + 1);
 				}
 			}
 			cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
@@ -531,10 +531,10 @@ package worlds
 			
 			// Initialize UI elements
 			listBox = new TextBox(200, 200, 2, 2);
-			attackDisplay = new DisplayText("Attack", 300, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			spellDisplay = new DisplayText("Spell", 385, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			defendDisplay = new DisplayText("Defend", 470, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			itemDisplay = new DisplayText("Item", 555, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			attackDisplay = new DisplayText(GC.ATTACK_STRING, 300, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			spellDisplay = new DisplayText(GC.SPELL_STRING, 385, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			defendDisplay = new DisplayText(GC.DEFEND_STRING, 470, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			itemDisplay = new DisplayText(GC.ITEM_STRING, 555, 380, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			
 			listDisplays.push(new DisplayText("", 250, 230, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
 			listDisplays.push(new DisplayText("", 250, 250, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500));
@@ -549,9 +549,9 @@ package worlds
 			listDisplayFour = new DisplayText("", 400, 290, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			
 			resultsScreen = new TextBox(GC.INVENTORY_OFFSET_X, GC.INVENTORY_OFFSET_Y, GC.INVENTORY_SCALE_X, GC.INVENTORY_SCALE_Y);
-			resultsExperienceGained = new DisplayText("Experience Gained: ", 100, 100, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			resultsGoldReceived = new DisplayText("Gold Received: ", 100, 130, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
-			resultsLootReceived = new DisplayText("Loot: ", 100, 160, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			resultsExperienceGained = new DisplayText(GC.EXPERIENCE_GAINED_STRING + ": ", 100, 100, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			resultsGoldReceived = new DisplayText(GC.GOLD_RECEIVED_STRING + ": ", 100, 130, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
+			resultsLootReceived = new DisplayText(GC.LOOT_STRING + ": ", 100, 160, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			
 			// Set the visibility of UI
 			listBox.visible = false;
@@ -573,7 +573,7 @@ package worlds
 			// Add the entities to the stage
 			add(playerBattle);
 			add(playerBattle.statDisplay);
-			for each (var e:EnemyBattle in enemies)
+			for each (var e:MobEntity in enemies)
 			{
 				add(e);
 				add(e.statDisplay);
@@ -609,7 +609,7 @@ package worlds
 			for (var i:int = 0; i < 6; i++)
 			{
 				listDisplays[i].displayText.text = "";
-				cursorPositions["ListRow" + (i + 1)].valid = false;
+				cursorPositions[GC.BATTLE_KEY_LIST_ROW + (i + 1)].valid = false;
 			}
 			if (player.items[GC.ITEM_CONSUMABLE].length > 6)
 			{
@@ -620,7 +620,7 @@ package worlds
 			for (i = 0; i < listEndIndex; i++)
 			{
 				listDisplays[i].displayText.text = player.items[GC.ITEM_CONSUMABLE][i].item[GC.ITEM_CONSUMABLE].name;
-				cursorPositions["ListRow" + (i + 1)].valid = true;
+				cursorPositions[GC.BATTLE_KEY_LIST_ROW + (i + 1)].valid = true;
 			}
 		}
 		
@@ -629,7 +629,7 @@ package worlds
 			for (var i:int = 0; i < 6; i++)
 			{
 				listDisplays[i].displayText.text = "";
-				cursorPositions["ListRow" + (i + 1)].valid = false;
+				cursorPositions[GC.BATTLE_KEY_LIST_ROW + (i + 1)].valid = false;
 			}
 			
 			if (player.spells.length > 6)
@@ -642,7 +642,7 @@ package worlds
 			{
 				listDisplays[i].displayText.text = player.spells[i];
 				FP.log(player.spells[i]);
-				cursorPositions["ListRow" + (i + 1)].valid = true;
+				cursorPositions[GC.BATTLE_KEY_LIST_ROW + (i + 1)].valid = true;
 			}
 		}
 		
@@ -655,9 +655,9 @@ package worlds
 				
 				var consumable:InventoryItem = player.items[GC.ITEM_CONSUMABLE][consumableIndex];
 				
-				listDisplayOne.displayText.text = "Name: " + consumable.item[GC.ITEM_CONSUMABLE].name;
-				listDisplayTwo.displayText.text = "Quantity: " + consumable.quantity;
-				listDisplayThree.displayText.text = "Effect: " + consumable.item[GC.ITEM_CONSUMABLE].description;
+				listDisplayOne.displayText.text = GC.NAME_STRING + ": " + consumable.item[GC.ITEM_CONSUMABLE].name;
+				listDisplayTwo.displayText.text = GC.QUANTITY_STRING + ": " + consumable.quantity;
+				listDisplayThree.displayText.text = GC.EFFECT_STRING + ": " + consumable.item[GC.ITEM_CONSUMABLE].description;
 			}
 			else if (currentMode == BROWSING_SPELLS_MODE)
 			{
@@ -668,13 +668,13 @@ package worlds
 				//var spell:String = player.spells[spellIndex];
 				var spell:String = listDisplays[spellIndex].displayText.text;
 				
-				listDisplayOne.displayText.text = "Name: " + spell;
-				listDisplayTwo.displayText.text = "Effect: " + Game.spells[spell].description;
-				listDisplayThree.displayText.text = "Manacost: " + Game.spells[spell].manaCost;
+				listDisplayOne.displayText.text = GC.NAME_STRING + ": " + spell;
+				listDisplayTwo.displayText.text = GC.EFFECT_STRING + ": " + Game.spells[spell].description;
+				listDisplayThree.displayText.text = GC.MANACOST_STRING + ": " + Game.spells[spell].manaCost;
 				
 				if (Game.spells[spell].temporary)
 				{ 
-					listDisplayFour.displayText.text = "Duration: " + Game.spells[spell].duration;
+					listDisplayFour.displayText.text = GC.DURATION_STRING + ": " + Game.spells[spell].duration;
 				}
 				else listDisplayFour.displayText.text = "";
 			}
@@ -690,12 +690,10 @@ package worlds
 		public function initCombattants():void
 		{
 			combattants.push(playerBattle);
-			for each (var e:EnemyBattle in enemies)
+			for each (var e:MobEntity in enemies)
 			{
 				combattants.push(e);
 			}
-			currentTurn = 0;
-			playerTurn = true;
 		}
 		
 		public function initMobs(_enemy:Enemy):void
@@ -708,11 +706,11 @@ package worlds
 					switch (mob.type)
 					{
 						case (GC.ENEMY_TYPE_ZELDA): {
-							enemies.push(new ZeldaBattle(enemyPositions[enemyIndex++], enemyIndex, Game.items));
+							enemies.push(new ZeldaMob(enemyPositions[enemyIndex++], enemyIndex, Game.items));
 							break;
 						}
 						case (GC.ENEMY_TYPE_VELDA): {
-							enemies.push(new VeldaBattle(enemyPositions[enemyIndex++], enemyIndex, Game.items));
+							enemies.push(new VeldaMob(enemyPositions[enemyIndex++], enemyIndex, Game.items));
 							break;
 						}
 					}
@@ -743,7 +741,7 @@ package worlds
 			defendDisplay.visible = false;
 			itemDisplay.visible = false;
 			cursor.visible = false;
-			setCursorPosition("Attack");
+			setCursorPosition(GC.BATTLE_KEY_ATTACK);
 		}
 		
 		public function showResultsScreen():void
@@ -770,7 +768,7 @@ package worlds
 			{
 				resultsScreen.visible = true;
 				resultsExperienceGained.visible = true;
-				resultsExperienceGained.displayText.text = "You died. You will respawn at starting position.";
+				resultsExperienceGained.displayText.text = GC.BATTLE_LOST_STRING;
 			}
 			
 			battleEnded = true;
