@@ -21,6 +21,10 @@ package entities.spells
 		{
 			setupSpritesheet();
 			graphic = spritemap;
+			
+			// play the animation immediately
+			// since the animation doesn't loop, 
+			// the callback get called
 			spritemap.play(curAnimation);
 			
 			x = _x;
@@ -45,6 +49,8 @@ package entities.spells
 		
 		public function animationCallback():void
 		{
+			// and the callback removes this entity from the stage it's on
+			// the entity lives only as long as its animation plays
 			this.world.remove(this);
 			Battle.enterNextTurn = true;
 		}

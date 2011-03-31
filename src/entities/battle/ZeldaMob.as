@@ -15,6 +15,7 @@ package entities.battle
 	 */
 	public class ZeldaMob extends MobEntity
 	{
+		// instances of entities for the spells that Zelda can cast
 		public var fireSpell:FireSpell;
 		
 		public function ZeldaMob(_position:Point, _keyIndex:int, _items:Array) 
@@ -87,9 +88,10 @@ package entities.battle
 		
 		public function battleAction(_player:PlayerBattle):void
 		{
+			// check if action must be taken to heal up
 			if (health < (maxHealth/2))
 			{
-				// the amount of HP we need to heal
+				// the amount of health that the mob has lost
  				var healthDeficit:int = maxHealth - health; 
 				
 				var healthPotionIndices:Array = new Array();
@@ -139,9 +141,11 @@ package entities.battle
 				}
 			}
 			
+			// choose between casting a spell or doing a normal attack, based on damage
 			var useSpell:Boolean = false;
 			if (spells.length > 0)
 			{
+				// only the first spell is compared as of now
 				if (Game.spells[spells[0] + ""].manaCost <= mana)
 				{
 					if (Game.spells[spells[0] + ""].damageRating > attackDamage)
@@ -161,6 +165,7 @@ package entities.battle
 			else
 			{
 				// if there isn't, do a melee attack
+				// first, move towards player
 				curAnimation = "walk_right";
 				spritemap.play(curAnimation);
 				moving = true;
@@ -176,16 +181,22 @@ package entities.battle
 		{
 			if (curAnimation == "cast_right")
 			{
+				// display the spell entity and its animation
+				// hard-coded the fire spell for now
 				fireSpell = new FireSpell(player.x, player.y);
 				this.world.add(fireSpell);
-				player.player.health -= Game.spells[spells[0]].damageRating;
-				mana -= Game.spells[spells[0]].manaCost;
-				if (mana < 0) mana = 0;
 				
+				// hurt the player
+				player.player.health -= Game.spells[spells[0]].damageRating;
 				if (player.player.health < 1) 
 				{
 					player.player.dead = true;
 				}
+
+				// pay the mana cost
+				mana -= Game.spells[spells[0]].manaCost;				
+				if (mana < 0) mana = 0;
+				
 				updateStatDisplay();
 				curAnimation = "stand_right";
 				spritemap.play(curAnimation);
@@ -200,6 +211,8 @@ package entities.battle
 		
 		public function consume(_inventoryItem:InventoryItem):void
 		{
+			// consume a consumable and apply status alterations
+			// no temporary effects for now
 			switch (_inventoryItem.item[GC.ITEM_CONSUMABLE].statusAlterations[0].statusVariable)
 			{
 				case (GC.STATUS_HEALTH): 

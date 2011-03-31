@@ -293,14 +293,14 @@ package utility
 		public static const BATTLE_PLAYER_X:int = 468;
 		public static const BATTLE_PLAYER_Y:int = 195;
 		
-		public static const BATTLE_ENEMY_ONE_X:int = 100;
-		public static const BATTLE_ENEMY_ONE_Y:int = 30;
+		public static const BATTLE_MOB_ONE_X:int = 100;
+		public static const BATTLE_MOB_ONE_Y:int = 30;
 		
-		public static const BATTLE_ENEMY_TWO_X:int = 100;
-		public static const BATTLE_ENEMY_TWO_Y:int = 300;
+		public static const BATTLE_MOB_TWO_X:int = 100;
+		public static const BATTLE_MOB_TWO_Y:int = 300;
 		
-		public static const BATTLE_ENEMY_THREE_X:int = 0;
-		public static const BATTLE_ENEMY_THREE_Y:int = 156;
+		public static const BATTLE_MOB_THREE_X:int = 0;
+		public static const BATTLE_MOB_THREE_Y:int = 156;
 		
 		// Arrow constants
 		public static const ARROW_SPRITE_WIDTH:int = 72;
@@ -309,6 +309,7 @@ package utility
 		// Player Battle constants
 		public static const PLAYER_BATTLE_SPRITE_WIDTH:Number = 127;
 		public static const PLAYER_BATTLE_SPRITE_HEIGHT:Number = 91;
+		public static const PLAYER_BATTLE_DESTINATION_RADIUS:int = 50;
 		
 		// Player Battle constants
 		public static const ZELDA_BATTLE_SPRITE_WIDTH:Number = 155;
@@ -336,8 +337,8 @@ package utility
 		public static const ENEMY_SPIRITUALITY_VELDA:int = 10;
 		public static const ENEMY_DAMAGE_RATING_VELDA:int = 4;
 		public static const ENEMY_ARMOR_RATING_VELDA:int = 1;
-				
-				
+		
+		
 		// Cursor Position Keys
 		public static const BATTLE_KEY_ATTACK:String = "Attack";
 		public static const BATTLE_KEY_SPELL:String = "Spell";
@@ -348,11 +349,11 @@ package utility
 		
 		// Spell Names
 		public static const FIRE_SPELL:String = "Fire";
-		public static const ICE_SPELL:String = "Fire";
+		public static const ICE_SPELL:String = "Ice";
 		
 		// Mob Names
-		public static const ZELDA_MOB:String = "Zelda";
-		public static const VELDA_MOB:String = "Velda";
+		public static const MOB_ZELDA:String = "Zelda";
+		public static const MOB_VELDA:String = "Velda";
 		
 		
 		public function GC() {}

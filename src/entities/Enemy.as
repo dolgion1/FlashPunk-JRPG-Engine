@@ -8,11 +8,14 @@ package entities
 	 */
 	public class Enemy extends NPC 
 	{
+		// stores the instances of mobs that this enemy(-group) contains
 		public var mobs:Array = new Array();
+		
+		// amount of experience points the player will gain when defeating the mobs
 		public var experiencePoints:int;
 		public var defeated:Boolean = false;
-		public var loot:Array = new Array();
-		public var gold:int;
+		public var loot:Array = new Array(); // an inventory of items that can be looted
+		public var gold:int; // amount of gold to be had for the player
 		
 		public function Enemy(_maps:Array, 
 							  _name:String, 

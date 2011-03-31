@@ -34,14 +34,17 @@ package entities.battle
 		
 		public function PlayerBattle(_x:int, _y:int, _player:Player) 
 		{
+			// initiate the graphics
 			setupSpritesheet();
 			graphic = spritemap;
 			spritemap.play(curAnimation);
 			
+			// set up position and internal player instance
 			x = _x;
 			y = _y;
 			player = _player;
 			
+			// initiate stats display
 			statDisplay = new DisplayText(player.health + "/" + player.maxHealth + " " + player.mana + "/" + player.maxMana,
 										  x + 40,
 										  y - 30,
@@ -59,42 +62,60 @@ package entities.battle
 			
 			if (moving)
 			{
+				// the player must move towards the destination
+				// dividing the deltas by FP.assignedFrameRate means the entire walk will take 1 second
 				x -= delta.x / FP.assignedFrameRate;
 				y -= delta.y / FP.assignedFrameRate;
+				
+				// move the stat display as well
 				statDisplay.x -= delta.x / FP.assignedFrameRate;
 				statDisplay.y -= delta.y / FP.assignedFrameRate;
 				
-				if ((Math.abs(x - targetPosition.x) < 50) &&
-					(Math.abs(y - targetPosition.y) < 50))
+				// check if the player has arrived in the proximity of destination
+				// within GC.PLAYER_BATTLE_DESTINATION_RADIUS 
+				if ((Math.abs(x - targetPosition.x) < GC.PLAYER_BATTLE_DESTINATION_RADIUS) &&
+					(Math.abs(y - targetPosition.y) < GC.PLAYER_BATTLE_DESTINATION_RADIUS))
 				{
 					if (curAnimation == "walk_left")
 					{
+						// so the player was walking to the left side, which means he was
+						// walking towards an enemy
 						curAnimation = "melee_left";
+						
+						// set the new target position to be the player's starting position
 						targetPosition = new Point(GC.BATTLE_PLAYER_X, GC.BATTLE_PLAYER_Y);
 						delta.x = x - targetPosition.x;
 						delta.y = y - targetPosition.y;
 						moving = false;
+						
+						// hurt the enemy
 						calculateDamage(GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY);
 					}
 					else if (curAnimation == "walk_right")
 					{
+						// so the player was walking back to his starting position.
+						// end this turn then
 						moving = false;
 						curAnimation = "stand_left";
 						Battle.enterNextTurn = true;
-						FP.log("Player's turn ended here");
 					}
 				}
 			}
 			else if (arrowMoving)
 			{
+				// move the arrow which was shot towards the destination (enemy)
+				// again, dividing delta by FP.assignedFrameRate means the arrow will take 1 second to hit
 				arrow.x -= delta.x / FP.assignedFrameRate;
 				arrow.y -= delta.y / FP.assignedFrameRate; 
 				
-				if ((Math.abs(arrow.x - targetPosition.x) < 50) &&
-					(Math.abs(arrow.y - targetPosition.y) < 50))
+				if ((Math.abs(arrow.x - targetPosition.x) < GC.PLAYER_BATTLE_DESTINATION_RADIUS) &&
+					(Math.abs(arrow.y - targetPosition.y) < GC.PLAYER_BATTLE_DESTINATION_RADIUS))
 				{
+					// the arrow has hit, so remove it from the stage
 					this.world.remove(arrow);
 					arrowMoving = false;
+					
+					// hurt the enemy and end the turn
 					calculateDamage(GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY);
 					Battle.enterNextTurn = true;
 				}
@@ -120,27 +141,34 @@ package entities.battle
 			spritemap.add("walk_right", [42, 43, 44, 45, 46, 47], 9, true);
 			spritemap.add("cast_left", [48, 0], 3, false);
 			spritemap.add("cast_right", [49, 1], 3, false);
-			spritemap.callback = animationCallback;
+			
+			// call this function whenever an animation finishes playing
+			spritemap.callback = animationCallback; 
 		}
 		
 		public function meleeAttack(_targetPosition:Point, _enemy:MobEntity, _meleeTwice:Boolean):void
 		{
+			// melee attacks start by walking towards the enemy
 			curAnimation = "walk_left";
 			moving = true;
-			meleeTwice = _meleeTwice;
+			meleeTwice = _meleeTwice; // this decides whether to also hit with a secondary weapon
 			
+			// store the position to which to travel
 			targetPosition = new Point(_targetPosition.x, _targetPosition.y);
 			targetPosition.y += 40;
 			
+			// store the distance to travel in both axises
 			delta.x = x - targetPosition.x;
 			delta.y = y - targetPosition.y;
 			
+			// store the instance of the enemy
 			targetEnemy = null;
 			targetEnemy = _enemy;
 		}
 		
 		public function rangedAttack(_targetPosition:Point, _enemy:MobEntity):void
 		{
+			// play the animation for ranged attacks
 			curAnimation = "ranged_left";
 			
 			// make the arrow fly towards the targetposition
@@ -149,11 +177,15 @@ package entities.battle
 			arrow.y = this.y + 40;
 			this.world.add(arrow);
 			
+			// store the position to which to travel
 			targetPosition = new Point(_targetPosition.x, _targetPosition.y);
 			targetPosition.y += 100;
+			
+			// store the distance for the arrow to travel in both axises
 			delta.x = arrow.x - targetPosition.x;
 			delta.y = arrow.y - targetPosition.y;
 			
+			// store the instance of the enemy
 			targetEnemy = null;
 			targetEnemy = _enemy;
 		}
@@ -166,11 +198,15 @@ package entities.battle
 			
 			if (someNum <= chance)
 			{
+				// the player landed a successful hit, now calculate the damage
 				damage = player.equipment[_weaponEquipmentKey].damageRating - targetEnemy.armorRating;
 				if (damage < 0) damage = 0;
+				
+				// hurt the enemy
 				targetEnemy.health -= damage;
 				targetEnemy.updateStatDisplay();
 				
+				// if the enemy died, remove him and set dead to true
 				if (targetEnemy.health < 1)
 				{
 					targetEnemy.world.remove(targetEnemy.statDisplay);
@@ -184,8 +220,11 @@ package entities.battle
 		{
 			if (curAnimation == "melee_left")
 			{
+				// the player has just performed a melee attack.
+				// is there a secondary attack to perform as well?
 				if (meleeTwice)
 				{
+					// only perform the attack animation if the enemy isn't already dead
 					if (!targetEnemy.dead)
 					{
 						spritemap.play("melee_left", true);
@@ -193,13 +232,16 @@ package entities.battle
 					}
 					else 
 					{
+						// otherwise just walk back
 						curAnimation = "walk_right";
 						moving = true;
 					}
+					
 					meleeTwice = false;
 				}
 				else 
 				{
+					// walk back
 					curAnimation = "walk_right";
 					moving = true;
 				}
@@ -211,10 +253,13 @@ package entities.battle
 			}
 		}
 		
-		public function castOnEnemy(_enemy:MobEntity, _offenseSpell:String, _castingScroll:Boolean):void
+		public function castOnMob(_enemy:MobEntity, _offenseSpell:String, _castingScroll:Boolean):void
 		{
 			curAnimation = "cast_left";
 			
+			// instantiate the corresponding spell and add it to the stage
+			// once the spell is on the stage, it's animation will play automatically
+			// and it will remove itself from the stage one the animation finishes
 			switch (_offenseSpell)
 			{
 				case GC.FIRE_SPELL: 
@@ -231,16 +276,21 @@ package entities.battle
 				}
 			}
 			
+			// hurt the enemy
 			_enemy.health -= Game.spells[_offenseSpell].damageRating;
 			_enemy.updateStatDisplay();
 			
+			// if the spell wasn't cast from a scroll, decrease the player's mana
 			if (!_castingScroll) 
 			{
 				player.mana -= Game.spells[_offenseSpell].manaCost;
+				
+				// update stats display because mana has changed
+				updateStatDisplay();
 			}
 			
-			updateStatDisplay();
-			
+			// check if the enemy is dead, in which case dead is set to true and the
+			// enemy is removed from the stage
 			if (_enemy.health < 1)
 			{
 				_enemy.world.remove(targetEnemy.statDisplay);
@@ -251,6 +301,8 @@ package entities.battle
 		
 		public function castOnSelf(_defenseSpell:DefenseSpell):void
 		{
+			// apply the status alteration of the spell on the correct
+			// attribute of the player
 			switch (_defenseSpell.statusVariable)
 			{
 				case (GC.STATUS_HEALTH): 
@@ -282,14 +334,20 @@ package entities.battle
 				}
 			}
 			
+			// if the spell is temporary, put it into the datastructure which
+			// keeps track of temporary effects
 			if (_defenseSpell.temporary) activeSpells.push(_defenseSpell);
 			
+			// decrease player's mana
 			player.mana -= _defenseSpell.manaCost;
 			updateStatDisplay();
 		}
 		
 		public function updateSpellAlterations():void
 		{
+			// update the countdown timers of all currently effective 
+			// temporary spells and reverse their effect if the timer
+			// has reached 0 
 			for (var i:int = 0; i < activeSpells.length; i++)
 			{
 				activeSpells[i].duration--;

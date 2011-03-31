@@ -43,6 +43,7 @@ package utility
 		
 		public function initDisplayTexts():void
 		{
+			// initialize all display texts
 			spellsHeader = new DisplayText(GC.SPELLS_STRING, 40, 40, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			manaDisplay = new DisplayText(GC.MANA_STRING + ": ", 400, 40, "default", GC.STATUS_SCREEN_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			
@@ -58,6 +59,7 @@ package utility
 			listDisplayThree = new DisplayText("", 300, 110, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			listDisplayFour = new DisplayText("", 300, 130, "default", GC.INVENTORY_DEFAULT_FONT_SIZE, 0xFFFFFF, 500);
 			
+			// push them to the stage
 			displayTexts.push(spellsHeader);
 			displayTexts.push(manaDisplay);
 			displayTexts.push(listDisplays[0]);
@@ -75,6 +77,7 @@ package utility
 		
 		public function initialize(_player:Player):void
 		{
+			// when opening the spells screen
 			player = _player;
 			populateSpellListDisplays();
 			setInfoDisplayTexts();
@@ -83,28 +86,33 @@ package utility
 		
 		public function populateSpellListDisplays():void
 		{
+			// invalidate cursor positions for the list row displays
+			// and empty their texts
 			for (var i:int = 0; i < 6; i++)
 			{
 				listDisplays[i].displayText.text = "";
 				cursorPositions["ListRow" + (i + 1)].valid = false;
 			}
-			FP.log("spells: " + player.spells.length)
+			
+			// set up listEndIndex
 			if (player.spells.length > 6)
 			{
 				listEndIndex = 6;
 			}
 			else listEndIndex = player.spells.length;
 			
+			// validate cursor positions and set the texts for the 
+			// corresponding list rows
 			for (i = 0; i < listEndIndex; i++)
 			{
 				listDisplays[i].displayText.text = player.spells[i];
-				FP.log(player.spells[i]);
 				cursorPositions["ListRow" + (i + 1)].valid = true;
 			}
 		}
 		
 		public function setInfoDisplayTexts():void
 		{
+			// set the texts of the info display texts based on the spell selected
 			var spellIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
 			var spell:String = listDisplays[spellIndex].displayText.text;
 			
@@ -121,6 +129,7 @@ package utility
 		
 		public function cursorMovement(_direction:String):void
 		{
+			// handle cursor movement, checking whether a cursor position exists or is valid
 			var newCursorPositionKey:String;
 			
 			switch(_direction)
@@ -145,6 +154,7 @@ package utility
 		{
 			var spellIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1 + listStartIndex;
 			
+			// only allow casting of defense spells in the spells screen
 			if (Game.spells[player.spells[spellIndex]] is DefenseSpell)
 			{
 				var defenseSpell:DefenseSpell = new DefenseSpell();

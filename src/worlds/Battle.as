@@ -29,10 +29,9 @@ package worlds
 		
 		public var player:Player;
 		public var playerBattle:PlayerBattle;
-		public var experiencePoints:int;
 		public var enemy:Enemy;
-		public var enemies:Array = new Array();
-		public var enemyPositions:Array = new Array();
+		public var mobs:Array = new Array();
+		public var mobPositions:Array = new Array();
 		public var combattants:Array = new Array();
 		public var currentTurn:int;
 		public var playerTurn:Boolean;
@@ -64,12 +63,14 @@ package worlds
 		{
 			enemy = _enemy;
 			player = _player;
-			experiencePoints = _enemy.experiencePoints;
-			
+						
+			// set up cursorPositions[] and cursor entity
 			initCursor(_battleUIData);
+			// initialize battle UI and combattant entities
 			initEntities();
+			// initialize combattants[]
 			initCombattants();
-			
+			// set state variables for player's turn
 			beginPlayerTurn();
 		}
 		
@@ -86,9 +87,9 @@ package worlds
 			
 			if (enterNextTurn)
 			{
-				if (!playerTurn)
+				if (!playerTurn) // it's a mob's turn
 				{
-					if (player.dead)
+					if (player.dead) // if the player died in the previous turn, conclude the battle 
 					{
 						player.dead = false;
 						player.x = 200;
@@ -108,9 +109,10 @@ package worlds
 					}
 					else
 					{
-						// the current enemy must do something
+						// first check whether the current mob is alive
 						if (!combattants[currentTurn].dead)
 						{
+							// in which case the mob's battle AI determines the next action
 							combattants[currentTurn].battleAction(playerBattle);
 						}
 						else
@@ -121,10 +123,11 @@ package worlds
 				}
 				else 
 				{
+					// if all mobs are dead, conclude the battle
 					var battleEnded:Boolean = true;
-					for each (var e:MobEntity in enemies)
+					for each (var m:MobEntity in mobs)
 					{
-						if (!e.dead) 
+						if (!m.dead) 
 						{
 							battleEnded = false;
 							break;
@@ -132,11 +135,13 @@ package worlds
 					}
 					if (!battleEnded)
 					{
+						// move on
 						endPlayerTurn();
 					}
 					else 
 					{
-						player.experience += experiencePoints;
+						// conclude the battle with a victory for the player 
+						player.experience += enemy.experiencePoints;
 						player.gold += enemy.gold;
 						player.takeLoot(enemy.loot);
 						enemy.defeated = true;
@@ -157,6 +162,8 @@ package worlds
 		
 		public function processGeneralInput():void
 		{
+			// if battle ended, the results screen is shown at this point. 
+			// wait for the player to press action to switch worlds
 			if (battleEnded)
 			{
 				if (Input.pressed(GC.BUTTON_ACTION))
@@ -194,6 +201,7 @@ package worlds
 			{
 				if (currentCursorPositionKey == GC.BATTLE_KEY_ATTACK)
 				{
+					// the player can only attack if there is a weapon equipped
 					if (!((player.equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_PRIMARY] == null) && 
 						(player.equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_SECONDARY] == null)))
 					{
@@ -203,6 +211,7 @@ package worlds
 				}
 				else if (currentCursorPositionKey == GC.BATTLE_KEY_SPELL)
 				{
+					// the player can only select spells he/she knows at least one
 					if (player.spells.length > 0)
 					{
 						currentMode = BROWSING_SPELLS_MODE;
@@ -214,10 +223,13 @@ package worlds
 				}
 				else if (currentCursorPositionKey == GC.BATTLE_KEY_DEFEND)
 				{
+					// TODO: something to temporarily boost armor or something else that
+					// can lessen damage from mob attacks
 					enterNextTurn = true;
 				}
 				else if (currentCursorPositionKey == GC.BATTLE_KEY_ITEM)
 				{
+					// only show the list if there is at least one consumable
 					if (player.items[GC.ITEM_CONSUMABLE].length > 0)
 					{
 						currentMode = BROWSING_ITEMS_MODE;	
@@ -232,7 +244,7 @@ package worlds
 			else if (currentMode == ATTACK_TARGETING_MODE)
 			{
 				currentMode = NORMAL_MODE;
-				playerAttackEnemy();
+				playerAttackMob();
 				cursor.visible = false;
 			}
 			
@@ -243,7 +255,7 @@ package worlds
 			else if (currentMode == SPELL_TARGETING_MODE)
 			{
 				currentMode = NORMAL_MODE;
-				playerCastOnEnemy();
+				playerCastOnMob();
 				cursor.visible = false;							
 				showListBox(false);
 				
@@ -317,6 +329,8 @@ package worlds
 		
 		public function cursorMovement():void
 		{
+			// we just assign new cursor positions and update the currentCursorPositionKey
+			// accordingly, but first make checks if the new positions are valid or existent at all
 			if (Input.pressed(GC.BUTTON_LEFT))
 			{
 				if (cursorPositions[currentCursorPositionKey].leftKey != null)
@@ -340,6 +354,8 @@ package worlds
 					}
 				}
 			}
+			// for up and down, we also need to update information display texts 
+			// if the cursor is currently navigating the list box
 			else if (Input.pressed(GC.BUTTON_UP))
 			{
 				if (cursorPositions[currentCursorPositionKey].upKey != null)
@@ -376,6 +392,8 @@ package worlds
 			}
 		}
 		
+		// when pressing the cancel button, the current mode must
+		// be reset to the one that comes before it 
 		public function cancelPress():void
 		{
 			if (currentMode == ATTACK_TARGETING_MODE)
@@ -403,12 +421,15 @@ package worlds
 			}
 		}
 		
+		// little helper function that just sets the cursor to a given position
+		// by using the cursor position key
 		public function setCursorPosition(_positionKey:String):void
 		{
 			currentCursorPositionKey = _positionKey;
 			cursor.position = cursorPositions[_positionKey].getPosition();			
 		}
 		
+		// set the visibility of the list box by the _visible parameter
 		public function showListBox(_visible:Boolean):void
 		{
 			listBox.visible = _visible;
@@ -423,6 +444,7 @@ package worlds
 			listDisplayThree.visible = _visible;
 			listDisplayFour.visible = _visible;
 			
+			// in items mode, we don't need the fourth list info display
 			if ((_visible) && (currentMode == BROWSING_ITEMS_MODE))
 			{
 				listDisplayFour.visible = false;
@@ -434,9 +456,9 @@ package worlds
 			// loop through enemies and determine
 			// which cursorPosition is valid, setting 
 			// true and false for each
-			for (var i:int = (enemies.length - 1); i >= 0; i--)
+			for (var i:int = (mobs.length - 1); i >= 0; i--)
 			{
-				if (enemies[i].dead)
+				if (mobs[i].dead)
 				{
 					cursorPositions[GC.BATTLE_KEY_ENEMY + (i + 1)].valid = false;
 				}
@@ -449,6 +471,8 @@ package worlds
 			cursor.position = cursorPositions[currentCursorPositionKey].getPosition();
 		}
 		
+		// Determine the spell that was selected and decide what to do next based on the
+		// type of spell: offensive or defensive
 		public function selectSpell():void
 		{
 			// Get instance of the spell
@@ -456,6 +480,7 @@ package worlds
 			
 			if (player.mana >= Game.spells[player.spells[spellIndex]].manaCost)
 			{
+				// If the spell was defensive, cast it on the player and end the turn
 				if (Game.spells[player.spells[spellIndex]] is DefenseSpell)
 				{
 					currentMode = NORMAL_MODE;
@@ -469,6 +494,7 @@ package worlds
 					// we just move to the next turn
 					enterNextTurn = true;
 				}
+				// if it was offensive, enter targeting mode
 				else if (Game.spells[player.spells[spellIndex]] is OffenseSpell)
 				{
 					currentMode = SPELL_TARGETING_MODE;
@@ -478,45 +504,47 @@ package worlds
 			}
 		}
 		
-		public function playerAttackEnemy():void
+		public function playerAttackMob():void
 		{
-			for (var i:int = 0; i < enemies.length; i++)
+			// find the mob that the cursor points to
+			for (var i:int = 0; i < mobs.length; i++)
 			{
-				if (enemies[i].key == currentCursorPositionKey)
+				if (mobs[i].key == currentCursorPositionKey)
 				{
-					if (!enemies[i].dead)
+					if (!mobs[i].dead)
 					{
-						var enemyPositionIndex:int = int(enemies[i].key.charAt(enemies[i].key.length - 1)) - 1;
+						// determine the type of attack: melee, melee with dual wielding or ranged?
+						var mobPositionIndex:int = int(mobs[i].key.charAt(mobs[i].key.length - 1)) - 1;
 						if (player.attackType == GC.ATTACK_TYPE_MELEE)
 						{
 							if (player.equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_SECONDARY] != null)
 							{
-								playerBattle.meleeAttack(enemyPositions[enemyPositionIndex], enemies[i], true);
+								playerBattle.meleeAttack(mobPositions[mobPositionIndex], mobs[i], true);
 							}
 							else 
 							{
-								playerBattle.meleeAttack(enemyPositions[enemyPositionIndex], enemies[i], false);
+								playerBattle.meleeAttack(mobPositions[mobPositionIndex], mobs[i], false);
 							}
 						}
 						else if (player.attackType == GC.ATTACK_TYPE_RANGED)
 						{
-							playerBattle.rangedAttack(enemyPositions[enemyPositionIndex], enemies[i]);
+							playerBattle.rangedAttack(mobPositions[mobPositionIndex], mobs[i]);
 						}
 					}
 				}
 			}
 		}
 		
-		
-		public function playerCastOnEnemy():void
+		// find the mob that was targeted and cast the selected spell
+		public function playerCastOnMob():void
 		{
-			for (var i:int = 0; i < enemies.length; i++)
+			for (var i:int = 0; i < mobs.length; i++)
 			{
-				if (enemies[i].key == currentCursorPositionKey)
+				if (mobs[i].key == currentCursorPositionKey)
 				{
-					if (!enemies[i].dead)
+					if (!mobs[i].dead)
 					{
-						playerBattle.castOnEnemy(enemies[i], targetedSpell, castingScroll);
+						playerBattle.castOnMob(mobs[i], targetedSpell, castingScroll);
 					}
 				}
 			}
@@ -526,8 +554,8 @@ package worlds
 		{
 			// Initialize the actors
 			playerBattle = new PlayerBattle(GC.BATTLE_PLAYER_X, GC.BATTLE_PLAYER_Y, player);
-			initEnemyPositions();
-			initMobs(enemy);
+			initMobPositions();
+			initMobs();
 			
 			// Initialize UI elements
 			listBox = new TextBox(200, 200, 2, 2);
@@ -573,10 +601,10 @@ package worlds
 			// Add the entities to the stage
 			add(playerBattle);
 			add(playerBattle.statDisplay);
-			for each (var e:MobEntity in enemies)
+			for each (var m:MobEntity in mobs)
 			{
-				add(e);
-				add(e.statDisplay);
+				add(m);
+				add(m.statDisplay);
 			}
 			
 			add(attackDisplay);
@@ -604,19 +632,24 @@ package worlds
 			add(resultsLootReceived);
 		}
 		
+		
 		public function populateItemListDisplays():void
 		{
+			// reset list displays and invalidate cursor positions
 			for (var i:int = 0; i < 6; i++)
 			{
 				listDisplays[i].displayText.text = "";
 				cursorPositions[GC.BATTLE_KEY_LIST_ROW + (i + 1)].valid = false;
 			}
+			
+			// set up listEndIndex
 			if (player.items[GC.ITEM_CONSUMABLE].length > 6)
 			{
 				listEndIndex = 6;
 			}
 			else listEndIndex = player.items[GC.ITEM_CONSUMABLE].length;
 			
+			// populate list rows with item names and validate cursor positions
 			for (i = 0; i < listEndIndex; i++)
 			{
 				listDisplays[i].displayText.text = player.items[GC.ITEM_CONSUMABLE][i].item[GC.ITEM_CONSUMABLE].name;
@@ -626,28 +659,32 @@ package worlds
 		
 		public function populateSpellListDisplays():void
 		{
+			// reset list displays and invalidate cursor positions
 			for (var i:int = 0; i < 6; i++)
 			{
 				listDisplays[i].displayText.text = "";
 				cursorPositions[GC.BATTLE_KEY_LIST_ROW + (i + 1)].valid = false;
 			}
 			
+			// set up listEndIndex
 			if (player.spells.length > 6)
 			{
 				listEndIndex = 6;
 			}
 			else listEndIndex = player.spells.length;
 			
+			// populate list rows with spell names and validate cursor positions
 			for (i = 0; i < listEndIndex; i++)
 			{
 				listDisplays[i].displayText.text = player.spells[i];
-				FP.log(player.spells[i]);
 				cursorPositions[GC.BATTLE_KEY_LIST_ROW + (i + 1)].valid = true;
 			}
 		}
 		
 		public function setInfoDisplayTexts ():void
 		{
+			// get the consumable/spell instances of the currently selected
+			// list row and populate the info display texts on the right side 
 			if (currentMode == BROWSING_ITEMS_MODE)
 			{
 				var consumableIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
@@ -662,10 +699,6 @@ package worlds
 			else if (currentMode == BROWSING_SPELLS_MODE)
 			{
 				var spellIndex:int = int(currentCursorPositionKey.charAt(currentCursorPositionKey.length - 1)) - 1;
-				//spellIndex += listStartIndex;
-				
-
-				//var spell:String = player.spells[spellIndex];
 				var spell:String = listDisplays[spellIndex].displayText.text;
 				
 				listDisplayOne.displayText.text = GC.NAME_STRING + ": " + spell;
@@ -680,37 +713,29 @@ package worlds
 			}
 		}
 		
-		public function initEnemyPositions():void
+		public function initMobPositions():void
 		{
-			enemyPositions.push(new Point(GC.BATTLE_ENEMY_ONE_X, GC.BATTLE_ENEMY_ONE_Y));
-			enemyPositions.push(new Point(GC.BATTLE_ENEMY_TWO_X, GC.BATTLE_ENEMY_TWO_Y));
-			enemyPositions.push(new Point(GC.BATTLE_ENEMY_THREE_X, GC.BATTLE_ENEMY_THREE_Y));
+			mobPositions.push(new Point(GC.BATTLE_MOB_ONE_X, GC.BATTLE_MOB_ONE_Y));
+			mobPositions.push(new Point(GC.BATTLE_MOB_TWO_X, GC.BATTLE_MOB_TWO_Y));
+			mobPositions.push(new Point(GC.BATTLE_MOB_THREE_X, GC.BATTLE_MOB_THREE_Y));
 		}
 		
-		public function initCombattants():void
+		public function initMobs():void
 		{
-			combattants.push(playerBattle);
-			for each (var e:MobEntity in enemies)
-			{
-				combattants.push(e);
-			}
-		}
-		
-		public function initMobs(_enemy:Enemy):void
-		{
-			var enemyIndex:int = 0;
-			for each (var mob:Mob in _enemy.mobs)
+			// loop through the mobs of _enemy and instantiate MobEntity subclasses accordingly
+			var mobIndex:int = 0;
+			for each (var mob:Mob in enemy.mobs)
 			{
 				for (var i:int = 0; i < mob.quantity; i++)
 				{
 					switch (mob.type)
 					{
 						case (GC.ENEMY_TYPE_ZELDA): {
-							enemies.push(new ZeldaMob(enemyPositions[enemyIndex++], enemyIndex, Game.items));
+							mobs.push(new ZeldaMob(mobPositions[mobIndex++], mobIndex, Game.items));
 							break;
 						}
 						case (GC.ENEMY_TYPE_VELDA): {
-							enemies.push(new VeldaMob(enemyPositions[enemyIndex++], enemyIndex, Game.items));
+							mobs.push(new VeldaMob(mobPositions[mobIndex++], mobIndex, Game.items));
 							break;
 						}
 					}
@@ -718,6 +743,16 @@ package worlds
 			}
 		}
 		
+		public function initCombattants():void
+		{
+			combattants.push(playerBattle);
+			for each (var m:MobEntity in mobs)
+			{
+				combattants.push(m);
+			}
+		}
+		
+		// setup state variables to begin the player's turn
 		public function beginPlayerTurn():void
 		{
 			currentTurn = 0;
@@ -730,6 +765,7 @@ package worlds
 			playerBattle.updateSpellAlterations();
 		}
 		
+		// setup state variables to end the player's turn
 		public function endPlayerTurn():void
 		{
 			currentMode = NORMAL_MODE;
@@ -744,6 +780,7 @@ package worlds
 			setCursorPosition(GC.BATTLE_KEY_ATTACK);
 		}
 		
+		// display the results screen UI, content depending if it's victory or defeat
 		public function showResultsScreen():void
 		{
 			if (enemy.defeated)
@@ -753,7 +790,7 @@ package worlds
 				resultsGoldReceived.visible = true;
 				resultsLootReceived.visible = true;
 				
-				resultsExperienceGained.displayText.text += experiencePoints;
+				resultsExperienceGained.displayText.text += enemy.experiencePoints;
 				resultsGoldReceived.displayText.text += enemy.gold;
 				
 				for (var i:int = 0; i < 3; i++)
