@@ -237,7 +237,7 @@ package worlds
 						showListBox(true);
 						setCursorPosition(GC.BATTLE_KEY_LIST_ROW + "1");
 						setInfoDisplayTexts();
-					}
+					}	
 				}
 			}
 			
@@ -488,7 +488,6 @@ package worlds
 					var defenseSpell:DefenseSpell = new DefenseSpell();
 					defenseSpell.copy(Game.spells[player.spells[spellIndex]]);
 					playerBattle.castOnSelf(defenseSpell);
-					showListBox(true);
 					
 					// until we have entities for the animation for casting on oneself,
 					// we just move to the next turn
@@ -514,21 +513,20 @@ package worlds
 					if (!mobs[i].dead)
 					{
 						// determine the type of attack: melee, melee with dual wielding or ranged?
-						var mobPositionIndex:int = int(mobs[i].key.charAt(mobs[i].key.length - 1)) - 1;
 						if (player.attackType == GC.ATTACK_TYPE_MELEE)
 						{
 							if (player.equipment[GC.INVENTORY_KEY_WEAPON_EQUIP_SECONDARY] != null)
 							{
-								playerBattle.meleeAttack(mobPositions[mobPositionIndex], mobs[i], true);
+								playerBattle.meleeAttack(new Point(mobs[i].x, mobs[i].y), mobs[i], true);
 							}
 							else 
 							{
-								playerBattle.meleeAttack(mobPositions[mobPositionIndex], mobs[i], false);
+								playerBattle.meleeAttack(new Point(mobs[i].x, mobs[i].y), mobs[i], false);
 							}
 						}
 						else if (player.attackType == GC.ATTACK_TYPE_RANGED)
 						{
-							playerBattle.rangedAttack(mobPositions[mobPositionIndex], mobs[i]);
+							playerBattle.rangedAttack(new Point(mobs[i].x, mobs[i].y), mobs[i]);
 						}
 					}
 				}
