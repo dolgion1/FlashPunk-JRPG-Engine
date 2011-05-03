@@ -1,3 +1,4 @@
+bin-debug
 bin-debug/*
 html-template/*
 .actionScriptProperties
