@@ -23,3 +23,6 @@ Temporary method of damage calculation:
 For now, in combat, single body parts are not targettable. The armor rating of all pieces of armor just adds up to become
 the overall armor rating. damage rating does not take into account the relationship between damage type and armor resistances.
 Rather, damage rating and armor rating and agilities are factored into the damage calculation for now. 
+
+test
+
