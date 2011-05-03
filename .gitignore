@@ -1,4 +1,5 @@
-bin/*
-obj/*
-src/Main.swf
-src/makefile
+bin-debug/*
+html-template/*
+.actionScriptProperties
+.project
+.settings/*

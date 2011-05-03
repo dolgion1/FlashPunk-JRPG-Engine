@@ -168,7 +168,7 @@ package worlds
 			{
 				if (Input.pressed(GC.BUTTON_ACTION))
 				{
-					FP.world = Main.game;
+					FP.world = JRPG.game;
 				}
 			}
 			else
