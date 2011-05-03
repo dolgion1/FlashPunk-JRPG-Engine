@@ -26,7 +26,7 @@
 		
 		override public function init():void 
 		{
-			FP.log("FlashPunk started successfully.");
+			FP.log("Checking if the move to eclipse worked.");
 		}
 	}
 }
