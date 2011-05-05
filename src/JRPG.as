@@ -1,4 +1,4 @@
-﻿﻿package 
+﻿package 
 {
 	import net.flashpunk.Engine;
 	import net.flashpunk.FP;

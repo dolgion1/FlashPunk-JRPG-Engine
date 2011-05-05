@@ -46,8 +46,8 @@ package entities.battle
 				statDisplay.x -= delta.x / FP.assignedFrameRate;
 				statDisplay.y -= delta.y / FP.assignedFrameRate;
 				
-				if ((Math.abs(x - targetPosition.x) < 2) &&
-					(Math.abs(y - targetPosition.y) < 2))
+				if ((Math.abs(x - targetPosition.x) < GC.MOB_DESTINATION_RADIUS) &&
+					(Math.abs(y - targetPosition.y) < GC.MOB_DESTINATION_RADIUS))
 				{
 					if (curAnimation == "walk_right")
 					{

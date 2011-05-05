@@ -1,8 +1,9 @@
 package utility
 {
-	import net.flashpunk.FP;
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
+	
+	import net.flashpunk.FP;
 
 	/**
 	 * ...
@@ -311,7 +312,9 @@ package utility
 		public static const PLAYER_BATTLE_SPRITE_HEIGHT:Number = 91;
 		public static const PLAYER_BATTLE_DESTINATION_RADIUS:int = 50;
 		
-		// Player Battle constants
+		// Mob constants
+		public static const MOB_DESTINATION_RADIUS:int = 2;
+		
 		public static const ZELDA_BATTLE_SPRITE_WIDTH:Number = 155;
 		public static const ZELDA_BATTLE_SPRITE_HEIGHT:Number = 200;
 		
